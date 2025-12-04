@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/root.dart';
 import 'package:recomind/shared/widgets/container.dart';
-import 'package:recomind/screens/Admin/Home/Home_page.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class completesetup extends StatefulWidget {

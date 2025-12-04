@@ -6,8 +6,6 @@ import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/features/admin/Home_admin/widget/home_wid.dart';
 import 'package:recomind/features/admin/profile/view/profile_view.dart';
 import 'package:recomind/root.dart';
-import 'package:recomind/screens/Admin/Home/Comany/com_screen.dart';
-import 'package:recomind/screens/Admin/Home/invites/invite_screen.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class HomeViewAdmin extends StatefulWidget {

@@ -9,6 +9,7 @@ import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/D
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/com_info.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/department.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/edit_button.dart';
+import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/start_AI_processing.dart';
 import 'package:recomind/shared/widgets/show_dialog_comInfo.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
@@ -240,7 +241,7 @@ late bool isclicked_dep ;
                   ///button
                   button(
                       onPressed: () {
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Plan(),));
+                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartAiProcessing(),));
                       },
                       color: AppColor.primaryColor,
                       borderColor: AppColor.primaryColor,

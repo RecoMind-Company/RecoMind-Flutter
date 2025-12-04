@@ -83,6 +83,7 @@ flutter:
    - assets/Team_Leader/home/
    - assets/Home/
    - assets/Robot/
+   - assets/Team leader svg/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

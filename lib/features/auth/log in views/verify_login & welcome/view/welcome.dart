@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:recomind/screens/Admin/Home/Home_page.dart';
+import 'package:recomind/features/admin/Home_admin/view/home_view_admin.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
@@ -19,7 +19,7 @@ class _setupState extends State<welcomeview> {
   void initState() {
     // TODO: implement initState
     Future.delayed(Duration(seconds:3),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeDashboardScreen() ));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeViewAdmin() ));
     });
     super.initState();
   }

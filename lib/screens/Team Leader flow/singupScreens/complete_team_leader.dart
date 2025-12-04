@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recomind/repeated_screen/complete.dart';
-import 'package:recomind/screens/Team%20Leader%20flow/HomePages/mainHomePage/main_home_page.dart';
+import 'package:recomind/splash_screen.dart';
 
 
 class compeleteTeamleader extends StatelessWidget {
@@ -8,6 +7,6 @@ class compeleteTeamleader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return completesetup(navigatscreen: HomeTeamleaderScreen(),);
+    return Scaffold();
   }
 }

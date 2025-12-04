@@ -9,8 +9,6 @@ import 'package:recomind/features/admin/company%20members%20&%20DB/view/database
 import 'package:recomind/features/admin/profile/view/profile_view.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/com_info.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/edit_button.dart';
-import 'package:recomind/screens/Admin/Home/Home_page.dart';
-import 'package:recomind/screens/Admin/Home/invites/invite_screen.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/show_dialog_comInfo.dart';
 

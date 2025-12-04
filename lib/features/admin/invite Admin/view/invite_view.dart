@@ -3,8 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/features/admin/invite%20Admin/widget/invite_successfully_message.dart';
 import 'package:recomind/features/admin/profile/view/profile_view.dart';
-import 'package:recomind/screens/Admin/Home/Comany/com_screen.dart';
-import 'package:recomind/screens/Admin/Home/Home_page.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 import '../widget/invite_card.dart' show InviteCard;

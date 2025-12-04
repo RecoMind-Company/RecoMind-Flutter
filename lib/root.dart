@@ -4,6 +4,7 @@ import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/features/admin/Home_admin/view/home_view_admin.dart';
 import 'package:recomind/features/admin/company%20Admin/view/company_view.dart';
 import 'package:recomind/features/admin/invite%20Admin/view/invite_view.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/view/home_TL_view.dart';
 
 class root extends StatefulWidget {
   const root({super.key});
@@ -18,12 +19,16 @@ class _rootState extends State<root> {
   late PageController controller;
 
   late List<Widget> pages;
-
+  bool Admin = false;
   @override
   void initState() {
     controller = PageController(initialPage: currentpage);
-    pages = [
+     Admin == true? pages = [
       HomeViewAdmin(),
+      InviteView(),
+      CompanyView(),
+    ]: pages = [
+       HomeTlView(),
       InviteView(),
       CompanyView(),
     ];
@@ -56,7 +61,8 @@ class _rootState extends State<root> {
               splashFactory:
                   NoSplash.splashFactory,
             ),
-            child: BottomNavigationBar(
+            child: Admin == true ?
+            BottomNavigationBar(
               currentIndex: currentpage,
               backgroundColor: Colors.transparent,
               type: BottomNavigationBarType.fixed,
@@ -64,7 +70,7 @@ class _rootState extends State<root> {
               selectedItemColor: AppColor.primaryColor,
               unselectedItemColor: AppColor.primaryColor,
               enableFeedback: false,
-              items: [
+                items:[
 
                 /// first
                 BottomNavigationBarItem(
@@ -119,7 +125,80 @@ class _rootState extends State<root> {
                 });
                 controller.jumpToPage(currentpage);
               },
-            ),
+            ):
+            BottomNavigationBar(
+              currentIndex: currentpage,
+              backgroundColor: Colors.transparent,
+              type: BottomNavigationBarType.fixed,
+              elevation: 0,
+              selectedItemColor: AppColor.primaryColor,
+              unselectedItemColor: AppColor.primaryColor,
+              enableFeedback: false,
+              items:[
+
+                /// first
+                BottomNavigationBarItem(
+                    icon: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        width: 60,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: currentpage == 0 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SvgPicture.asset("assets/Home/SVG_Icon/Default.svg" , color: currentpage != 0? AppColor.primaryColor:Color(0xff060B1B),)), label: "Home"),
+                /// second
+                BottomNavigationBarItem(
+                    icon: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        width: 60,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: currentpage == 1 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SvgPicture.asset("assets/Team_Leader/home/robot.svg" , color: currentpage != 1? AppColor.primaryColor:Color(0xff060B1B),)), label: "Chatbot"),
+                ///third
+                BottomNavigationBarItem(
+                  icon: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      width: 60,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: currentpage == 2
+                            ? const Color(0xff7EE3FF)
+                            : Color(0xff070C1E),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: SvgPicture.asset(
+                          "assets/Team leader svg/report_icon.svg",
+                          color: currentpage != 2
+                              ? AppColor.primaryColor
+                              : Color(0xff060B1B))),
+                  label: "Report",
+                ),
+                ///fourth
+                BottomNavigationBarItem(
+                  icon: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      width: 60,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: currentpage == 3 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: SvgPicture.asset("assets/Team leader svg/Team_icon.svg" , color: currentpage != 3? AppColor.primaryColor:Color(0xff060B1B),)),
+                  label: "Team",
+                ),
+
+              ],
+              onTap: (v) {
+                setState(() {
+                  currentpage = v;
+                });
+                controller.jumpToPage(currentpage);
+              },
+            )
           ),
         ),
       ),
