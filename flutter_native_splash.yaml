@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#060B1B"                 # لون الخلفية (اختياري)
+  image: "assets/Logo.png"       # مسار اللوجو (تأكد إنه مضاف في assets)
+
+  android: true
+  ios: true
+  web: false
+
+
+
+  # محاذاة الصورة
+  android_gravity: center
+  ios_content_mode: center
+
+
