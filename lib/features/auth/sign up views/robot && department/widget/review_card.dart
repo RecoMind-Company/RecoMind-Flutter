@@ -4,7 +4,8 @@ import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class ReviewCard extends StatelessWidget {
-  const ReviewCard({super.key,required this.Name});
+  const ReviewCard({super.key,required this.Name, this.ontap});
+  final Function()? ontap;
 final String? Name ;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ final String? Name ;
       child: Row(children: [
         customText(text: Name!,textsize: 20,fontweight: FontWeight.w400,color: Colors.white,),
         Spacer(),
-        Container(width:116,child: button(onPressed: (){}, color: AppColor.primaryColor, borderColor:  AppColor.primaryColor, buttonText: "Review", textColor: Colors.black))
+        Container(width:116,child: button(onPressed: ontap, color: AppColor.primaryColor, borderColor:  AppColor.primaryColor, buttonText: "Review", textColor: Colors.black))
       ],),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:recomind/shared/widgets/custom_text.dart';
 // import 'package:recomind/shared/widgets/custom_text.dart'; // نفترض أن هذه الودجت موجودة
 
 class DropDownHistory extends StatefulWidget {
@@ -16,7 +17,7 @@ class _DropdownState extends State<DropDownHistory> {
   final GlobalKey _key = GlobalKey(); // لتحديد موضع الـ TextField
 
   // قائمة الدول
-  final List<String> allReport = ['All reports', 'insights only', 'insight and plan'];
+  final List<String> allReport = ['All reports', 'insights only', 'insight and plan','insight and plan'];
 
   @override
   void dispose() {
@@ -58,26 +59,35 @@ class _DropdownState extends State<DropDownHistory> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(allReport.length, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    // تحديث القيمة المختارة وإخفاء القائمة
-                    widget.selected.value = allReport[index];
-                    _overlayEntry?.remove();
-                    _overlayEntry = null;
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: Text( // استبدال customText بنص عادي للتجربة
-                      allReport[index],
-                      style: const TextStyle(
-                        color: Color(0xFFEEEEEE),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // تحديث القيمة المختارة وإخفاء القائمة
+                        widget.selected.value = allReport[index];
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        alignment: Alignment.centerLeft,
+                        height: 50,
+                        child: Text( // استبدال customText بنص عادي للتجربة
+                          allReport[index],
+                          style: const TextStyle(
+                            color: Color(0xFFEEEEEE),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                   allReport.length !=index+1?
+                     Divider(
+                      color: const Color(0xff498495),
+                      thickness: 1,
+                    ):customText(text: "")
+                  ],
                 );
               }),
             ),
@@ -112,7 +122,7 @@ class _DropdownState extends State<DropDownHistory> {
                   hintStyle: const TextStyle(
                     color: Color(0xFFB8ADAD),
                     fontFamily: "Poppins",
-                    fontSize: 12,
+                    fontSize: 14,
                   ),
                   border: InputBorder.none,
                   enabledBorder: OutlineInputBorder(
@@ -123,7 +133,7 @@ class _DropdownState extends State<DropDownHistory> {
                     borderSide: const BorderSide(color: Color(0xffEFEFEF), width: 1),
                     borderRadius: BorderRadius.circular(25),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  contentPadding: const EdgeInsets.symmetric(vertical:12, horizontal: 20),
                 ),
               ),
             ],

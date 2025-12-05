@@ -204,7 +204,7 @@ class _LoginviewState extends State<Loginview> {
                             )
 
 
-                            , Gap(30),
+                            , Gap(47),
 
                             button(onPressed: () {
                               Navigator.pushReplacement(context,
@@ -218,37 +218,31 @@ class _LoginviewState extends State<Loginview> {
                                     : Colors.grey.shade600,
                                 buttonText: "Log In",
                                 textColor: Colors.black),
-                            const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 35),
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 120),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const customText(
-                                      text: "Don't Have an account? ",
-                                     color: Colors.white70,
-                                          textsize: 16,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushReplacement(context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignUP()));
-                                      },
-                                      child: const customText(
-                                       text: "Sing Up",
-                                            color: Color(0xFF7EE3FF),
-                                            fontweight: FontWeight.bold,
-                                            textsize: 18,
-                                        isunderline: true,
-                                      ),
-                                    ),
-                                  ],
+                            Gap(47),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const customText(
+                                  text: "Don't Have an account? ",
+                                 color: Colors.white70,
+                                      textsize: 16,
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SignUP()));
+                                  },
+                                  child: const customText(
+                                   text: "Sing Up",
+                                        color: Color(0xFF7EE3FF),
+                                        fontweight: FontWeight.bold,
+                                        textsize: 18,
+                                    isunderline: true,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

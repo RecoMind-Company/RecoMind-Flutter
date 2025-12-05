@@ -17,13 +17,13 @@ class _splash_screenState extends State<splash_screen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(Duration(milliseconds: 50), () {
       setState(() {
         showGroup = true;
       });
     });
 
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         showText = true;
       });

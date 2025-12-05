@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
@@ -9,8 +10,14 @@ import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 
-class Department1Verification extends StatelessWidget {
+class Department1Verification extends StatefulWidget {
    Department1Verification({super.key});
+
+  @override
+  State<Department1Verification> createState() => _Department1VerificationState();
+}
+
+class _Department1VerificationState extends State<Department1Verification> {
 final List department = [
   "Sales",
   "Marketing",
@@ -23,6 +30,8 @@ final List department = [
   "Human Resources",
   "Technology",
 ];
+bool isclicked = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +53,13 @@ final List department = [
                   Gap(20),
                  Column(children: List.generate(department.length, (index) => Padding(
                    padding: const EdgeInsets.only(bottom: 32.0),
-                   child: ReviewCard(Name: department[index]),
+                   child: ReviewCard(Name: department[index],ontap: (){
+                     setState(() {
+                       isclicked = true;
+                     });
+                   },),
                  ),)),
-        
+
                 ],
               ),
             ),
@@ -70,7 +83,7 @@ final List department = [
           Gap(15),
           customText(text: "0 : 10",color: AppColor.primaryColor,textsize: 24,fontweight: FontWeight.w400,),
           Gap(16),
-          Container(padding:EdgeInsets.symmetric(horizontal: 56),child: button(onPressed: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Department2Verification(),));}, color: AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Finalize Setup", textColor: Colors.black))
+          Container(padding:EdgeInsets.symmetric(horizontal: 56),child: button(onPressed: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Department2Verification(),));}, color:isclicked==false ?CupertinoColors.inactiveGray:AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Finalize Setup", textColor: Colors.black))
         ],),
       ),
     );

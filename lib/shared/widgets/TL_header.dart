@@ -5,8 +5,9 @@ import 'package:recomind/shared/widgets/custom_text.dart';
 
 
 class TlHeader extends StatelessWidget {
-  const TlHeader({super.key,required this.icon});
+  const TlHeader({super.key,required this.icon,this.onTab_setting});
 final String? icon;
+final Function()? onTab_setting ;
   @override
   Widget build(BuildContext context) {
     return  Row(
@@ -43,7 +44,7 @@ final String? icon;
           ],
         ),
         Spacer(),
-        IconButton(onPressed: (){}, icon: SvgPicture.asset(icon!))
+        IconButton(onPressed: onTab_setting, icon: SvgPicture.asset(icon!))
       ],
     );
   }

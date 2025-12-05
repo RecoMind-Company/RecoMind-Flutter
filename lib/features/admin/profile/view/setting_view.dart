@@ -28,7 +28,7 @@ class _SettingViewState extends State<SettingView> {
               Gap(70),
               Row(
                 children: [
-                  Gap(10),
+                  Gap(5),
                   GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
@@ -36,9 +36,9 @@ class _SettingViewState extends State<SettingView> {
                       child: Icon(
                         CupertinoIcons.back,
                         color: Colors.white,
-                        size: 30,
+                        size: 35,
                       )),
-                  Gap(80),
+                  Gap(85),
                   customText(
                     text: "Settings",
                     color: Colors.white,

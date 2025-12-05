@@ -51,7 +51,7 @@ class _CardManagementState extends State<CardManagement> {
           key: const ValueKey<bool>(false), // مفتاح خاص بالحالة المدمجة
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           height: 60,
-          width: 346,
+          width:  double.infinity,
           decoration: BoxDecoration(
             color: const Color(0xFF212635),
             borderRadius: BorderRadius.circular(12),
@@ -86,7 +86,7 @@ class _CardManagementState extends State<CardManagement> {
           key: const ValueKey<bool>(true),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           height: 180,
-          width: 346,
+          width: double.infinity,
           decoration: BoxDecoration(
             color: const Color(0xFF212635),
             borderRadius: BorderRadius.circular(12),

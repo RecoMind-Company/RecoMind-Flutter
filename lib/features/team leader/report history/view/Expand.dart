@@ -13,7 +13,7 @@ class ExpandScreen extends StatelessWidget {
     return Scaffold(
       body: Containerwid(
           child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        padding: const EdgeInsets.symmetric(horizontal: 28.0),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
@@ -21,7 +21,7 @@ class ExpandScreen extends StatelessWidget {
               Gap(90),
               Row(
                 children: [
-                  Gap(15),
+                  Gap(5),
                   GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
@@ -49,7 +49,7 @@ class ExpandScreen extends StatelessWidget {
               Gap(16),
               Container(
                 height: 505,
-                width: 349,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                       stops: [0.001, 5, 5],
@@ -85,7 +85,7 @@ class ExpandScreen extends StatelessWidget {
               Gap(16),
               Container(
                 height: 323,
-                width: 349,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                       stops: [0.001, 5, 5],

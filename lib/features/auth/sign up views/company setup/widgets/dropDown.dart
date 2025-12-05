@@ -58,26 +58,34 @@ class _DropdownState extends State<Dropdown> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(countries.length, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    // تحديث القيمة المختارة وإخفاء القائمة
-                    widget.selectedCountry.value = countries[index];
-                    _overlayEntry?.remove();
-                    _overlayEntry = null;
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    child: Text( // استبدال customText بنص عادي للتجربة
-                      countries[index],
-                      style: const TextStyle(
-                        color: Color(0xFFEEEEEE),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // تحديث القيمة المختارة وإخفاء القائمة
+                        widget.selectedCountry.value = countries[index];
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        alignment: Alignment.centerLeft,
+                        height: 50,
+                        child: Text( // استبدال customText بنص عادي للتجربة
+                          countries[index],
+                          style: const TextStyle(
+                            color: Color(0xFFEEEEEE),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Divider(
+                      color: Colors.grey.withOpacity(0.5),
+                      height: 1,
+                    )
+                  ],
                 );
               }),
             ),

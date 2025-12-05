@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/view/log_in.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_2.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/view/review_all_setup.dart';
+import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/department_1_verification.dart';
 import 'package:recomind/root.dart';
 import 'package:recomind/splash_screen.dart';
 import 'features/admin/Home_admin/view/home_view_admin.dart';
@@ -20,7 +21,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:root(),
+      home:Department1Verification(),
     );
   }
 }

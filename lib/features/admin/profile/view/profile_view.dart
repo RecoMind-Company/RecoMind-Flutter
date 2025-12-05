@@ -60,7 +60,7 @@ class _ProfileViewState extends State<ProfileView> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   height: 29,
-                  width: 344,
+                  width:  double.infinity,
                   decoration: BoxDecoration(
                       gradient: const LinearGradient(
                           begin: Alignment.centerLeft,
@@ -88,7 +88,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ///edit button && image
                 Container(
                   height: 101,
-                  width: 344,
+                  width:  double.infinity,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

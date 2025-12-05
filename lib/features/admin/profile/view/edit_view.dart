@@ -23,7 +23,7 @@ class EditView extends StatelessWidget {
             Gap(70),
             Row(
               children: [
-                Gap(15),
+                Gap(5),
                 GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -33,7 +33,7 @@ class EditView extends StatelessWidget {
                       color: Colors.white,
                       size: 35,
                     )),
-                Gap(15),
+                Gap(25),
                 customText(
                   text: "Edit Personal data",
                   color: Colors.white,

@@ -28,7 +28,7 @@ class UploadButton2 extends StatelessWidget {
                   ),
                   Gap(5),
                   customText(
-                    text: "Upload file (PDF, DOCX, Excel)",
+                    text: "Upload Excel file",
                     color: Color(0xFFEEEEEE),
                     textsize: 14,
                     fontweight: FontWeight.w400,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recomind/core/constants/app_colors.dart';
 
 
 class Tabbar extends StatelessWidget {
@@ -8,7 +9,7 @@ class Tabbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabBar(
       dividerColor: Color(0xFF474747),
-      indicatorColor: Colors.blue,
+      indicatorColor: AppColor.primaryColor,
       indicatorWeight: 2.0,
       labelColor: Colors.white,
       unselectedLabelColor: Colors.grey,

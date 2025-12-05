@@ -23,7 +23,7 @@ class InviteTl extends StatelessWidget {
             Gap(73),
             Row(
               children: [
-                Gap(15),
+                Gap(5),
                 GestureDetector(
                   onTap: (){
                     Navigator.pop(context);
