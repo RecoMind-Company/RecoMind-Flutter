@@ -5,6 +5,8 @@ import 'package:recomind/features/admin/Home_admin/view/home_view_admin.dart';
 import 'package:recomind/features/admin/company%20Admin/view/company_view.dart';
 import 'package:recomind/features/admin/invite%20Admin/view/invite_view.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/view/home_TL_view.dart';
+import 'package:recomind/features/team%20leader/chat_bot/view/chat_bot_view.dart';
+import 'package:recomind/features/team%20leader/report/view/report_view.dart';
 
 class root extends StatefulWidget {
   const root({super.key});
@@ -29,8 +31,9 @@ class _rootState extends State<root> {
       CompanyView(),
     ]: pages = [
        HomeTlView(),
-      InviteView(),
-      CompanyView(),
+       ChatBotView(),
+       ReportView(),
+       CompanyView(),
     ];
     // TODO: implement initState
     super.initState();
