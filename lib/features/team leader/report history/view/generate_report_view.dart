@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/team%20leader/report%20history/data/report_reporistory.dart';
 import 'package:recomind/features/team%20leader/report%20history/view/Expand.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
@@ -9,9 +11,48 @@ import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/diver_wid.dart';
 import 'package:recomind/shared/widgets/textfiekd.dart';
 
-class GenerateReportView extends StatelessWidget {
+import '../data/report_reporistory.dart';
+
+class GenerateReportView extends StatefulWidget {
   const GenerateReportView({super.key});
 
+  @override
+  State<GenerateReportView> createState() => _GenerateReportViewState();
+}
+
+class _GenerateReportViewState extends State<GenerateReportView> {
+  bool isLoading = false ;
+  reportRepo requestReport = reportRepo();
+  Future<void> requestAnalysisTask() async {
+    try {
+      setState(() {
+        isLoading = true ;
+      });
+      final task = await requestReport.getSetup();
+
+      print("TASK ID = ${task.taskId}");
+      print("Status = ${task.status}");
+
+      // وانت حر بقى تحفظه وتستخدمه بعد كدا
+      // مثلاً:
+
+      if (task.status == "PENDING") {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: task.taskId,),));
+      }
+      setState(() {
+        isLoading = false ;
+      });
+
+    } on ApiError catch (e) {
+      setState(() {
+        isLoading = false ;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message), backgroundColor: Colors.red),
+      );
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,8 +103,8 @@ class GenerateReportView extends StatelessWidget {
 
               Gap(32),
               ///button
-              button(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(),));
+              isLoading==true ? CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,):button(onPressed: (){
+                requestAnalysisTask();
               }, color: AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Generate", textColor: Colors.black)
             ],
           ),

@@ -45,6 +45,8 @@ dependencies:
   flutter_feather_icons: ^2.0.0+1
   gap: ^3.0.1
   dropdown_search: ^6.0.2
+  dio: ^5.9.0
+  shared_preferences: ^2.5.3
 
 
 

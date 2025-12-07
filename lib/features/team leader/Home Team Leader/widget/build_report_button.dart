@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class BuildReportButton extends StatelessWidget {
-  const BuildReportButton({super.key});
-
+  const BuildReportButton({super.key, required this.onTap});
+final Function() onTap ;
   @override
   Widget build(BuildContext context) {
     return Center(
       child: GestureDetector(
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           alignment: Alignment.center,
           height: 44,

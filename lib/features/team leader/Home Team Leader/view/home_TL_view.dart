@@ -7,6 +7,7 @@ import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/grid
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/notification_TL.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/premium_card.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/show_notification_TL.dart';
+import 'package:recomind/features/team%20leader/report%20history/view/generate_report_view.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
@@ -103,7 +104,11 @@ class _HomeTeamleaderScreenState extends State<HomeTlView> {
                 const SizedBox(height: 24),
 
                 // ================= BUTTON =================
-                BuildReportButton(),
+                BuildReportButton(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenerateReportView(),));
+                  },
+                ),
                 Gap(24),
 
                 // ================= TITLE =================

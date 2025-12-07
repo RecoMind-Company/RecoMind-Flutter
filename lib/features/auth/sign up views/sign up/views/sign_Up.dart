@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/auth/sign%20up%20views/sign%20up/data/signup_repository.dart';
 import 'package:recomind/features/auth/sign%20up%20views/verfy%20&%20almost/view/verify_View.dart';
+import 'package:recomind/root.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/widget/password_rules.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/widget/social_Button.dart';
@@ -22,6 +26,9 @@ class SignUP extends StatefulWidget {
 
 class _SignUPState extends State<SignUP> {
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   bool _isPasswordValid = false;
 
   @override
@@ -36,6 +43,39 @@ class _SignUPState extends State<SignUP> {
       _isPasswordValid = password.length >= 8;
     });
   }
+bool isLoading = false;
+  /// singUp
+  signUpRepo authRepo = signUpRepo();
+
+  Future<void> signUp() async {
+    try{
+      setState(() {
+        isLoading = true;
+      });
+      final user = await authRepo.signUp(
+        _nameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      if(user != null ){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => verifySignUpView()),
+        );
+      }
+      setState(() {
+        isLoading = false;
+      });
+
+    }on ApiError catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message),backgroundColor: Colors.red,));
+    }
+  }
+
 
   @override
   void dispose() {
@@ -104,7 +144,8 @@ class _SignUPState extends State<SignUP> {
                               TitleTextField(text: "Name",),
                               textfield(
                                 hint: "Enter Your Name",
-                                icon: Icons.person_outline,),
+                                icon: Icons.person_outline,
+                              controller: _nameController,),
                               Gap(15),
 
                               ///email
@@ -114,6 +155,7 @@ class _SignUPState extends State<SignUP> {
                                 child: textfield(
                                   hint: "Enter Your Email",
                                   icon: Icons.email_outlined,
+                                  controller: _emailController,
                                 ),
                               ),
 
@@ -130,12 +172,13 @@ class _SignUPState extends State<SignUP> {
 
 
                               ///Button
+                              isLoading==true ? Center(child: CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,),):
                               Padding(
                                   padding:
                                       const EdgeInsets.only(top: 10, bottom: 20),
                                   child: button(
                                       onPressed: () {
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>verifySignUpView() ,));
+                                        signUp();
                                       },
                                       color: _isPasswordValid
                                           ? AppColor.primaryColor

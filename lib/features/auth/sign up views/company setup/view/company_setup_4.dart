@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/auth/log%20in%20views/log%20in/data/login_model.dart';
+import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_repository.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_5.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/invite_TL.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/company_diver.dart';
@@ -11,10 +15,49 @@ import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/textfiekd.dart';
 
-class CompanySetup4 extends StatelessWidget {
+class CompanySetup4 extends StatefulWidget {
   const CompanySetup4({super.key});
 
+  @override
+  State<CompanySetup4> createState() => _CompanySetup4State();
+}
+
+class _CompanySetup4State extends State<CompanySetup4> {
   final int Pagenumber = 3;
+  final TextEditingController _emailController = TextEditingController();
+
+
+  /// invite
+ SetupRepository authRepo = SetupRepository();
+
+  bool isLoading = false;
+
+  Future<void> invite() async {
+    try{
+      setState(() {
+        isLoading = true;
+      });
+      final user = await authRepo.invite(
+        _emailController.text.trim(),
+      );
+      if(user != null ){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CompanySetup5()),
+        );
+      }
+      setState(() {
+        isLoading = false;
+      });
+
+    }on ApiError catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message),backgroundColor: Colors.red,));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +115,7 @@ class CompanySetup4 extends StatelessWidget {
                     textfield(
                       hint: "manager1@company.com, manager2@com",
                       icon: Icons.mail_outline_outlined,
+                      controller: _emailController,
                     ),
                     Gap(24),
 
@@ -127,13 +171,13 @@ class CompanySetup4 extends StatelessWidget {
                     Gap(32),
 
                     ///buttons
-                    button(
+                    isLoading == true ? Center(child: CupertinoActivityIndicator(color: AppColor.primaryColor,radius:20 ,),):button(
                       color: AppColor.primaryColor,
                       buttonText: "Next",
                       textColor: Colors.black,
                       borderColor: AppColor.primaryColor,
                       onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanySetup5(),));
+                        invite();
                       },
                     ),
                     Gap(16),

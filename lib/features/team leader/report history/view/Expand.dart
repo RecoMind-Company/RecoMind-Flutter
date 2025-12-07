@@ -1,13 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/team%20leader/report%20history/data/report_reporistory.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/diver_wid.dart';
 
-class ExpandScreen extends StatelessWidget {
-  const ExpandScreen({super.key});
+class ExpandScreen extends StatefulWidget {
+  const ExpandScreen({super.key, this.taskId});
+ final String? taskId ;
+  @override
+  State<ExpandScreen> createState() => _ExpandScreenState();
+}
 
+class _ExpandScreenState extends State<ExpandScreen> {
+  /// get report
+  reportRepo resultrepo = reportRepo();
+  Future<void> getResult ()async {
+    try {
+      final result = await resultrepo.getReportResult("${widget.taskId}");
+      print("TASK ID = ${result.taskId}");
+      print("Status = ${result.status}");
+    } on ApiError catch (e) {
+      print("Error: ${e.message}");
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getResult ();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,59 +72,20 @@ class ExpandScreen extends StatelessWidget {
                 ],
               ),
               Gap(16),
-              Container(
-                height: 505,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      stops: [0.001, 5, 5],
-                      begin: AlignmentGeometry.bottomLeft,
-                      end: AlignmentGeometry.topRight,
-                      colors: [
-                        Color(0xFFD9D9D9),
-                        Color(0xFF02112F),
-                        Color(0xFF02112F)
-                      ]),
-                  borderRadius: BorderRadius.circular(15),
+              Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(15),
+                child: Container(
+                  height: 505,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                   color:AppColor.darkBlue,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
               ),
               ///Divider
-              Gap(32),
-              Divider(
-                color: Color(0xFF7EE3FF),
-                thickness: 0.7,
-              ),
-              Gap(32),
 
-              /// title
-              Row(
-                children: [
-                  customText(
-                    text: "Your Plan",
-                    textsize: 20,
-                    fontweight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-              Gap(16),
-              Container(
-                height: 323,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      stops: [0.001, 5, 5],
-                      begin: AlignmentGeometry.bottomLeft,
-                      end: AlignmentGeometry.topRight,
-                      colors: [
-                        Color(0xFFD9D9D9),
-                        Color(0xFF02112F),
-                        Color(0xFF02112F)
-                      ]),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              Gap(30)
             ],
           ),
         ),

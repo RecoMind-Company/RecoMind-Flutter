@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:recomind/shared/widgets/custom_text.dart'; // نفترض أن هذه الودجت موجودة
 
 class Dropdown extends StatefulWidget {
-  Dropdown({super.key, required this.selectedCountry});
-  // استخدام القيمة النهائية (final) في StatelessWidget أو جعلها قابلة للتعديل عبر الكلاس State
-  final ValueNotifier<String?> selectedCountry;
+  final ValueNotifier<String?> selectedItem; // القيمة المختارة
+  final String hints; // نص الهينت
+  final TextEditingController controller; // من الخارج
+  final List<String> items; // قائمة العناصر متغيرة
+
+  Dropdown({
+    super.key,
+    required this.selectedItem,
+    required this.hints,
+    required this.controller,
+    required this.items,
+  });
 
   @override
   State<Dropdown> createState() => _DropdownState();
@@ -13,14 +21,20 @@ class Dropdown extends StatefulWidget {
 
 class _DropdownState extends State<Dropdown> {
   OverlayEntry? _overlayEntry;
-  final GlobalKey _key = GlobalKey(); // لتحديد موضع الـ TextField
+  final GlobalKey _key = GlobalKey();
 
-  // قائمة الدول
-  final List<String> countries = ['Egypt', 'UAE', 'England', 'Qatar'];
+  @override
+  void initState() {
+    super.initState();
+    // تعيين القيمة الافتراضية عند البداية
+    if (widget.selectedItem.value != null) {
+      widget.controller.text = widget.selectedItem.value!;
+    }
+  }
 
   @override
   void dispose() {
-    _overlayEntry?.remove(); // إزالة الـ overlay عند حذف الودجت
+    _overlayEntry?.remove();
     super.dispose();
   }
 
@@ -28,7 +42,7 @@ class _DropdownState extends State<Dropdown> {
     if (_overlayEntry != null) {
       _overlayEntry!.remove();
       _overlayEntry = null;
-      return; // إخفاء إذا كان مرئيًا بالفعل
+      return;
     }
 
     final RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
@@ -38,7 +52,7 @@ class _DropdownState extends State<Dropdown> {
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
-        top: offset.dy + size.height + 5.0, // تحت الـ TextField بمسافة 5 بكسل
+        top: offset.dy + size.height + 5,
         width: size.width,
         child: Material(
           elevation: 8,
@@ -47,23 +61,16 @@ class _DropdownState extends State<Dropdown> {
             decoration: BoxDecoration(
               color: const Color(0xff212831),
               borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(countries.length, (index) {
+              children: widget.items.map((item) {
                 return Column(
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // تحديث القيمة المختارة وإخفاء القائمة
-                        widget.selectedCountry.value = countries[index];
+                        widget.selectedItem.value = item;
+                        widget.controller.text = item;
                         _overlayEntry?.remove();
                         _overlayEntry = null;
                       },
@@ -71,8 +78,8 @@ class _DropdownState extends State<Dropdown> {
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         alignment: Alignment.centerLeft,
                         height: 50,
-                        child: Text( // استبدال customText بنص عادي للتجربة
-                          countries[index],
+                        child: Text(
+                          item,
                           style: const TextStyle(
                             color: Color(0xFFEEEEEE),
                             fontSize: 16,
@@ -87,7 +94,7 @@ class _DropdownState extends State<Dropdown> {
                     )
                   ],
                 );
-              }),
+              }).toList(),
             ),
           ),
         ),
@@ -99,22 +106,25 @@ class _DropdownState extends State<Dropdown> {
 
   @override
   Widget build(BuildContext context) {
-    // استخدم ValueListenableBuilder لمراقبة التغييرات في القيمة المختارة
     return ValueListenableBuilder<String?>(
-      valueListenable: widget.selectedCountry,
+      valueListenable: widget.selectedItem,
       builder: (context, selectedCountryValue, child) {
         return Column(
-          key: _key, // تعيين المفتاح لتحديد موضع الـ Overlay
+          key: _key,
           children: [
             TextField(
-              readOnly: true, // لمنع الكتابة المباشرة
-              onTap: () => _showOverlay(context), // فتح القائمة عند الضغط على الحقل
+              style: const TextStyle(color: Colors.white),
+              controller: widget.controller,
+              onChanged: (val) {
+                widget.selectedItem.value = val; // تحديث القيمة عند الكتابة
+              },
+              onTap: () => _showOverlay(context),
               decoration: InputDecoration(
                 suffixIcon: IconButton(
-                  onPressed: () => _showOverlay(context), // فتح القائمة عند الضغط على الأيقونة
+                  onPressed: () => _showOverlay(context),
                   icon: SvgPicture.asset("assets/down.svg"),
                 ),
-                hintText: selectedCountryValue ?? "Select a Country",
+                hintText: widget.hints,
                 hintStyle: const TextStyle(
                   color: Color(0xFFB8ADAD),
                   fontFamily: "Poppins",

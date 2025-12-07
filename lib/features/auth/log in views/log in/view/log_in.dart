@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/auth/log%20in%20views/log%20in/data/login_repository.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/widget/password_field.dart';
 import 'package:recomind/root.dart';
 import 'package:recomind/shared/widgets/button.dart';
@@ -22,6 +24,8 @@ class Loginview extends StatefulWidget {
 
 class _LoginviewState extends State<Loginview> {
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   bool _isPasswordValid = false;
   bool isChecked = false;
 
@@ -37,6 +41,38 @@ class _LoginviewState extends State<Loginview> {
       _isPasswordValid = password.length >= 8;
     });
   }
+  bool isLoading = false;
+  /// login
+  LoginRepository authRepo = LoginRepository();
+
+  Future<void> login() async {
+    try{
+      setState(() {
+        isLoading = true;
+      });
+      final user = await authRepo.logIn(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      if(user != null ){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => root()),
+        );
+      }
+      setState(() {
+        isLoading = false;
+      });
+
+    }on ApiError catch(e){
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message),backgroundColor: Colors.red,));
+    }
+  }
+
 
   @override
   void dispose() {
@@ -106,6 +142,8 @@ class _LoginviewState extends State<Loginview> {
                               child: _textField(
                                 hint: "Enter Your Email",
                                 icon: Icons.email_outlined,
+                                controller: _emailController,
+
                               ),
                             ),
 
@@ -206,9 +244,8 @@ class _LoginviewState extends State<Loginview> {
 
                             , Gap(47),
 
-                            button(onPressed: () {
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) => root()));
+                            isLoading==true ? Center(child: CircularProgressIndicator(),): button(onPressed: () {
+                              login();
                             },
                                 color: _isPasswordValid
                                     ? AppColor.primaryColor
@@ -287,6 +324,7 @@ class _LoginviewState extends State<Loginview> {
   static Widget _textField({
     required String hint,
     required IconData icon,
+    required TextEditingController controller
 
   }) {
     return Container(
@@ -296,6 +334,7 @@ class _LoginviewState extends State<Loginview> {
         border: Border.all(color: Colors.white24),
       ),
       child: TextField(
+        controller: controller,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
 

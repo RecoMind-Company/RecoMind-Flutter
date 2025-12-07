@@ -19,6 +19,9 @@ class ShowDialogCominfo extends StatefulWidget {
 }
 
 class _ShowDialogCominfoState extends State<ShowDialogCominfo> {
+  final TextEditingController _business_Industry_Controller = TextEditingController();
+  final TextEditingController _Country_Controller = TextEditingController();
+  final TextEditingController _Company_Size_Controller = TextEditingController();
   final ValueNotifier<String?> _selectedCountryNotifier =
   ValueNotifier<String?>("EGYPT");
 
@@ -77,10 +80,41 @@ class _ShowDialogCominfoState extends State<ShowDialogCominfo> {
                           Column(
                             children: [
                               TitleTextField(
+                                text: "Business Industry",
+                              ),
+                              Dropdown(
+                                controller: _business_Industry_Controller,
+                                items: ["Marketing","Sales","IT","HR"],
+                                selectedItem: _selectedCountryNotifier,
+                                hints: "EX : Marketing",
+                              ),
+                            ],
+                          ),
+                          Gap(16),
+                          Column(
+                            children: [
+                              TitleTextField(
+                                text: "Country",
+                              ),
+                              Dropdown(
+                                controller: _Country_Controller,
+                                items: ["Egypt","USA","Qatar","Japan"],
+                                selectedItem: _selectedCountryNotifier,
+                                hints:"Search Country" ,
+                              ),
+                            ],
+                          ),
+                          Gap(16),
+                          Column(
+                            children: [
+                              TitleTextField(
                                 text: "Company Size",
                               ),
                               Dropdown(
-                                selectedCountry: _selectedCountryNotifier,
+                                controller: _Company_Size_Controller,
+                                items: ["50-100","100-200","200-500"],
+                                selectedItem: _selectedCountryNotifier,
+                                hints: "200-500",
                               ),
                             ],
                           ),
@@ -88,32 +122,10 @@ class _ShowDialogCominfoState extends State<ShowDialogCominfo> {
                           Column(
                             children: [
                               TitleTextField(
-                                text: "Business Industry",
+                                text: "Company Website",
                               ),
-                              Dropdown(
-                                selectedCountry: _selectedCountryNotifier,
-                              ),
-                            ],
-                          ),
-                          Gap(16),
-                          Column(
-                            children: [
-                              TitleTextField(
-                                text: "Business Industry",
-                              ),
-                              Dropdown(
-                                selectedCountry: _selectedCountryNotifier,
-                              ),
-                            ],
-                          ),
-                          Gap(16),
-                          Column(
-                            children: [
-                              TitleTextField(
-                                text: "Business Industry",
-                              ),
-                              Dropdown(
-                                selectedCountry: _selectedCountryNotifier,
+                              textfield(
+                                hint: "Example",
                               ),
                             ],
                           ),

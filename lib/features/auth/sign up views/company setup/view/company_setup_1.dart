@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/core/utils/pref_helper.dart';
+import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_repository.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_2.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/dropDown.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
@@ -19,9 +23,54 @@ class CompanySetup1 extends StatefulWidget {
 }
 
 class _CompanySetup1State extends State<CompanySetup1> {
+  final TextEditingController _business_Industry_Controller = TextEditingController();
+  final TextEditingController _Country_Controller = TextEditingController();
+  final TextEditingController _Company_Size_Controller = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _webController = TextEditingController();
+ bool isLoading = false ;
   final int Pagenumber = 0;
-  String _selectedCountry = "Egypt";
-  final ValueNotifier<String?> _selectedCountryNotifier = ValueNotifier<String?>("EGYPT");
+
+  /// setup
+  SetupRepository authRepo = SetupRepository();
+
+  Future<void> setup() async{
+    try{
+      final token = await PrefHelper.getToken();
+      setState(() {
+        isLoading = true;
+      });
+      final user = await authRepo.setup(
+        adminId: token ?? "",
+        name: _nameController.text.trim(),
+        industry: _business_Industry_Controller.text.trim(),
+        country: _Country_Controller.text.trim(),
+        size: _Company_Size_Controller.text.trim(),
+        website: _webController.text.trim(),
+      );
+      if(user != null ){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CompanySetup2()),
+        );
+      }
+      setState(() {
+        isLoading = false;
+      });
+
+    }on ApiError catch(e){
+      print("---- UI ERROR ----");
+      print(e.message);
+      print("-------------------");
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message),backgroundColor: Colors.red,));
+    }
+  }
+
+  final ValueNotifier<String?> _selectedCountryNotifier = ValueNotifier<String?>("select");
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -54,6 +103,7 @@ class _CompanySetup1State extends State<CompanySetup1> {
                         text: "Company Name",
                       ),
                       textfield(
+                        controller: _nameController,
                         hint: "Example",
                       ),
                       Gap(15),
@@ -66,13 +116,13 @@ class _CompanySetup1State extends State<CompanySetup1> {
                 top: 780,
                 left: 18,
                 right: 18,
-                child: button(
+                child: isLoading==true ?Center(child: CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,),):button(
                   onPressed: () {
+                    // setup();
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CompanySetup2(),
-                        ));
+                      context,
+                      MaterialPageRoute(builder: (context) => CompanySetup2()),
+                    );
                   },
                   color: AppColor.primaryColor,
                   borderColor: AppColor.primaryColor,
@@ -89,6 +139,7 @@ class _CompanySetup1State extends State<CompanySetup1> {
                       text: "Company Website",
                     ),
                     textfield(
+                      controller: _webController,
                       hint: "Example",
                     ),
                   ],
@@ -103,7 +154,10 @@ class _CompanySetup1State extends State<CompanySetup1> {
                       text: "Company Size",
                     ),
                     Dropdown(
-                      selectedCountry: _selectedCountryNotifier,
+                      controller: _Company_Size_Controller,
+                      items: ["50-100","100-200","200-500"],
+                      selectedItem: _selectedCountryNotifier,
+                      hints: "200-500",
                     ),
                   ],
                 )),
@@ -117,7 +171,10 @@ class _CompanySetup1State extends State<CompanySetup1> {
                       text: "Country",
                     ),
                     Dropdown(
-                      selectedCountry:_selectedCountryNotifier,
+                      controller: _Country_Controller,
+                      items: ["Egypt","USA","Qatar","Japan"],
+                      selectedItem: _selectedCountryNotifier,
+                      hints:"Search Country" ,
                     ),
                   ],
                 )),
@@ -131,7 +188,10 @@ class _CompanySetup1State extends State<CompanySetup1> {
                       text: "Business Industry",
                     ),
                     Dropdown(
-                      selectedCountry: _selectedCountryNotifier,
+                      controller: _business_Industry_Controller,
+                      items: ["Marketing","Sales","IT","HR"],
+                      selectedItem: _selectedCountryNotifier,
+                        hints: "EX : Marketing",
                     ),
                   ],
                 )),

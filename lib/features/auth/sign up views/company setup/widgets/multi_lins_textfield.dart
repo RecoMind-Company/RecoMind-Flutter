@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 
 class MultiLinsTextfield extends StatelessWidget {
-  const MultiLinsTextfield({super.key});
-
+  const MultiLinsTextfield({super.key,required this.controller});
+ final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       style: TextStyle(color: Colors.white,fontSize: 12),
       maxLines: 5,
       decoration: InputDecoration(
