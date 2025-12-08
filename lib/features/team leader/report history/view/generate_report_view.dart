@@ -21,6 +21,7 @@ class GenerateReportView extends StatefulWidget {
 }
 
 class _GenerateReportViewState extends State<GenerateReportView> {
+  TextEditingController controller = TextEditingController();
   bool isLoading = false ;
   reportRepo requestReport = reportRepo();
   Future<void> requestAnalysisTask() async {
@@ -28,13 +29,13 @@ class _GenerateReportViewState extends State<GenerateReportView> {
       setState(() {
         isLoading = true ;
       });
-      final task = await requestReport.getSetup();
+      final task = await requestReport.getSetup(
+        controller.text.trim()
+      );
 
       print("TASK ID = ${task.taskId}");
       print("Status = ${task.status}");
 
-      // وانت حر بقى تحفظه وتستخدمه بعد كدا
-      // مثلاً:
 
       if (task.status == "PENDING") {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: task.taskId,),));
@@ -92,7 +93,7 @@ class _GenerateReportViewState extends State<GenerateReportView> {
                 ],
               ),
               Gap(32),
-              textfield(hint: "Type here... (e.g. Sales growth ,...)"),
+              textfield(hint: "Type here... (e.g. Sales growth ,...)",controller: controller,),
               Gap(12),
               Row(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -104,7 +105,9 @@ class _GenerateReportViewState extends State<GenerateReportView> {
               Gap(32),
               ///button
               isLoading==true ? CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,):button(onPressed: (){
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: ""),));
                 requestAnalysisTask();
+                controller.clear();
               }, color: AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Generate", textColor: Colors.black)
             ],
           ),

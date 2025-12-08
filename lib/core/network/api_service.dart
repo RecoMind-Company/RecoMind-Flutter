@@ -236,3 +236,62 @@ class ApiServiceReport{
     }
   }
 }
+
+
+///service DB
+class ApiServiceDB{
+  final DioDB _dioClient = DioDB();
+
+  ///CRUD METHODS
+  ///get
+  Future<dynamic> get(String endPoint)async{
+    try {
+      final response = await _dioClient.dio.get(endPoint);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+
+
+
+  ///put||update
+  Future<dynamic> put(String endPoint,Map<String,dynamic> body)async{
+    try {
+      final response = await _dioClient.dio.put(endPoint,data: body);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+  ///post
+  Future<dynamic> post(String endPoint, dynamic body) async {
+    try {
+      final response = await _dioClient.dio.post(
+        endPoint,
+        data: body,
+        // cause of image as well
+        options: Options(
+          contentType: body is FormData
+              ? 'multipart/form-data'
+              : Headers.jsonContentType,
+        ),
+      );
+
+      return response.data;
+
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+
+  ///delete
+  Future<dynamic> delete(String endPoint,Map<String,dynamic> body)async{
+    try {
+      final response = await _dioClient.dio.delete(endPoint,data: body);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+}

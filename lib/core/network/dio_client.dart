@@ -144,3 +144,40 @@ class DioReport {
   /// this to get dio
   Dio get dio => _dio;
 }
+
+
+///DB
+class DioDB {
+  /// this to baseurl
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: "https://api.recomind.site/api/DbSetting",
+      connectTimeout: const Duration(milliseconds: 5000),
+      receiveTimeout: const Duration(milliseconds: 5000),
+      // لا تضف responseType هنا إذا كنت تريد JSON افتراضياً
+      responseType: ResponseType.json, // يمكن وضعه عند الطلب get/post
+    ),
+  );
+
+  ///to get token
+  DioClient() {
+    _dio.interceptors.add(LogInterceptor(
+        requestBody: true,
+        responseBody: true
+    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async{
+          final token =await PrefHelper.getToken(); ///from pref helper
+          if (token != null && token.isNotEmpty && token != 'guest') {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+      ),
+    );
+  }
+
+  /// this to get dio
+  Dio get dio => _dio;
+}

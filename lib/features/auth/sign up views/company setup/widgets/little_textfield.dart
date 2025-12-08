@@ -3,7 +3,8 @@ import 'package:gap/gap.dart';
 import 'package:recomind/shared/widgets/title_Text_Field.dart';
 
 class LittleTextfield extends StatelessWidget {
-  const LittleTextfield({super.key, required this.Title, required this.hint});
+  const LittleTextfield({super.key, required this.Title, required this.hint,this.controller});
+  final TextEditingController? controller;
 
   final String? Title, hint;
 
@@ -16,6 +17,8 @@ class LittleTextfield extends StatelessWidget {
           TitleTextField(text: Title!),
           Gap(4),
           TextField(
+            style: TextStyle(color: Colors.white),
+            controller: controller,
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: const TextStyle(

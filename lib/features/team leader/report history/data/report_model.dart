@@ -18,30 +18,26 @@ class CreateReportTaskModel {
   }
 }
 
-class TaskStatusResponse {
-  final String taskId;
-  final String status;
-  final String? result;
 
-  TaskStatusResponse({
-    required this.taskId,
-    required this.status,
-    this.result,
-  });
+
+
+class TaskStatusResponse {
+  final String? aiResponse;
+  final String? generatedDate;
+
+  TaskStatusResponse({this.aiResponse, this.generatedDate});
 
   factory TaskStatusResponse.fromJson(Map<String, dynamic> json) {
     return TaskStatusResponse(
-      taskId: json['TaskId'] ?? '',
-      status: json['Status'] ?? '',
-      result: json['Result'], // ممكن تكون null
+      aiResponse: json['aiResponse'],
+      generatedDate: json['generatedDate'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'task_id': taskId,
-      'status': status,
-      'result': result,
+      'aiResponse': aiResponse,
+      'generatedDate': generatedDate,
     };
   }
 }

@@ -10,6 +10,8 @@ import '../../../../../core/network/api_exceptions.dart';
 class SetupRepository {
   ApiServiceInvite apiService = ApiServiceInvite();
   ApiServiceSetup apiServiceSetup = ApiServiceSetup();
+  ApiServiceDB apiServiceDB = ApiServiceDB();
+
 
   ///invite
   Future<inviteModel> invite(String email) async {
@@ -158,6 +160,43 @@ class SetupRepository {
       print("Dio Message: ${e.message}");
       print("Internal Error: ${e.error}");
 
+      throw ApiException.handleError(e);
+    } catch (e) {
+      print("CATCH ERROR:");
+      print("Error: $e");
+      throw ApiError(message: e.toString());
+    }
+  }
+
+
+
+
+
+  ///post DB
+  Future<List<DBModel>> postDB(String name,String server,String dbName,String user,String password,String dbType)async{
+    try{
+      final response = await apiServiceDB.post("/company/fb140d33-7e96-474d-a06d-ab3a6c65d1a9",
+      {
+        "name": name,
+        "server": server,
+        "dbName": dbName,
+        "user": user,
+        "password": password,
+        "DbType": dbType,
+      }
+      );
+      print("RESPONSE: $response");
+      print("RESPONSE TYPE: ${response.runtimeType}");
+      if(response is ApiError){
+        throw response;
+      }
+      return [DBModel.fromJson(response)];
+    }on DioError catch (e) {
+      print("DIO ERROR:");
+      print("Status Code: ${e.response?.statusCode}");
+      print("Status Message: ${e.response?.statusMessage}");
+      print("Response Data: ${e.response?.data}");
+      print("Dio Message: ${e.message}");
       throw ApiException.handleError(e);
     } catch (e) {
       print("CATCH ERROR:");

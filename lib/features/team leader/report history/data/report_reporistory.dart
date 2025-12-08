@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/core/network/api_exceptions.dart';
 import 'package:recomind/core/network/api_service.dart';
@@ -10,9 +11,9 @@ class reportRepo{
   ApiServiceReport apiServiceReport = ApiServiceReport();
 
   /// send request
-  Future<CreateReportTaskModel> getSetup()async{
+  Future<CreateReportTaskModel> getSetup(String userRequest)async{
     try{
-      final response = await apiServiceReport.post("/teams", {});
+      final response = await apiServiceReport.post("/teams?userRequest=$userRequest", {});
       return CreateReportTaskModel.fromJson(response);
   }on DioError catch(e){
       throw ApiException.handleError(e);
@@ -22,24 +23,30 @@ class reportRepo{
     }
 
 
-    ///get report
   Future<TaskStatusResponse> getReportResult(String taskID) async {
-    try {
-      final response = await apiServiceReport.get(
-          "/teams/wewewe?taskId=${taskID}");
-      print("Raw response: ${response}"); // Debug
-      print("Response data: ${response.data}");
-      print("Response statusCode: ${response.statusCode}");
+    const delayBetweenRetries = Duration(seconds: 30);
 
-      if (response is ApiError) {
-        throw response;
+    while (true) {
+      try {
+        final response = await apiServiceReport.get(
+          "/teams/wewewe?taskId=$taskID",
+        );
+        if (response !is ApiError ||
+        response is Map<String,dynamic>) {
+        print(response['aiResponse']);
+        return TaskStatusResponse.fromJson(response);
+        } else if(response != Map<String,dynamic>)  {
+          print("Data not ready yet, retrying...");
+        }
+      } on DioError catch (e) {
+        print("DioError: ${e.message}, retrying...");
+      } catch (e) {
+        print("Error: $e, retrying...");
       }
-      final user = TaskStatusResponse.fromJson(response["data"]);
-      return user;
-    } on DioError catch (e) {
-      throw ApiException.handleError(e);
-    } catch (e) {
-      throw ApiError(message: e.toString());
+
+      await Future.delayed(delayBetweenRetries);
     }
   }
+
+
 }

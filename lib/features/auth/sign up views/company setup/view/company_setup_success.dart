@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_model.dart';
+import 'package:recomind/features/auth/sign%20up%20views/review%20setup/data/review_Model.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/view/review_all_setup.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class CompanySetupSuccess extends StatelessWidget {
-  const CompanySetupSuccess({super.key});
-
+  const CompanySetupSuccess({super.key,required this.review});
+final DBModel review;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +54,7 @@ class CompanySetupSuccess extends StatelessWidget {
                 textColor: Colors.black,
                 borderColor: AppColor.primaryColor,
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ReviewAllSetup(),));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ReviewAllSetup(dbList: review,),));
                 },
               ),
             ],

@@ -42,3 +42,30 @@ class setupModel {
   }
 
 }
+
+
+
+
+class DBModel {
+ final String? name,server,dbName,user,password,dbType,id;
+ DBModel({
+   this.user,
+   this.name,
+   this.server,
+   this.dbName,
+   this.password,
+   this.dbType,
+   this.id
+ });
+ factory DBModel.fromJson(Map<String, dynamic> json) {
+   return DBModel(
+     name: json['name'],
+     server: json['server'],
+     dbName: json['dbName'],
+     user: json['user'],
+     password: json['password'],
+     dbType: json['DbType'],
+     id: json['id'],
+   );
+ }
+}
