@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
+import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/data/robot_repo.dart';
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/widget/loading_bar.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 
-class Step1Widget extends StatelessWidget {
+class Step1Widget extends StatefulWidget {
   const Step1Widget({super.key});
+
+  @override
+  State<Step1Widget> createState() => _Step1WidgetState();
+}
+
+class _Step1WidgetState extends State<Step1Widget> {
 
   @override
   Widget build(BuildContext context) {
