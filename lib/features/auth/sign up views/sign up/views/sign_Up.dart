@@ -72,7 +72,7 @@ bool isLoading = false;
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message),backgroundColor: Colors.red,));
+          SnackBar(content: Text("Try Again"),backgroundColor: Colors.red,));
     }
   }
 

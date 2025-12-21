@@ -10,8 +10,8 @@ import 'package:recomind/shared/widgets/container.dart';
 
 
 class RobotRoot extends StatefulWidget {
-  const RobotRoot({super.key,required this.Id});
- final String Id ;
+   RobotRoot({super.key,required this.Id});
+ String Id;
   @override
   State<RobotRoot> createState() => _RobotRootState();
 }

@@ -77,7 +77,9 @@ class _ChatBotViewState extends State<ChatBotView> {
 
 
                   ///text field
-                  TextfieldSend()
+                  TextfieldSend(
+                   onSave: (v){},
+                  )
                 ],
               ),
             )),

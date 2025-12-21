@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/core/utils/pref_helper.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_model.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_repository.dart';
-import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_3.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/Cubit/company_setup_3_cubit.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/data/team_Repo.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/view/company_setup_3.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/company_diver.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/multi_lins_textfield.dart';
@@ -49,23 +52,26 @@ class _CompanySetup2State extends State<CompanySetup2> {
   ///update company //description
   Future<void> description() async {
     try{
-      final token = await PrefHelper.getToken();
       setState(() {
         isLoading = true;
       });
-      final user = await authRepo.description(
-          "$token",
+      final user = await authRepo.updateCompanyAndRefresh(
           getSetup?.name ?? "",
           getSetup?.industry ?? "",
           getSetup?.country ?? "",
           getSetup?.size ?? "",
           getSetup?.code ?? "",
-          _description.text.trim()
+          _description.text.trim(),
+          getSetup?.id ?? ""
       );
       if(user != null ){
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CompanySetup3()),
+          MaterialPageRoute(builder: (context) => BlocProvider(
+            create: (_) => CompanySetup3Cubit(TeamRepo())..getTeams(),
+            child: CompanySetup3(),
+          )
+          ),
         );
       }
       setState(() {
@@ -85,6 +91,7 @@ class _CompanySetup2State extends State<CompanySetup2> {
     // TODO: implement initState
     super.initState();
     getsetupdata();
+
   }
 
   @override
@@ -141,11 +148,15 @@ class _CompanySetup2State extends State<CompanySetup2> {
                     textColor: Colors.black,
                     borderColor: AppColor.primaryColor,
                     onPressed: (){
-                      // description();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CompanySetup3()),
-                      );
+                      description();
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => BlocProvider(
+                      //     create: (_) => CompanySetup3Cubit(TeamRepo())..getTeams(),
+                      //     child: CompanySetup3(),
+                      //   )
+                      //   ),
+                      // );
                     },
                   ),
                   Gap(16),
@@ -154,8 +165,9 @@ class _CompanySetup2State extends State<CompanySetup2> {
                     buttonText: "Back",
                     textColor: AppColor.primaryColor,
                     borderColor: AppColor.primaryColor,
-                    onPressed: (){
-                      Navigator.pop(context);
+                    onPressed: ()async{
+                      final token = await PrefHelper.getToken() ;
+                      print(token);
                     },
                   ),
                 ],

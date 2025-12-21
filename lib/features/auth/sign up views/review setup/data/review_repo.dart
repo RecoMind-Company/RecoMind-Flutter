@@ -7,7 +7,7 @@ import 'package:recomind/features/auth/sign%20up%20views/review%20setup/data/rev
 
 class reviewRepo{
   ApiServiceDB apiServiceDB = ApiServiceDB();
-  Future<List<DBModel>?> getDB() async {
+  Future<DBModel> getDB() async {
     const int maxRetries = 10;
     const Duration delayBetweenRetries = Duration(seconds: 2);
     int attempt = 0;
@@ -16,7 +16,7 @@ class reviewRepo{
       attempt++;
       try {
         final response = await apiServiceDB
-            .get("/company/fb140d33-7e96-474d-a06d-ab3a6c65d1a9");
+            .get("/api/DbSetting/for-ai");
 
         print("Attempt $attempt - RESPONSE TYPE: ${response.runtimeType}");
 
@@ -25,15 +25,13 @@ class reviewRepo{
         // لو response List
         if (response is List) {
           if (response.isNotEmpty) {
-            return response
-                .map((e) => DBModel.fromJson(e as Map<String, dynamic>))
-                .toList();
+            return DBModel.fromJson(response[0]);
           } else {
             print("Data not ready yet, retrying...");
           }
         } else if (response is Map<String, dynamic>) {
           // لو response Map
-          return [DBModel.fromJson(response)];
+          return DBModel.fromJson(response);
         } else {
           print("Unexpected response type: ${response.runtimeType}");
         }

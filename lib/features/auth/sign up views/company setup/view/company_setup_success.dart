@@ -9,8 +9,8 @@ import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class CompanySetupSuccess extends StatelessWidget {
-  const CompanySetupSuccess({super.key,required this.review});
-final DBModel review;
+  const CompanySetupSuccess({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +54,7 @@ final DBModel review;
                 textColor: Colors.black,
                 borderColor: AppColor.primaryColor,
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ReviewAllSetup(dbList: review,),));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ReviewAllSetup(),));
                 },
               ),
             ],

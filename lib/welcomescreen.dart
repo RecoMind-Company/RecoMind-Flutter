@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/view/log_in.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/views/sign_Up.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
+import 'package:recomind/shared/widgets/custom_text.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -20,29 +22,25 @@ class WelcomeScreen extends StatelessWidget {
                 'assets/welcome.png',
                 height: 272,
               ),
-              const SizedBox(height: 40),
+              Gap(40),
               Container(
                 width: double.infinity,
-                child: const Text(
-                  """RecoMind helps your company turn data into insights and insights into action""",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 20,
-                      height: 1.5,
-                      fontFamily: "Poppins"),
-                ),
+                child: const customText(
+                 text: """RecoMind helps your company turn data into insights and insights into action""",
+                  iscenter: true,
+                    color: Colors.white70,
+                      textsize: 20,
+                      ),
+
               ),
-              const SizedBox(height: 10),
-              const Text(
-                'all powered by AI',
-                style: TextStyle(
+              Gap(10),
+              const customText(
+                text: 'all powered by AI',
                     color: Colors.lightBlueAccent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    fontFamily: "Poppins"),
-              ),
-              const SizedBox(height: 60),
+                    fontweight: FontWeight.bold,
+                    textsize: 16,
+                    ),
+             Gap(60),
               //=========sinup button=========
               button(
                 onPressed: () {
@@ -55,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
                 buttonText: "Sign Up",
                 textColor: Colors.black,
               ),
-              const SizedBox(height: 15),
+              Gap(15),
               //=========login button=========
               button(
                 onPressed: () {

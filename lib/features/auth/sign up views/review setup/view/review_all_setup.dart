@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_model.dart';
+import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_repository.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/dropDown.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/data/review_repo.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/DB_info.dart';
@@ -13,12 +15,16 @@ import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/c
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/department.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/edit_button.dart';
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/start_AI_processing.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/Cubit/company_setup_3_cubit.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/data/team_Model.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/data/team_Repo.dart';
 import 'package:recomind/shared/widgets/show_dialog_comInfo.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/textfiekd.dart';
 import 'package:recomind/shared/widgets/title_Text_Field.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../plan & complete/view/plan.dart';
 import '../widget/show_dialog_dep.dart';
@@ -36,19 +42,53 @@ class _ReviewAllSetupState extends State<ReviewAllSetup> {
       ValueNotifier<String?>("EGYPT");
 late bool isclicked_info ;
 late bool isclicked_dep ;
+late bool click_more = false;
 DBModel dbModel = DBModel();
 
   reviewRepo review = reviewRepo();
+/// review Company setup
+  SetupRepository authRepo = SetupRepository();
+   setupModel? getSetup;
+  bool isLoading = false ;
+  /// get setup
+  Future<void> getsetupdata() async {
+    try {
+      final user = await authRepo.getSetup();
+      setState(() {
+        getSetup = user;
+      });
+    } on ApiError catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message), backgroundColor: Colors.red),
+      );
+    }
+  }
 
-///review DB
+  //===================department===================
+  // ================= GET TEAMS =================
+  final TeamRepo teamRepo = TeamRepo();
+  List<TeamNameModel> teams = [];
+
+  Future<void> getTeams() async {
+    try {
+
+      final result = await teamRepo.getTeamNames();
+      teams = result ?? [];
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  ///review DB
   Future<void> getDB() async {
     try {
       final userlist = await review.getDB();
 
-      if (userlist != null && userlist.isNotEmpty) {
-        dbModel = userlist[0];
+      if (userlist != null) {
+        dbModel = userlist;
         print(dbModel.id);
-        setState(() {}); // حدث الواجهة بعد التعيين
+        setState(() {});
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -82,6 +122,8 @@ DBModel dbModel = DBModel();
     // TODO: implement initState
     super.initState();
      getDB();
+     getsetupdata();
+     getTeams();
   }
 
   @override
@@ -93,227 +135,231 @@ DBModel dbModel = DBModel();
         await getDB();
       },
       child: Scaffold(
-        body: Stack(
-          children: [
-            Containerwid(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Gap(70),
+        body: Skeletonizer(
+          enabled: getSetup == null ? true : false,
+          child: Stack(
+            children: [
+              Containerwid(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Gap(70),
 
-                    ///title
-                    customText(
-                      text: "Review Setup",
-                      fontweight: FontWeight.w400,
-                      textsize: 28,
-                      color: Color(0xFFEEEEEE),
-                    ),
-                    Gap(10),
+                      ///title
+                      customText(
+                        text: "Review Setup",
+                        fontweight: FontWeight.w400,
+                        textsize: 28,
+                        color: Color(0xFFEEEEEE),
+                      ),
+                      Gap(10),
 
-                    ///subtitle
-                    Row(
-                      children: [
-                        customText(
-                          text:
-                              "Check your company details before completing\nthe setup.",
-                          fontweight: FontWeight.w400,
-                          textsize: 13,
-                          color: Color(0xFFEEEEEE),
-                          iscenter: false,
-                        ),
-                      ],
-                    ),
-                    Gap(20),
+                      ///subtitle
+                      Row(
+                        children: [
+                          customText(
+                            text:
+                                "Check your company details before completing\nthe setup.",
+                            fontweight: FontWeight.w400,
+                            textsize: 13,
+                            color: Color(0xFFEEEEEE),
+                            iscenter: false,
+                          ),
+                        ],
+                      ),
+                      Gap(20),
 
-                    ///Company info
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        customText(
-                          text: "Company info",
-                          textsize: 20,
-                          fontweight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                        EditButton(
-                          ontap: () {
-                            setState(() {
-                              isclicked_info = true;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    Gap(15),
-
-                    ///info
-                    ComInfo(
-                      title: "company Name",
-                      name: "CName",
-                    ),
-                    ComInfo(
-                      title: "Industry",
-                      name: "Software Development",
-                    ),
-                    ComInfo(
-                      title: "Country",
-                      name: "Egypt",
-                    ),
-                    ComInfo(
-                      title: "Company Size",
-                      name: "200 - 500",
-                    ),
-                    Row(
-                      children: [
-                        customText(
-                          text: "Company Description",
-                          fontweight: FontWeight.w400,
-                          textsize: 12,
-                          color: Color(0xFFB5B5B5),
-                        ),
-                      ],
-                    ),
-                    Gap(4),
-                    Column(
-                      children: [
-                        customText(
-                          text:
-                              """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt""",
-                          textsize: 14,
-                          fontweight: FontWeight.w400,
-                          color: Color(0xFFFFFFFF),
-                        ),
-                        Row(
+                      ///Company info
+                      Skeletonizer(
+                        enabled: isLoading == true ? true : false,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             customText(
-                              text: """ut labore et dolore magna...""",
-                              textsize: 14,
+                              text: "Company info",
+                              textsize: 20,
                               fontweight: FontWeight.w400,
-                              color: Color(0xFFFFFFFF),
+                              color: Colors.white,
                             ),
-                            Gap(5),
-                            GestureDetector(
-                                onTap: () {},
-                                child: customText(
-                                  text: "View full description",
-                                  color: AppColor.primaryColor,
-                                  fontweight: FontWeight.w400,
-                                  textsize: 14,
-                                  isunderline: true,
-                                ))
+                            EditButton(
+                              ontap: () {
+                                setState(() {
+                                  isclicked_info = true;
+                                });
+                              },
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                    Gap(24),
-                    Divider(
-                      color: Color(0xFF03294A),
-                      thickness: 1,
-                    ),
-                    Gap(24),
+                      ),
+                      Gap(15),
 
-                    ///DEPARTMENT
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        customText(
-                          text: "Department",
-                          textsize: 20,
-                          fontweight: FontWeight.w400,
-                          color: Colors.white,
+                      ///info
+                      Skeletonizer(
+                        enabled: isLoading == true ? true : false,
+                        child: ComInfo(
+                          title: "company Name",
+                          name: getSetup?.name ??"CName",
                         ),
-                        EditButton(
-                          ontap: () {setState(() {
-                            isclicked_dep = !isclicked_dep;
-                          });},
-                        ),
-                      ],
-                    ),
-                    Gap(15),
-                    Department(
-                      depList: depList,
-                    ),
-                    Gap(12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        customText(
-                          text: "+3 more departments",
+                      ),
+                      ComInfo(
+                        title: "Industry",
+                        name: getSetup?.industry??"Software Development",
+                      ),
+                      ComInfo(
+                        title: "Country",
+                        name: getSetup?.country??"Egypt",
+                      ),
+                      ComInfo(
+                        title: "Company Size",
+                        name: "200 - 500", //////////// this code ///////////
+                      ),
+                      Row(
+                        children: [
+                          customText(
+                            text: "Company Description",
+                            fontweight: FontWeight.w400,
+                            textsize: 12,
+                            color: Color(0xFFB5B5B5),
+                          ),
+                        ],
+                      ),
+                      Gap(4),
+                      Row(
+                        children: [
+                          customText(text: getSetup?.description??"",fontweight: FontWeight.w400,textsize: 12,color: Color(0xFFEEEEEE),iscenter: false,),
+                        ],
+                      ),
+                      Gap(24),
+                      Divider(
+                        color: Color(0xFF03294A),
+                        thickness: 1,
+                      ),
+                      Gap(24),
+
+                      ///DEPARTMENT
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          customText(
+                            text: "Department",
+                            textsize: 20,
+                            fontweight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                          EditButton(
+                            ontap: () {setState(() {
+                              isclicked_dep = !isclicked_dep;
+                            });},
+                          ),
+                        ],
+                      ),
+                      Gap(15),
+                      Department(
+                        isclicked: click_more,
+                        depList:teams,
+                      ),
+                      Gap(12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                click_more = !click_more ;
+                              });
+                            },
+                            child: customText(
+                              text: teams.length <= 3 ? "":click_more==true ? "less departments":"+${teams.length-3} more departments",
+                              color: AppColor.primaryColor,
+                              fontweight: FontWeight.w400,
+                              textsize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Gap(24),
+                      Divider(
+                        color: Color(0xFF03294A),
+                        thickness: 1,
+                      ),
+                      Gap(24),
+
+                      ///DB_Setup
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          customText(
+                            text: "Database Setup",
+                            textsize: 20,
+                            fontweight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                          EditButton(
+                            ontap: () {},
+                          ),
+                        ],
+                      ),
+                      Gap(15),
+                      DbInfo(title: "Server", name: dbModel.server ?? "sales"),
+                      Gap(8),
+                      Divider(
+                        color: Color(0xFF03294A),
+                        thickness: 1,
+                      ),
+                      Gap(8),
+                      DbInfo(title: "Database Name", name: dbModel.dbName ?? "sales"),
+                      Gap(8),
+                      Divider(
+                        color: Color(0xFF03294A),
+                        thickness: 1,
+                      ),
+                      Gap(8),
+                      DbInfo(title: "User ID", name: dbModel.user ?? ""),
+                      Gap(32),
+
+                      ///button
+                      button(
+                          onPressed: () {
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartAiProcessing(),));
+                          },
                           color: AppColor.primaryColor,
-                          fontweight: FontWeight.w400,
-                          textsize: 12,
-                        ),
-                      ],
-                    ),
-                    Gap(24),
-                    Divider(
-                      color: Color(0xFF03294A),
-                      thickness: 1,
-                    ),
-                    Gap(24),
-
-                    ///DB_Setup
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        customText(
-                          text: "Database Setup",
-                          textsize: 20,
-                          fontweight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                        EditButton(
-                          ontap: () {},
-                        ),
-                      ],
-                    ),
-                    Gap(15),
-                    DbInfo(title: "Server", name: "${dbModel.dbName}"),
-                    Gap(8),
-                    Divider(
-                      color: Color(0xFF03294A),
-                      thickness: 1,
-                    ),
-                    Gap(8),
-                    DbInfo(title: "Database Name", name: "${dbModel.dbType}"),
-                    Gap(8),
-                    Divider(
-                      color: Color(0xFF03294A),
-                      thickness: 1,
-                    ),
-                    Gap(8),
-                    DbInfo(title: "User ID", name: "${dbModel.user}"),
-                    Gap(32),
-
-                    ///button
-                    button(
-                        onPressed: () {
-                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartAiProcessing(),));
-                        },
-                        color: AppColor.primaryColor,
-                        borderColor: AppColor.primaryColor,
-                        buttonText: "Finish Setup",
-                        textColor: Colors.black),
-                    Gap(30)
-                  ],
+                          borderColor: AppColor.primaryColor,
+                          buttonText: "Finish Setup",
+                          textColor: Colors.black),
+                      Gap(30)
+                    ],
+                  ),
                 ),
-              ),
-            )),
-            isclicked_info == true
-                ?
-            ShowDialogCominfo(
-                    ontap: () {
-                      setState(() {
-                        isclicked_info = false;
-                      });
-                    },
-                  ): Text(""),
-            isclicked_dep ==true ? ShowDialogComDep(list: depList,ontap: (){setState(() {
+              )),
+              isclicked_info == true
+                  ?
+              ShowDialogCominfo(
+                      ontap: () {
+                        setState(() {
+                          isclicked_info = false;
+                        });
+                        getsetupdata();
+                      },
+                    ): const SizedBox.shrink(),
+      isclicked_dep == true
+          ? BlocProvider(
+        create: (_) => CompanySetup3Cubit(teamRepo)..getTeams(),
+        child: ShowDialogComDep(
+          list: teams,
+          ontap: () {
+            setState(() {
               isclicked_dep = false;
-            });},) : Text(""),
-          ],
+            });
+            getTeams(); // علشان نعمل refresh بعد add / delete
+          },
+        ),
+      )
+          : const SizedBox.shrink(),
+
+            ],
+          ),
         ),
       ),
     );

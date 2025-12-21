@@ -6,7 +6,7 @@ import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/data/login_model.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_repository.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_5.dart';
-import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/invite_TL.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/view/invite_TL.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/company_diver.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/upload_Button2.dart';
@@ -41,7 +41,7 @@ class _CompanySetup4State extends State<CompanySetup4> {
         _emailController.text.trim(),
       );
       if(user != null ){
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CompanySetup5()),
         );
@@ -177,7 +177,11 @@ class _CompanySetup4State extends State<CompanySetup4> {
                       textColor: Colors.black,
                       borderColor: AppColor.primaryColor,
                       onPressed: (){
-                        invite();
+                        // invite();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CompanySetup5()),
+                        );
                       },
                     ),
                     Gap(16),

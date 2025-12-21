@@ -36,7 +36,7 @@ class _PlanState extends State<Plan> {
                     Image(image: AssetImage("assets/plan.png")),
                     Padding(
                       padding: const EdgeInsets.only(left: 25 , top: 25),
-                      child: customText(text: "500 LE / Month",color: Color(0xffEEEEEE),textsize: 20,fontweight: FontWeight.bold),),
+                      child: customText(text:r"$ LE / Month",color: Color(0xffEEEEEE),textsize: 20,fontweight: FontWeight.bold),),
                     Star(text:" AI-Generatd Plans"),
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),

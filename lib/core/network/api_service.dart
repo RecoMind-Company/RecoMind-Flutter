@@ -121,62 +121,51 @@ class ApiServiceInvite{
 
 
 ///service seutp company
-class ApiServiceSetup{
+class ApiServiceSetup {
   final Diosetup _dioClient = Diosetup();
 
-  ///CRUD METHODS
-  ///get
-  Future<dynamic> get(String endPoint)async{
-    try {
-      final response = await _dioClient.dio.get(endPoint);
-      return response.data;
-    } on DioError catch (e) {
-      return ApiException.handleError(e);
-    }
-  }
-
-
-
-  ///put||update
-  Future<dynamic> put(String endPoint,Map<String,dynamic> body)async{
-    try {
-      final response = await _dioClient.dio.put(endPoint,data: body);
-      return response.data;
-    } on DioError catch (e) {
-      return ApiException.handleError(e);
-    }
-  }
-  ///post
   Future<dynamic> post(String endPoint, dynamic body) async {
     try {
       final response = await _dioClient.dio.post(
         endPoint,
         data: body,
-        // cause of image as well
-        options: Options(
-          contentType: body is FormData
-              ? 'multipart/form-data'
-              : Headers.jsonContentType,
-        ),
       );
 
       return response.data;
 
     } on DioError catch (e) {
-      return ApiException.handleError(e);
+      throw ApiException.handleError(e);
     }
   }
 
-  ///delete
-  Future<dynamic> delete(String endPoint,Map<String,dynamic> body)async{
+  Future<dynamic> get(String endPoint) async {
     try {
-      final response = await _dioClient.dio.delete(endPoint,data: body);
+      final response = await _dioClient.dio.get(endPoint);
       return response.data;
     } on DioError catch (e) {
-      return ApiException.handleError(e);
+      throw ApiException.handleError(e);
+    }
+  }
+
+  Future<dynamic> put(String endPoint, Map<String, dynamic> body) async {
+    try {
+      final response = await _dioClient.dio.put(endPoint, data: body);
+      return response.data;
+    } on DioError catch (e) {
+      throw ApiException.handleError(e);
+    }
+  }
+
+  Future<dynamic> delete(String endPoint, Map<String, dynamic> body) async {
+    try {
+      final response = await _dioClient.dio.delete(endPoint, data: body);
+      return response.data;
+    } on DioError catch (e) {
+      throw ApiException.handleError(e);
     }
   }
 }
+
 
 
 ///service report
@@ -296,9 +285,127 @@ class ApiServiceDB{
   }
 }
 
-
+///service Robot
 class ApiServiceRobot{
   final DioRobot _dioClient = DioRobot();
+
+  ///CRUD METHODS
+  ///get
+  Future<dynamic> get(String endPoint)async{
+    try {
+      final response = await _dioClient.dio.get(endPoint);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+
+
+
+  ///put||update
+  Future<dynamic> put(String endPoint,Map<String,dynamic> body)async{
+    try {
+      final response = await _dioClient.dio.put(endPoint,data: body);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+  ///post
+  Future<dynamic> post(String endPoint, dynamic body) async {
+    try {
+      final response = await _dioClient.dio.post(
+        endPoint,
+        data: body,
+        // cause of image as well
+        options: Options(
+          contentType: body is FormData
+              ? 'multipart/form-data'
+              : Headers.jsonContentType,
+        ),
+      );
+
+      return response.data;
+
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+
+  ///delete
+  Future<dynamic> delete(String endPoint,Map<String,dynamic> body)async{
+    try {
+      final response = await _dioClient.dio.delete(endPoint,data: body);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+}
+
+
+/// service Team
+class ApiServiceTeam{
+  final DioTeam _dioClient = DioTeam();
+
+  ///CRUD METHODS
+  ///get
+  Future<dynamic> get(String endPoint)async{
+    try {
+      final response = await _dioClient.dio.get(endPoint);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+
+
+
+  ///put||update
+  Future<dynamic> put(String endPoint,Map<String,dynamic> body)async{
+    try {
+      final response = await _dioClient.dio.put(endPoint,data: body);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+  ///post
+  Future<dynamic> post(String endPoint, dynamic body) async {
+    try {
+      final response = await _dioClient.dio.post(
+        endPoint,
+        data: body,
+        // cause of image as well
+        options: Options(
+          contentType: body is FormData
+              ? 'multipart/form-data'
+              : Headers.jsonContentType,
+        ),
+      );
+
+      return response.data;
+
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+
+  ///delete
+  Future<dynamic> delete(String endPoint)async{
+    try {
+      final response = await _dioClient.dio.delete(endPoint);
+      return response.data;
+    } on DioError catch (e) {
+      return ApiException.handleError(e);
+    }
+  }
+}
+
+
+/// service ChatBot
+class ApiServiceChatBot{
+  final DioTeam _dioClient = DioTeam();
 
   ///CRUD METHODS
   ///get

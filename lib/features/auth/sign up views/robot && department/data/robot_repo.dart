@@ -8,7 +8,7 @@ class RobotRep{
 
   Future<String> requestRobot() async {
     try{
-      final response = await apiServiceRobot.post("/dataAssing/fb140d33-7e96-474d-a06d-ab3a6c65d1a9","/");
+      final response = await apiServiceRobot.get("/dataAssing");
       if(response != null ){
         print("$response");
         return response;
@@ -23,7 +23,7 @@ class RobotRep{
 
 
   Future<String> getRobot(String id) async {
-    const delayBetweenRetries = Duration(seconds: 6);
+    const delayBetweenRetries = Duration(seconds: 30);
 
     while (true) {
       try {

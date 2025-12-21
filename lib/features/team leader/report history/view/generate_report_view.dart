@@ -105,8 +105,8 @@ class _GenerateReportViewState extends State<GenerateReportView> {
               Gap(32),
               ///button
               isLoading==true ? CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,):button(onPressed: (){
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: ""),));
-                requestAnalysisTask();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(),));
+                // requestAnalysisTask();
                 controller.clear();
               }, color: AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Generate", textColor: Colors.black)
             ],

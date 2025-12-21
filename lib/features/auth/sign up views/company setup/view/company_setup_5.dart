@@ -48,7 +48,7 @@ bool isLoading = false ;
         print(dbModel!.id);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => CompanySetupSuccess(review: userlist[0],)),
+          MaterialPageRoute(builder: (context) => CompanySetupSuccess()),
         );
       }
       setState(() {
@@ -95,7 +95,7 @@ bool isLoading = false ;
                 Gap(16),
                 TitleTextField(text: "Password"),
                 Gap(4),
-                textfield(hint: "Enter DB Password",icon: CupertinoIcons.lock,controller: controllerPassword),
+                textfield(isPassword: true,hint: "Enter DB Password",icon: CupertinoIcons.lock,controller: controllerPassword),
                 Gap(32),
 
                 /// buttons
@@ -106,6 +106,7 @@ bool isLoading = false ;
                   borderColor: AppColor.primaryColor,
                   onPressed: (){
                     postDB();
+
                   },
                 ),
                 Gap(16),

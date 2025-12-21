@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/core/network/api_service.dart';
+import 'package:recomind/core/network/dio_client.dart';
 import 'package:recomind/core/utils/pref_helper.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/company_model.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/data/signup_model.dart';
@@ -8,6 +11,8 @@ import 'package:recomind/features/auth/sign%20up%20views/sign%20up/data/signup_m
 import '../../../../../core/network/api_exceptions.dart';
 
 class SetupRepository {
+  ApiService _apiService = ApiService();
+  DioClient _dioClient = DioClient();
   ApiServiceInvite apiService = ApiServiceInvite();
   ApiServiceSetup apiServiceSetup = ApiServiceSetup();
   ApiServiceDB apiServiceDB = ApiServiceDB();
@@ -36,25 +41,19 @@ class SetupRepository {
     }
   }
 
+
+
   ///setup company
-  Future<setupModel> setup({
-    required String adminId,
-    required String name,
-    required String industry,
-    required String country,
-    required String size,
-    required String website,
-  }) async {
+  Future<void> setup({required String name, required String industry, required String country, required String size, required String website,}) async {
     try {
+
       final response = await apiServiceSetup.post("/create", {
-        "adminId": adminId,
         "name": name,
         "industry": industry,
         "country": country,
         "size": size,
         "code": website,
-        "description": "",
-        "subscriptionId": "your-subscription-id-here",
+        "subscriptionId": ""
       });
 
       print("RESPONSE DATA: $response");
@@ -63,10 +62,8 @@ class SetupRepository {
       if (response is ApiError) {
         throw response;
       }
-
-      final model = setupModel.fromJson(response);
-      print("repo success");
-      return model;
+      print(response);
+      return response;
 
     } on DioError catch (e) {
       print("---- DIO ERROR ----");
@@ -79,7 +76,6 @@ class SetupRepository {
       print("Request Path: ${e.requestOptions.path}");
       print("Request Data: ${e.requestOptions.data}");
       print("Dio Message: ${e.message}");
-
       print("-------------------");
 
       throw ApiException.handleError(e);
@@ -91,60 +87,47 @@ class SetupRepository {
       throw ApiError(message: e.toString());
     }
   }
-
-
-
   ///update description
-  Future<setupModel> description(String name, String industry, String country, String size, String website,String description,String AdminId) async {
+  /// UPDATE + REFRESH
+  Future<setupModel> updateCompanyAndRefresh(
+    String name, String industry, String country, String size, String website, String description, String id,
+  ) async {
     try {
-      final response = await apiServiceSetup.put(
-        "/759e29ff-89f0-45da-8e9b-bd59bea571cb",
+      /// 1️⃣ UPDATE
+      final updateResponse = await apiServiceSetup.put(
+        "/Update/$id",
         {
-          "adminId":AdminId,
-          "name": name,
-          "industry": industry,
-          "country": country,
-          "size": size,
-          "code": website,
-          "description": description
+          "name": name, "industry": industry, "country": country, "size": size, "code": website, "description": description, "subscriptionId": ""
         },
       );
-      print("RESPONSE: $response");
-      print("RESPONSE TYPE: ${response.runtimeType}");
 
+      if (updateResponse is ApiError) throw updateResponse;
 
-      if (response is ApiError) {
-        throw response;
+      final setup = setupModel.fromJson(updateResponse);
+      print("✅ COMPANY UPDATED");
+print(updateResponse);
+      /// 2️⃣ REFRESH TOKEN (بالكوكي)
+      final refreshResponse =
+      await _apiService.get("/refresh-token");
+
+      if (refreshResponse is ApiError) throw refreshResponse;
+
+      final newToken = refreshResponse["token"];
+
+      if (newToken != null && newToken.isNotEmpty) {
+        await PrefHelper.saveToken(newToken);
+        print("✅ TOKEN REFRESHED AFTER UPDATE");
       }
 
-      final user = setupModel.fromJson(
-        response is Map ? response : response.data,
-      );
-
-      return user;
-    }  on DioError catch (e) {
-      print("DIO ERROR:");
-      print("Status Code: ${e.response?.statusCode}");
-      print("Status Message: ${e.response?.statusMessage}");
-      print("Response Data: ${e.response?.data}");
-      print("Dio Message: ${e.message}");
-      print("Internal Error: ${e.error}");
-
-      throw ApiException.handleError(e);
+      return setup;
     } catch (e) {
-      print("CATCH ERROR:");
-      print("Error: $e");
-      throw ApiError(message: e.toString());
+      rethrow;
     }
   }
-
-
-
-
-  ///get setup
+  ///get Company
   Future<setupModel> getSetup()async{
     try{
-      final response = await apiServiceSetup.get("/759e29ff-89f0-45da-8e9b-bd59bea571cb");
+      final response = await apiServiceSetup.get("/GetByAdminId");
       print("RESPONSE: $response");
       print("RESPONSE TYPE: ${response.runtimeType}");
       if(response is ApiError){
@@ -171,11 +154,10 @@ class SetupRepository {
 
 
 
-
   ///post DB
   Future<List<DBModel>> postDB(String name,String server,String dbName,String user,String password,String dbType)async{
     try{
-      final response = await apiServiceDB.post("/company/fb140d33-7e96-474d-a06d-ab3a6c65d1a9",
+      final response = await apiServiceDB.post("/api/DbSetting/create",
       {
         "name": name,
         "server": server,

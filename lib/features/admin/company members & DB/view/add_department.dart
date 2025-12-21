@@ -60,7 +60,7 @@ class _ShowDialogComDepState extends State<AddDepartment> {
             Gap(32),
 
             ///add department
-            EnterDepartment(),
+            EnterDepartment(onTap: (){},Controller: TextEditingController(),),
             Gap(32),
             button(
               color: Color(0xFF060B1B),

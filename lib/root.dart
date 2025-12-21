@@ -25,11 +25,15 @@ class _rootState extends State<root> {
   @override
   void initState() {
     controller = PageController(initialPage: currentpage);
-     Admin == true? pages = [
+
+     Admin == true?
+         ///Admin
+     pages = [
       HomeViewAdmin(),
       InviteView(),
-      CompanyView(),
-    ]: pages = [
+      CompanyView(),]
+     /// team leader
+         : pages = [
        HomeTlView(),
        ChatBotView(),
        ReportView(),

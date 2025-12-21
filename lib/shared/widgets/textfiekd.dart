@@ -1,25 +1,36 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class textfield extends StatelessWidget {
+class textfield extends StatefulWidget {
   textfield({
     super.key,
     required this.hint,
     this.icon,
     this.controller,
     this.labeltxt,
+    this.onchange,
+    this.isPassword
   });
 
   final String hint;
   final IconData? icon;
   final TextEditingController? controller;
   String? labeltxt;
+  final Function(String)? onchange;
+  late final bool? isPassword;
 
   @override
+  State<textfield> createState() => _textfieldState();
+}
+
+class _textfieldState extends State<textfield> {
+  bool isclicked = false ;
+  @override
   Widget build(BuildContext context) {
-    if (labeltxt != null) {
+    if (widget.labeltxt != null) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          "$labeltxt",
+          "${widget.labeltxt}",
           style: const TextStyle(color: Colors.white70, fontSize: 14),
         ), SizedBox(height: 8),
         Container(
@@ -30,12 +41,12 @@ class textfield extends StatelessWidget {
           ),
           child: SizedBox(height: 52,
             child: TextField(
-              controller: controller??null,
+              controller: widget.controller??null,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                prefixIcon: icon == null ? null : Icon(
-                    icon, color: Colors.white54),
-                hintText: hint,
+                prefixIcon: widget.icon == null ? null : Icon(
+                    widget.icon, color: Colors.white54),
+                hintText: widget.hint,
                 hintStyle: const TextStyle(
                     color: Color(0xFFB8ADAD), fontFamily: "Poppins"),
                 border: InputBorder.none,
@@ -48,12 +59,14 @@ class textfield extends StatelessWidget {
     } else {
       return SizedBox(height: 65,
         child: TextField(
-          controller: controller,
+          obscureText: widget.isPassword == true ? isclicked==true? false:true : false,
+          onChanged: widget.onchange,
+          controller: widget.controller,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
-              prefixIcon: icon == null ? null : Icon(
-                  icon, color: Colors.white54),
-              hintText: hint,
+              prefixIcon: widget.icon == null ? null : Icon(
+                  widget.icon, color: Colors.white54),
+              hintText: widget.hint,
               hintStyle: const TextStyle(
                   color: Color(0xFFB8ADAD), fontFamily: "Poppins" , fontSize: 14),
               border: InputBorder.none,
@@ -64,7 +77,22 @@ class textfield extends StatelessWidget {
                   borderSide: BorderSide(color: Color(0xffEFEFEF),width: 1),
                   borderRadius: BorderRadius.circular(8)),
               contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-
+            suffixIcon: widget.isPassword == true ? isclicked == false
+                ? GestureDetector(
+              onTap: () {
+                setState(() {
+                  isclicked = true;
+                });
+              },
+              child: Icon(CupertinoIcons.eye_fill, color: Colors.white,),):
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isclicked = false;
+                });
+              },
+              child: Icon(CupertinoIcons.eye_slash_fill,color: Colors.white,),)
+                : null,
           ),
         ),
       );

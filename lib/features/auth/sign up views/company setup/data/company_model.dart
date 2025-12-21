@@ -14,7 +14,7 @@ class inviteModel {
 
 
 class setupModel {
-  String? name , industry , country , size,code,description,subscriptionId,adminId,token;
+  String? name , industry , country , size,code,description,subscriptionId,adminId,id;
   setupModel({
     this.name,
     this.industry,
@@ -24,10 +24,11 @@ class setupModel {
     this.description,
     this.subscriptionId,
     this.adminId,
-    this.token
+    this.id
 });
   factory setupModel.fromJson(Map<String, dynamic> json) {
     return setupModel(
+      id: json['id'],
       name: json['name'],
       industry: json['industry'],
       country: json['country'],
@@ -35,8 +36,6 @@ class setupModel {
       code: json['code'],
       description: json['description'],
       subscriptionId: json['subscriptionId'],
-      adminId: json['adminId'],
-      token: json['token'],
     );
 
   }

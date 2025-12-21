@@ -35,25 +35,24 @@ class _CompanySetup1State extends State<CompanySetup1> {
   SetupRepository authRepo = SetupRepository();
 
   Future<void> setup() async{
+    final token = await PrefHelper.getToken();
+    print("this is toooooooken : $token");
     try{
-      final token = await PrefHelper.getToken();
       setState(() {
         isLoading = true;
       });
       final user = await authRepo.setup(
-        adminId: token ?? "",
         name: _nameController.text.trim(),
         industry: _business_Industry_Controller.text.trim(),
         country: _Country_Controller.text.trim(),
         size: _Company_Size_Controller.text.trim(),
         website: _webController.text.trim(),
       );
-      if(user != null ){
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CompanySetup2()),
         );
-      }
       setState(() {
         isLoading = false;
       });
@@ -118,11 +117,11 @@ class _CompanySetup1State extends State<CompanySetup1> {
                 right: 18,
                 child: isLoading==true ?Center(child: CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,),):button(
                   onPressed: () {
-                    // setup();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CompanySetup2()),
-                    );
+                    setup();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => CompanySetup2()),
+                    // );
                   },
                   color: AppColor.primaryColor,
                   borderColor: AppColor.primaryColor,

@@ -20,15 +20,11 @@ class Department1Verification extends StatefulWidget {
 class _Department1VerificationState extends State<Department1Verification> {
 final List department = [
   "Sales",
-  "Marketing",
-  "Finance",
-  "Human Resources",
-  "Technology",
-  "Sales",
-  "Marketing",
-  "Finance",
-  "Human Resources",
-  "Technology",
+  "HR",
+  "Operations",
+  "Production",
+  "Purchasing",
+  "Shared/General"
 ];
 bool isclicked = false;
 
