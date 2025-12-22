@@ -13,7 +13,7 @@ class Star extends StatelessWidget {
       child: Container(
         child: Row(children: [
           Image(image: AssetImage("assets/star.png"))
-          ,customText(text:text!,color: Color(0xffEEEEEE),textsize: 16),
+          ,customText(text:text,color: Color(0xffEEEEEE),textsize: 16),
         ],),
       ),
     );
