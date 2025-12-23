@@ -405,7 +405,7 @@ class ApiServiceTeam{
 
 /// service ChatBot
 class ApiServiceChatBot{
-  final DioTeam _dioClient = DioTeam();
+  final DioChatBot _dioClient = DioChatBot();
 
   ///CRUD METHODS
   ///get

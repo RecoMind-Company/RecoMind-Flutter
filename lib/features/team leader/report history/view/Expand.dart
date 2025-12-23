@@ -15,9 +15,10 @@ import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/diver_wid.dart';
 
 class ExpandScreen extends StatefulWidget {
-  const ExpandScreen({super.key, this.taskId});
+  const ExpandScreen({super.key, this.taskId,this.teamId});
 
   final String? taskId;
+  final String? teamId;
 
   @override
   State<ExpandScreen> createState() => _ExpandScreenState();
@@ -34,7 +35,7 @@ class _ExpandScreenState extends State<ExpandScreen> {
       setState(() {
         isLoading = true;
       });
-      final result = await resultrepo.getReportResult("${widget.taskId}");
+      final result = await resultrepo.getReportResult(widget.teamId,widget.taskId);
       print("TASK ID = ${result.aiResponse}");
       print("Status = ${result.generatedDate}");
       fixedText = result.aiResponse?.replaceAll(RegExp(r'\\\\n'), r'\n');
@@ -213,7 +214,7 @@ class _ExpandScreenState extends State<ExpandScreen> {
                           right: 30,
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreen(),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreen(teamId: widget.teamId,taskId: widget.taskId,fixedText: fixedText.toString(),),));
                             },
                             child: Container(
                               height: 40,

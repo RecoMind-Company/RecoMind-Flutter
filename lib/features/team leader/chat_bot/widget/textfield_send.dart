@@ -4,18 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
 class TextfieldSend extends StatelessWidget {
-  TextfieldSend({super.key, required this.onSave});
+  TextfieldSend({super.key,required this.controller, required this.sendMessage});
 
-  final Function(String message) onSave;
-  final TextEditingController _controller = TextEditingController();
-
-  void _sendMessage() {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-
-    onSave(text);
-    _controller.clear();
-  }
+  final TextEditingController controller ;
+  final Function() sendMessage ;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +19,7 @@ class TextfieldSend extends StatelessWidget {
           SizedBox(
             width: 279,
             child: TextField(
-              controller: _controller,
-              onSubmitted: (_) => _sendMessage(),
+              controller: controller,
               maxLines: null,
               minLines: 1,
               keyboardType: TextInputType.multiline,
@@ -65,7 +56,7 @@ class TextfieldSend extends StatelessWidget {
           ),
           const Gap(10),
           GestureDetector(
-            onTap: _sendMessage,
+            onTap: sendMessage,
             child: SizedBox(
               width: 40,
               height: 40,

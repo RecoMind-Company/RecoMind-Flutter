@@ -24,7 +24,7 @@ final List department = [
   "Operations",
   "Production",
   "Purchasing",
-  "Shared/General"
+  "PR"
 ];
 bool isclicked = false;
 

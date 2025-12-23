@@ -57,8 +57,9 @@ class _LoginviewState extends State<Loginview> {
       if(user != null ){
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => root()),
+          MaterialPageRoute(builder: (context) => root(Role: user[0],)),
         );
+        print(user);
       }
       setState(() {
         isLoading = false;

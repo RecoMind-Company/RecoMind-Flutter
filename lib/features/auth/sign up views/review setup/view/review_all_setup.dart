@@ -114,7 +114,20 @@ DBModel dbModel = DBModel();
       );
     }
   }
-
+Future<void> refresh ()async{
+    try{
+      await review.refresh();
+    }on ApiError catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } catch (e) {
+      print("Unexpected error: $e");
+    }
+    }
   @override
   void initState() {
      isclicked_info=false ;
@@ -226,9 +239,16 @@ DBModel dbModel = DBModel();
                         ],
                       ),
                       Gap(4),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          customText(text: getSetup?.description??"",fontweight: FontWeight.w400,textsize: 12,color: Color(0xFFEEEEEE),iscenter: false,),
+                          customText(
+                            text: getSetup?.description ?? "",
+                            fontweight: FontWeight.w400,
+                            textsize: 12,
+                            color: const Color(0xFFEEEEEE),
+                            iscenter: false,
+                          ),
                         ],
                       ),
                       Gap(24),
@@ -323,6 +343,7 @@ DBModel dbModel = DBModel();
                       button(
                           onPressed: () {
                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartAiProcessing(),));
+                           refresh ();
                           },
                           color: AppColor.primaryColor,
                           borderColor: AppColor.primaryColor,

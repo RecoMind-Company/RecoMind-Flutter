@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:recomind/features/admin/add%20TL%20&%20manager/view/invite_TL.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/view/log_in.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_1.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_2.dart';
+import 'package:recomind/features/auth/sign%20up%20views/plan%20&%20complete/view/plan.dart';
+import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/step_1_widget.dart';
 import 'package:recomind/features/auth/sign%20up%20views/teams/view/company_setup_3.dart';
 import 'package:recomind/features/auth/sign%20up%20views/teams/view/company_setup_4.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_5.dart';
@@ -30,7 +33,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:Loginview(),
+      home:splash_screen(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/team%20leader/report%20history/data/report_model.dart';
 import 'package:recomind/features/team%20leader/report%20history/data/report_reporistory.dart';
 import 'package:recomind/features/team%20leader/report%20history/view/Expand.dart';
 import 'package:recomind/shared/widgets/button.dart';
@@ -24,26 +25,23 @@ class _GenerateReportViewState extends State<GenerateReportView> {
   TextEditingController controller = TextEditingController();
   bool isLoading = false ;
   reportRepo requestReport = reportRepo();
+  CreateReportTaskModel? requist;
   Future<void> requestAnalysisTask() async {
     try {
       setState(() {
         isLoading = true ;
       });
-      final task = await requestReport.getSetup(
-        controller.text.trim()
+      final task = await requestReport.user(
       );
-
-      print("TASK ID = ${task.taskId}");
-      print("Status = ${task.status}");
-
-
-      if (task.status == "PENDING") {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: task.taskId,),));
-      }
+      print(task);
       setState(() {
         isLoading = false ;
+        requist = task;
       });
-
+        final response = await requestReport.getSetup(
+            controller.text.trim(), requist!.companyId, requist!.teamName);
+        print(response);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: response.task_id,teamId: task.teamId,),));
     } on ApiError catch (e) {
       setState(() {
         isLoading = false ;
@@ -105,8 +103,7 @@ class _GenerateReportViewState extends State<GenerateReportView> {
               Gap(32),
               ///button
               isLoading==true ? CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,):button(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(),));
-                // requestAnalysisTask();
+                requestAnalysisTask();
                 controller.clear();
               }, color: AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Generate", textColor: Colors.black)
             ],

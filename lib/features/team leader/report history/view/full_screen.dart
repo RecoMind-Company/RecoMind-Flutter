@@ -10,9 +10,10 @@ import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 class FullScreen extends StatefulWidget {
-  const FullScreen({super.key, this.taskId});
+  const FullScreen({super.key, this.taskId , this.teamId , this.fixedText});
   final String? taskId;
-
+  final String? teamId;
+ final String? fixedText;
   @override
   State<FullScreen> createState() => _FullScreenState();
 }
@@ -26,7 +27,10 @@ class _FullScreenState extends State<FullScreen> {
     try {
       setState(() => isLoading = true);
 
-      final result = await resultrepo.getReportResult("${widget.taskId}");
+      final result = await resultrepo.getReportResult(
+          widget.teamId,widget.taskId
+
+      );
 
       fixedText = result.aiResponse?.replaceAll(RegExp(r'\\\\n'), r'\n');
 
@@ -40,7 +44,7 @@ class _FullScreenState extends State<FullScreen> {
   @override
   void initState() {
     super.initState();
-    getResult();
+    // getResult();
   }
 
   @override
@@ -93,7 +97,7 @@ class _FullScreenState extends State<FullScreen> {
                                           ),
                       )
                       : Markdown(
-                    data: fixedText ?? "",
+                    data: widget.fixedText ?? "",
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     styleSheet: MarkdownStyleSheet(

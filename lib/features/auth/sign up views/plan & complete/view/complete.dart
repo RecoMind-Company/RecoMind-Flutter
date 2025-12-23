@@ -41,7 +41,7 @@ class _completesetupState extends State<completesetup> {
          Gap(40),
           MaterialButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => root(),), (Route<dynamic> route) => false,);
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => root(Role: "admin",),), (Route<dynamic> route) => false,);
               },
               child: Container(
                   width: 330,

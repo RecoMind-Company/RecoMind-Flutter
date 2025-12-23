@@ -18,7 +18,7 @@ class Department2Verification extends StatelessWidget {
     "Operations",
     "Production",
     "Purchasing",
-    "Shared/General"
+    "PR"
   ];
   @override
   Widget build(BuildContext context) {

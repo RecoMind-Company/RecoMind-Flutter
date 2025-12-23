@@ -27,10 +27,14 @@ class Step4Widget extends StatelessWidget {
               fontweight: FontWeight.w400,
               textsize: 22,
               iscenter: true,),
-            Gap(12),
             Gap(32),
-            LoadingBar(width: 282,Number: "75 %",) ,
-            Gap(4),
+            LinearProgressIndicator(
+              minHeight: 30,
+              color: AppColor.primaryColor,
+              borderRadius: BorderRadius.circular(25),
+              backgroundColor: Color(0xFF454A5599),
+            ) ,
+            Gap(8),
             customText(text: "This may take a few minutes",fontweight: FontWeight.w400,textsize: 10,color: Color(0xFFEFEFEF),)
 
           ],),)

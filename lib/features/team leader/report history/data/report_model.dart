@@ -1,25 +1,37 @@
 class CreateReportTaskModel {
-  final String taskId;
-  final String status;
-  final String message;
+  final String teamName;
+  final String teamId;
+  final String companyId;
 
   CreateReportTaskModel({
-    required this.taskId,
-    required this.status,
-    required this.message,
+    required this.teamName,
+    required this.teamId,
+    required this.companyId,
   });
 
   factory CreateReportTaskModel.fromJson(Map<String, dynamic> json) {
     return CreateReportTaskModel(
-      taskId: json["task_id"],
-      status: json["status"],
-      message: json["message"],
+      teamId: json["teamId"],
+      teamName: json["teamName"],
+      companyId: json["companyId"],
     );
   }
 }
 
+class CreateReportrequistModel {
+  final String? task_id;
 
 
+  CreateReportrequistModel({
+    required this.task_id
+  });
+
+  factory CreateReportrequistModel.fromJson(Map<String, dynamic> json) {
+    return CreateReportrequistModel(
+      task_id: json["task_id"]
+    );
+  }
+}
 
 class TaskStatusResponse {
   final String? aiResponse;

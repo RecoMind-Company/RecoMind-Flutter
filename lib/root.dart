@@ -9,8 +9,8 @@ import 'package:recomind/features/team%20leader/chat_bot/view/chat_bot_view.dart
 import 'package:recomind/features/team%20leader/report/view/report_view.dart';
 
 class root extends StatefulWidget {
-  const root({super.key});
-
+  const root({super.key, this.Role});
+final String? Role;
   @override
   State<root> createState() => _rootState();
 }
@@ -26,7 +26,7 @@ class _rootState extends State<root> {
   void initState() {
     controller = PageController(initialPage: currentpage);
 
-     Admin == true?
+     widget.Role == "admin"?
          ///Admin
      pages = [
       HomeViewAdmin(),
@@ -68,7 +68,7 @@ class _rootState extends State<root> {
               splashFactory:
                   NoSplash.splashFactory,
             ),
-            child: Admin == true ?
+            child: widget.Role=="admin" ?
             BottomNavigationBar(
               currentIndex: currentpage,
               backgroundColor: Colors.transparent,

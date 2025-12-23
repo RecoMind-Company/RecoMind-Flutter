@@ -40,8 +40,13 @@ class _Step1WidgetState extends State<Step1Widget> {
           textsize: 16,
           fontweight: FontWeight.w400,),
         Gap(32),
-              LoadingBar(width: 49,Number: "10 %",) ,
-              Gap(4),
+              LinearProgressIndicator(
+                minHeight: 30,
+                color: AppColor.primaryColor,
+                borderRadius: BorderRadius.circular(25),
+                backgroundColor: Color(0xFF454A5599),
+              ) ,
+              Gap(8),
               customText(text: "This may take a few minutes",fontweight: FontWeight.w400,textsize: 10,color: Color(0xFFEFEFEF),)
 
       ],),)

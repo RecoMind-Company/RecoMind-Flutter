@@ -10,11 +10,32 @@ import 'package:recomind/features/team%20leader/report%20history/data/report_mod
 class reportRepo{
   ApiServiceReport apiServiceReport = ApiServiceReport();
 
-  /// send request
-  Future<CreateReportTaskModel> getSetup(String userRequest)async{
+
+
+  /// user
+  Future<CreateReportTaskModel> user () async {
     try{
-      final response = await apiServiceReport.post("/teams?userRequest=$userRequest", {});
-      return CreateReportTaskModel.fromJson(response);
+      final response = await apiServiceReport.get("/teams/user");
+      print(response);
+      final user = CreateReportTaskModel.fromJson(response as Map<String,dynamic>);
+      print("finish");
+      return user;
+    }on DioError catch(e){
+      throw ApiException.handleError(e);
+    }catch (e){
+      throw ApiError(message: e.toString());
+    }
+  }
+  /// send request
+  Future<CreateReportrequistModel> getSetup(String userRequest,String CompanyID,String Team_Name)async{
+    try{
+      final response = await apiServiceReport.post("/teams/create", {
+        "company_id": CompanyID,///
+        "user_request": userRequest,
+        "team_name": Team_Name///
+      });
+
+      return CreateReportrequistModel.fromJson(response as Map<String,dynamic>);
   }on DioError catch(e){
       throw ApiException.handleError(e);
     }catch (e){
@@ -23,13 +44,17 @@ class reportRepo{
     }
 
 
-  Future<TaskStatusResponse> getReportResult(String taskID) async {
+  Future<TaskStatusResponse> getReportResult(String? taskID,String? teamID) async {
     const delayBetweenRetries = Duration(seconds: 30);
 
     while (true) {
       try {
-        final response = await apiServiceReport.get(
-          "/teams/user",
+        final response = await apiServiceReport.post(
+          "/teams/add",{
+          "teamId": teamID,
+          "periodic": "Weekly",
+          "taskId":  taskID
+        }
         );
         if (response !is ApiError ||
         response is Map<String,dynamic>) {

@@ -8,10 +8,10 @@ import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/step_5_widget.dart';
 import 'package:recomind/shared/widgets/container.dart';
 
-
 class RobotRoot extends StatefulWidget {
-   RobotRoot({super.key,required this.Id});
- String Id;
+  RobotRoot({super.key, required this.Id});
+  String Id;
+
   @override
   State<RobotRoot> createState() => _RobotRootState();
 }
@@ -19,11 +19,19 @@ class RobotRoot extends StatefulWidget {
 class _RobotRootState extends State<RobotRoot> {
   int currentStep = 0;
   RobotRep robotRep = RobotRep();
-  Future<void> robotRequest ()async{
-    try{
+
+  bool isSuccess = false;
+  bool isStopped = false;
+
+  Future<void> robotRequest() async {
+    try {
       final response = await robotRep.getRobot(widget.Id);
-      print(response);
-    }catch(e){
+      if (response != null) {
+        setState(() {
+          isSuccess = true;
+        });
+      }
+    } catch (e) {
       print(e);
     }
   }
@@ -34,20 +42,42 @@ class _RobotRootState extends State<RobotRoot> {
     Step3Widget(),
     Step4Widget(),
     Step5Widget(),
-    AiAllSet()
+    AiAllSet() // آخر خطوة
   ];
 
   @override
   void initState() {
     super.initState();
     startChangingSteps();
-    robotRequest ();
+    robotRequest();
   }
 
   Future<void> startChangingSteps() async {
-    for (int i = 0; i < steps.length; i++) {
-      await Future.delayed(Duration(seconds: 6));
-      setState(() => currentStep = i);
+    int i = 0;
+
+    while (!isStopped) {
+      await Future.delayed(const Duration(seconds: 3));
+
+      if (!mounted) return;
+
+
+      if (isSuccess) {
+        setState(() {
+          currentStep = steps.length - 1;
+        });
+        isStopped = true;
+        break;
+      }
+
+      setState(() {
+        currentStep = i;
+      });
+
+      if (i == steps.length - 2) {
+        i = 0;
+      } else {
+        i++;
+      }
     }
   }
 
@@ -57,7 +87,7 @@ class _RobotRootState extends State<RobotRoot> {
       body: Containerwid(
         child: Center(
           child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             switchInCurve: Curves.easeInOut,
             switchOutCurve: Curves.easeInOut,
             transitionBuilder: (child, animation) =>

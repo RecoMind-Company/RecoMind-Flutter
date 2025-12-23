@@ -11,7 +11,7 @@ class LoginRepository{
 
 
   ///signUp
-  Future<AuthResponse> logIn(String email,String password)async{
+  Future<List<String>> logIn(String email,String password)async{
     try{
       final response = await apiService.post("/login", {
         "email":email,
@@ -25,7 +25,7 @@ class LoginRepository{
         if (user.token != null) {
           await PrefHelper.saveToken(user.token!);
         }
-        return user;}else{
+        return user.roles;}else{
         throw ApiError(message: "un expected error from server");
       }
     }on DioError catch(e) {
