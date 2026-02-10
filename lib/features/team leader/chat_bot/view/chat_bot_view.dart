@@ -30,7 +30,8 @@ class _ChatBotViewState extends State<ChatBotView> {
   ChatbotRepo repo = ChatbotRepo();
 
   // قائمة الرسائل (المستخدم + البوت)
-  List<Map<String, String>> messages = []; // { "type": "user"/"bot", "text": "..." }
+  List<Map<String, String>> messages =
+      []; // { "type": "user"/"bot", "text": "..." }
 
   @override
   Widget build(BuildContext context) {
@@ -68,43 +69,44 @@ class _ChatBotViewState extends State<ChatBotView> {
                           ),
                           Gap(22),
                           // Recommended messages فوق
-                          if (showRecommendedMessages) Column(
-                            children: [
-                              customText(
-                                text: "Hi, How Can I Help You?",
-                                color: AppColor.primaryColor,
-                                textsize: 28,
-                                fontweight: FontWeight.w400,
-                              ),
-                              Gap(32),
-                              Row(
-                                children: [
-                                  RecommendedMessageWidget(
-                                      text: "  What if we cut costs 10%?  "),
-                                  Gap(8),
-                                  RecommendedMessageWidget(
-                                      text: " Show sales this month "),
-                                ],
-                              ),
-                              Gap(12),
-                              Row(
-                                children: [
-                                  RecommendedMessageWidget(
-                                      text:
-                                      "           Top 3 products performance           "),
-                                ],
-                              ),
-                              Gap(12),
-                              Row(
-                                children: [
-                                  RecommendedMessageWidget(
-                                      text:
-                                      "        Which services generate the highest revenue ?        "),
-                                ],
-                              ),
-                              Gap(12),
-                            ],
-                          ),
+                          if (showRecommendedMessages)
+                            Column(
+                              children: [
+                                customText(
+                                  text: "Hi, How Can I Help You?",
+                                  color: AppColor.primaryColor,
+                                  textsize: 28,
+                                  fontweight: FontWeight.w400,
+                                ),
+                                Gap(32),
+                                Row(
+                                  children: [
+                                    RecommendedMessageWidget(
+                                        text: "  What if we cut costs 10%?  "),
+                                    Gap(8),
+                                    RecommendedMessageWidget(
+                                        text: " Show sales this month "),
+                                  ],
+                                ),
+                                Gap(12),
+                                Row(
+                                  children: [
+                                    RecommendedMessageWidget(
+                                        text:
+                                            "           Top 3 products performance           "),
+                                  ],
+                                ),
+                                Gap(12),
+                                Row(
+                                  children: [
+                                    RecommendedMessageWidget(
+                                        text:
+                                            "        Which services generate the highest revenue ?        "),
+                                  ],
+                                ),
+                                Gap(12),
+                              ],
+                            ),
                           // الرسائل Scrollable تحت
                           Expanded(
                             child: SingleChildScrollView(
@@ -118,81 +120,92 @@ class _ChatBotViewState extends State<ChatBotView> {
                                           ? Alignment.centerRight
                                           : Alignment.centerLeft,
                                       child: Container(
-                                        margin: EdgeInsets.symmetric(vertical: 4),
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 4),
                                         padding: EdgeInsets.all(12),
                                         decoration: BoxDecoration(
                                           color: msg["type"] == "user"
                                               ? Color(0xFF454A5599)
                                               : AppColor.darkBlue,
-                                          borderRadius: msg["type"] == "user" ? BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12),bottomLeft: Radius.circular(12), ):BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12),bottomRight: Radius.circular(12), ),
+                                          borderRadius: msg["type"] == "user"
+                                              ? BorderRadius.only(
+                                                  topLeft: Radius.circular(12),
+                                                  topRight: Radius.circular(12),
+                                                  bottomLeft:
+                                                      Radius.circular(12),
+                                                )
+                                              : BorderRadius.only(
+                                                  topLeft: Radius.circular(12),
+                                                  topRight: Radius.circular(12),
+                                                  bottomRight:
+                                                      Radius.circular(12),
+                                                ),
                                         ),
-                                        child: customText(text: msg["text"]! , color: Colors.white,),
+                                        child: customText(
+                                          text: msg["text"]!,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   if (state is ChatBotLoading)
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 18.0),
+                                      padding: EdgeInsets.only(top: 4),
                                       child: Container(
-                                        alignment: Alignment.center,
-                                        padding: EdgeInsets.symmetric(horizontal: 12 , vertical: 18),
-                                        decoration:BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                          color: Color(0xFF0E1526)
-                                        )
-                                        ,child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              SkeletonLoader(
+                                        alignment: Alignment.topCenter,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Color(0xFF0E1526),
+                                        ),
+                                        child:Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Skeletonizer(
+                                              enabled: true,
+                                              effect: ShimmerEffect(
                                                 baseColor: Color(0xFF1A2C3D),
-                                                items: 1, // عدد المرات اللي يظهر فيها الـ skeleton
-                                                period: Duration(seconds: 2), // مدة الانيميشن
-                                                highlightColor: Color(0xFF274454), // لون الهايلايت
-                                                direction: SkeletonDirection.ltr, // اتجاه التحريك
-                                                builder: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 12,
-                                                      margin: EdgeInsets.symmetric(vertical: 4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey.shade700,
-                                                        borderRadius: BorderRadius.circular(6),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 12,
-                                                      margin: EdgeInsets.symmetric(vertical: 4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey.shade700,
-                                                        borderRadius: BorderRadius.circular(6),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: MediaQuery.of(context).size.width * 0.7,
-                                                      height: 12,
-                                                      margin: EdgeInsets.symmetric(vertical: 4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey.shade700,
-                                                        borderRadius: BorderRadius.circular(6),
-                                                      ),
-                                                    ),
-                                                    Gap(18),
-
-                                                  ],
-                                                ),
+                                                highlightColor: Color(0xFF274454),
                                               ),
-                                              Row(children: [customText(text: "Analizing Your question ...", color: Colors.white.withOpacity(0.6),textsize: 15,fontweight: FontWeight.bold,)],)
-                                            ],
-                                          ),
+                                              child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(4.0),
+                                                          child: customText(text: "  1                                                                           1 "),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(4.0),
+                                                          child: customText(text: "  1                                                                           1 "),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(4.0),
+                                                          child: customText(text: "1                                   1"),
+                                                        ),
+                                                        Gap(8),
+
+
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                customText(
+                                                  text:
+                                                  "Analyzing your question ...",
+                                                  color:
+                                                  Colors.white.withOpacity(0.6),
+                                                  textsize: 15,
+                                                  fontweight: FontWeight.bold,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-
-
+                                    )
                                 ],
                               ),
                             ),
@@ -202,13 +215,10 @@ class _ChatBotViewState extends State<ChatBotView> {
                               if (controller.text.trim().isEmpty) return;
 
                               setState(() {
-                                // إضافة رسالة المستخدم
                                 messages.add({
                                   "type": "user",
                                   "text": controller.text.trim()
                                 });
-
-                                // إخفاء الرسائل المقترحة
                                 showRecommendedMessages = false;
                               });
 
@@ -220,7 +230,6 @@ class _ChatBotViewState extends State<ChatBotView> {
                             },
                             controller: controller,
                           ),
-
                         ],
                       ),
                     ),

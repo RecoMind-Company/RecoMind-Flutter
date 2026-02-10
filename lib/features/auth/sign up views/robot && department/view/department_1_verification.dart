@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
-import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/department_2_verification.dart';
+import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/dapartment_2_verification.dart';
+import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/department_final_verification.dart';
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/widget/done_card.dart';
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/widget/review_card.dart';
 import 'package:recomind/shared/widgets/button.dart';
@@ -50,9 +51,7 @@ bool isclicked = false;
                  Column(children: List.generate(department.length, (index) => Padding(
                    padding: const EdgeInsets.only(bottom: 32.0),
                    child: ReviewCard(Name: department[index],ontap: (){
-                     setState(() {
-                       isclicked = true;
-                     });
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Dapartment2Verification(),));
                    },),
                  ),)),
 
@@ -79,7 +78,7 @@ bool isclicked = false;
           Gap(15),
           customText(text: "0 : 10",color: AppColor.primaryColor,textsize: 24,fontweight: FontWeight.w400,),
           Gap(16),
-          Container(padding:EdgeInsets.symmetric(horizontal: 56),child: button(onPressed: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Department2Verification(),));}, color:isclicked==false ?CupertinoColors.inactiveGray:AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Finalize Setup", textColor: Colors.black))
+          Container(padding:EdgeInsets.symmetric(horizontal: 56),child: button(onPressed: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DepartmentFinalVerification(),));}, color:isclicked==false ?CupertinoColors.inactiveGray:AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Finalize Setup", textColor: Colors.black))
         ],),
       ),
     );

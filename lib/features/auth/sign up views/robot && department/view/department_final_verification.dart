@@ -10,8 +10,8 @@ import 'package:recomind/shared/widgets/custom_text.dart';
 import '../../plan & complete/view/plan.dart';
 
 
-class Department2Verification extends StatelessWidget {
-  Department2Verification({super.key});
+class DepartmentFinalVerification extends StatelessWidget {
+  DepartmentFinalVerification({super.key});
   final List department = [
     "Sales",
     "HR",
