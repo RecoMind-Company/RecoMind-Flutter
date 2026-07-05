@@ -43,7 +43,6 @@ class RobotRep{
         print("❌ Error: $e, retrying...");
       }
 
-      // 👇 هنا المكان الصحيح
       await Future.delayed(delayBetweenRetries);
     }
   }

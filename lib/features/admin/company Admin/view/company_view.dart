@@ -13,6 +13,7 @@ import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/co
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/data/review_repo.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/com_info.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/edit_button.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/admin_head.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/show_dialog_comInfo.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -83,49 +84,7 @@ class _CompanyScreenState extends State<CompanyView> {
                  Gap(70),
 
                   // Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 22),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView(),));
-                  }
-                          ,child: const CircleAvatar(
-                            radius: 23,
-                            backgroundImage: AssetImage("assets/Home/Ellipse 79.png"),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            customText(
-                               text: 'Welcome to CName, Ahmed!',
-                                color: Color(0XFFEEEEEE),
-                                fontweight: FontWeight.bold,
-                                textsize: 18,
-                            ),
-                            Gap(2),
-                            customText(
-                              text: 'Moving forward together',
-                              color: Colors.white54, textsize: 14
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF060B1B),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.notifications_none,
-                              color: Color(0xff65B7D1), size: 28),
-                        ),
-                      ],
-                    ),
-                  ),
+                  AdminHead(),
 
                   Gap(50),
                   Padding(
@@ -167,11 +126,8 @@ class _CompanyScreenState extends State<CompanyView> {
                       ],
                     ),
                     Gap(4),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                        Row(
                           children: [
                             customText(
                               text: getSetup?.description ?? "",
@@ -182,8 +138,7 @@ class _CompanyScreenState extends State<CompanyView> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
+
                       Gap(16)
                       ,
                       ComInfoAdmin(

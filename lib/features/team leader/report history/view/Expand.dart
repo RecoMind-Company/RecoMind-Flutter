@@ -10,6 +10,7 @@ import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/team%20leader/report%20history/data/report_reporistory.dart';
 import 'package:recomind/features/team%20leader/report%20history/view/full_screen.dart';
 import 'package:recomind/features/team%20leader/report%20history/widget/texttest.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/diver_wid.dart';
@@ -29,16 +30,18 @@ class _ExpandScreenState extends State<ExpandScreen> {
   String? fixedText;
   bool isLoading = false;
   reportRepo resultrepo = reportRepo();
+  late String reportID;
 
   Future<void> getResult() async {
     try {
       setState(() {
         isLoading = true;
       });
-      final result = await resultrepo.getReportResult(widget.teamId,widget.taskId);
+      final result = await resultrepo.getReportResult(widget.taskId,widget.teamId,);
       print("TASK ID = ${result.aiResponse}");
       print("Status = ${result.generatedDate}");
       fixedText = result.aiResponse?.replaceAll(RegExp(r'\\\\n'), r'\n');
+      reportID = result.id!;
 
 
       print("Fixed Result:\n$fixedText");
@@ -117,12 +120,9 @@ class _ExpandScreenState extends State<ExpandScreen> {
                         fontweight: FontWeight.bold,
                         textsize: 20,
                       ),
-                      Gap(20),
+                      Gap(40),
                       Center(
-                          child: CupertinoActivityIndicator(
-                            color: AppColor.primaryColor,
-                            radius: 20,
-                          ))
+                          child: SwappedShrinkingLoading(strokeWidth: 5,size: 50,))
                     ],
                   ): Stack(
                       children: [
@@ -203,7 +203,7 @@ class _ExpandScreenState extends State<ExpandScreen> {
                               height: 500,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: AppColor.darkBlue.withOpacity(0.3), // شفافية
+                                color: AppColor.darkBlue.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
@@ -214,7 +214,8 @@ class _ExpandScreenState extends State<ExpandScreen> {
                           right: 30,
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreen(teamId: widget.teamId,taskId: widget.taskId,fixedText: fixedText.toString(),),));
+                              print(reportID);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreen(teamId: widget.teamId,taskId: widget.taskId,fixedText: fixedText.toString(),reportid:reportID,),));
                             },
                             child: Container(
                               height: 40,

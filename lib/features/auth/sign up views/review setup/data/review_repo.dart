@@ -9,7 +9,7 @@ import 'package:recomind/features/auth/sign%20up%20views/review%20setup/data/rev
 class reviewRepo{
   ApiService _apiService = ApiService();
   ApiServiceDB apiServiceDB = ApiServiceDB();
-  Future<DBModel> getDB() async {
+  Future<DBModel> getDB({required String? Id}) async {
     const int maxRetries = 10;
     const Duration delayBetweenRetries = Duration(seconds: 2);
     int attempt = 0;
@@ -17,8 +17,9 @@ class reviewRepo{
     while (attempt < maxRetries) {
       attempt++;
       try {
+        print("this is iddddddddd${Id}");
         final response = await apiServiceDB
-            .get("/api/DbSetting/for-ai");
+            .get("/api/DbSetting/company/$Id");
 
         print("Attempt $attempt - RESPONSE TYPE: ${response.runtimeType}");
 

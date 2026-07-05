@@ -9,6 +9,7 @@ import 'package:recomind/features/auth/sign%20up%20views/teams/view/company_setu
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/enter_department.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
 import 'package:recomind/features/auth/sign%20up%20views/teams/widget/department_card.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
@@ -27,6 +28,8 @@ class _CompanySetup3State extends State<CompanySetup3> {
   @override
   void initState() {
     super.initState();
+    // نادى الدالة هنا أول ما الصفحة تفتح
+    context.read<CompanySetup3Cubit>().getTeams();
   }
 
   void addTeam() {
@@ -98,7 +101,7 @@ class _CompanySetup3State extends State<CompanySetup3> {
               builder: (context, state) {
                 if (state is CompanySetup3Loading) {
                   return const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
+                    child: SwappedShrinkingLoading(size: 50,strokeWidth: 5,),
                   );
                 }
 

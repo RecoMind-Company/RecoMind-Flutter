@@ -2,7 +2,7 @@
 
 lib/
 ├── core/
-│   ├── constants/   الحاجات الثابته اللي هتبقى فالapplication
+│   ├── constants/ 
 │   │   ├── api_endpoints.dart
 │   │   ├── app_colors.dart
 │   │   └── app_strings.dart
@@ -29,10 +29,10 @@ lib/
 │   │   │   ├── manage_food.dart
 │   │   │   ├── food_details.dart
 │   │   │   └── add_food_item.dart
-│   │
-├── shared/ للwidget المشتركه و اللي بتعدي ال 7 سطور
+│   │    
+├── shared/
 │
-├── root.dart هي اهم اسكرين و بتخليني اربط الصفحات كلها ببعض
+├── root.dart
 │
 ├── splash_screen.dart
 │

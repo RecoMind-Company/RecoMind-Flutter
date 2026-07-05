@@ -14,6 +14,7 @@ import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/multi_lins_textfield.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/upload_Button.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
@@ -142,7 +143,7 @@ class _CompanySetup2State extends State<CompanySetup2> {
                   Gap(16),
                   UploadButton(),
                   Gap(30),
-                  isLoading == true ? CupertinoActivityIndicator():button(
+                  isLoading == true ? SwappedShrinkingLoading(size: 50,strokeWidth: 5,):button(
                     color: AppColor.primaryColor,
                     buttonText: "Next",
                     textColor: Colors.black,
@@ -166,6 +167,7 @@ class _CompanySetup2State extends State<CompanySetup2> {
                     textColor: AppColor.primaryColor,
                     borderColor: AppColor.primaryColor,
                     onPressed: ()async{
+                      Navigator.pop(context);
                       final token = await PrefHelper.getToken() ;
                       print(token);
                     },

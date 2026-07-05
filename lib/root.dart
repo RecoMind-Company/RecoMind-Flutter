@@ -4,42 +4,45 @@ import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/features/admin/Home_admin/view/home_view_admin.dart';
 import 'package:recomind/features/admin/company%20Admin/view/company_view.dart';
 import 'package:recomind/features/admin/invite%20Admin/view/invite_view.dart';
+import 'package:recomind/features/manager/dashboard/company%20plans/view/dashboard.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/view/home_TL_view.dart';
 import 'package:recomind/features/team%20leader/chat_bot/view/chat_bot_view.dart';
 import 'package:recomind/features/team%20leader/report/view/report_view.dart';
 
 class root extends StatefulWidget {
-  const root({super.key, this.Role});
-final String? Role;
+  const root({super.key, this.Role, this.initialPage = 0});
+  final String? Role;
+  final int initialPage; // استقبال قيمة الصفحة المراد فتحها
+
   @override
   State<root> createState() => _rootState();
 }
 
 class _rootState extends State<root> {
-  int currentpage = 0;
+  late int currentpage;
 
   late PageController controller;
 
   late List<Widget> pages;
   bool Admin = false;
+
   @override
   void initState() {
+    currentpage = widget.initialPage;
     controller = PageController(initialPage: currentpage);
 
-     widget.Role == "admin"?
-         ///Admin
-     pages = [
+    widget.Role == "admin"
+        ? pages = [
       HomeViewAdmin(),
       InviteView(),
-      CompanyView(),]
-     /// team leader
-         : pages = [
-       HomeTlView(),
-       ChatBotView(),
-       ReportView(),
-       CompanyView(),
+      CompanyView(),
+    ]
+        : pages = [
+      HomeTlView(),
+      ReportView(),
+      CompanyPlansScreen(),
+      ChatBotView(),
     ];
-    // TODO: implement initState
     super.initState();
   }
 
@@ -51,25 +54,23 @@ class _rootState extends State<root> {
         body: PageView(
           controller: controller,
           children: pages,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
         ),
         bottomNavigationBar: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Color(0xFF060B1B), boxShadow: [
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(color: const Color(0xFF060B1B), boxShadow: [
             BoxShadow(
               color: Colors.white.withOpacity(0.1),
               blurRadius: 20,
               spreadRadius: 1,
             )
           ]),
-
           child: Theme(
             data: Theme.of(context).copyWith(
-              splashFactory:
-                  NoSplash.splashFactory,
+              splashFactory: NoSplash.splashFactory,
             ),
-            child: widget.Role=="admin" ?
-            BottomNavigationBar(
+            child: widget.Role == "admin"
+                ? BottomNavigationBar(
               currentIndex: currentpage,
               backgroundColor: Colors.transparent,
               type: BottomNavigationBarType.fixed,
@@ -77,127 +78,47 @@ class _rootState extends State<root> {
               selectedItemColor: AppColor.primaryColor,
               unselectedItemColor: AppColor.primaryColor,
               enableFeedback: false,
-                items:[
-
-                /// first
+              items: [
                 BottomNavigationBarItem(
                     icon: Container(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-              width: 60,
-              height: 32,
-              decoration: BoxDecoration(
-                color: currentpage == 0 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: SvgPicture.asset("assets/Home/SVG_Icon/Default.svg" , color: currentpage != 0? AppColor.primaryColor:Color(0xff060B1B),)), label: "Home"),
-
-                /// second
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        width: 60,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: currentpage == 0 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/Home/SVG_Icon/Default.svg",
+                          color: currentpage != 0 ? AppColor.primaryColor : const Color(0xff060B1B),
+                        )),
+                    label: "Home"),
                 BottomNavigationBarItem(
                   icon: Container(
                       padding: const EdgeInsets.symmetric(vertical: 2),
                       width: 60,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: currentpage == 1
-                            ? const Color(0xff7EE3FF)
-                            : Color(0xff070C1E),
+                        color: currentpage == 1 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: SvgPicture.asset(
-                          "assets/Home/SVG_Icon/Email.svg",
-                          color: currentpage != 1
-                              ? AppColor.primaryColor
-                              : Color(0xff060B1B))),
+                      child: SvgPicture.asset("assets/Home/SVG_Icon/Email.svg",
+                          color: currentpage != 1 ? AppColor.primaryColor : const Color(0xff060B1B))),
                   label: "Invites",
                 ),
-
-                ///third
                 BottomNavigationBarItem(
                   icon: Container(
                       padding: const EdgeInsets.symmetric(vertical: 2),
                       width: 60,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: currentpage == 2 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
+                        color: currentpage == 2 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: SvgPicture.asset("assets/Home/SVG_Icon/company.svg" , color: currentpage != 2? AppColor.primaryColor:Color(0xff060B1B),)),
+                      child: SvgPicture.asset("assets/Home/SVG_Icon/company.svg",
+                          color: currentpage != 2 ? AppColor.primaryColor : const Color(0xff060B1B))),
                   label: "Company",
                 ),
-
-              ],
-              onTap: (v) {
-                setState(() {
-                  currentpage = v;
-                });
-                controller.jumpToPage(currentpage);
-              },
-            ):
-            BottomNavigationBar(
-              currentIndex: currentpage,
-              backgroundColor: Colors.transparent,
-              type: BottomNavigationBarType.fixed,
-              elevation: 0,
-              selectedItemColor: AppColor.primaryColor,
-              unselectedItemColor: AppColor.primaryColor,
-              enableFeedback: false,
-              items:[
-
-                /// first
-                BottomNavigationBarItem(
-                    icon: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        width: 60,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: currentpage == 0 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SvgPicture.asset("assets/Home/SVG_Icon/Default.svg" , color: currentpage != 0? AppColor.primaryColor:Color(0xff060B1B),)), label: "Home"),
-                /// second
-                BottomNavigationBarItem(
-                    icon: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        width: 60,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: currentpage == 1 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SvgPicture.asset("assets/Team_Leader/home/robot.svg" , color: currentpage != 1? AppColor.primaryColor:Color(0xff060B1B),)), label: "Chatbot"),
-                ///third
-                BottomNavigationBarItem(
-                  icon: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      width: 60,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: currentpage == 2
-                            ? const Color(0xff7EE3FF)
-                            : Color(0xff070C1E),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: SvgPicture.asset(
-                          "assets/Team leader svg/report_icon.svg",
-                          color: currentpage != 2
-                              ? AppColor.primaryColor
-                              : Color(0xff060B1B))),
-                  label: "Report",
-                ),
-                ///fourth
-                BottomNavigationBarItem(
-                  icon: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      width: 60,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: currentpage == 3 ? const Color(0xff7EE3FF) : Color(0xff070C1E),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: SvgPicture.asset("assets/Team leader svg/Team_icon.svg" , color: currentpage != 3? AppColor.primaryColor:Color(0xff060B1B),)),
-                  label: "Team",
-                ),
-
               ],
               onTap: (v) {
                 setState(() {
@@ -206,6 +127,81 @@ class _rootState extends State<root> {
                 controller.jumpToPage(currentpage);
               },
             )
+                : BottomNavigationBar(
+              currentIndex: currentpage,
+              backgroundColor: Colors.transparent,
+              type: BottomNavigationBarType.fixed,
+              elevation: 0,
+              selectedItemColor: AppColor.primaryColor,
+              unselectedItemColor: AppColor.primaryColor,
+              enableFeedback: false,
+              items: [
+                ///home
+                BottomNavigationBarItem(
+                    icon: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        width: 60,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: currentpage == 0 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/Home/SVG_Icon/Default.svg",
+                          color: currentpage != 0 ? AppColor.primaryColor : const Color(0xff060B1B),
+                        )),
+                    label: "Home"),
+                ///report
+                BottomNavigationBarItem(
+                  icon: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      width: 60,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: currentpage == 1 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: SvgPicture.asset("assets/Team leader svg/report_icon.svg",
+                          color: currentpage != 1 ? AppColor.primaryColor : const Color(0xff060B1B))),
+                  label: "Report",
+                ),
+                ///dashboard
+                BottomNavigationBarItem(
+                  icon: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      width: 60,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: currentpage == 2 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: SvgPicture.asset("assets/Team leader svg/Dashboard.svg",
+                          color: currentpage != 2 ? AppColor.primaryColor : const Color(0xff060B1B))),
+                  label: "Dashboard",
+                ),
+                ///chatbot
+                BottomNavigationBarItem(
+                    icon: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        width: 60,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: currentpage == 3 ? const Color(0xff7EE3FF) : const Color(0xff070C1E),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/Team_Leader/home/robot.svg",
+                          color: currentpage != 3 ? AppColor.primaryColor : const Color(0xff060B1B),
+                        )),
+                    label: "Chatbot"),
+              ],
+              onTap: (v) {
+                setState(() {
+                  currentpage = v;
+                });
+                controller.jumpToPage(currentpage);
+              },
+            ),
           ),
         ),
       ),

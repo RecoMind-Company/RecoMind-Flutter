@@ -1,5 +1,5 @@
 class inviteModel {
-  String? email , reciverRole , companyId,token;
+  String? email , reciverRole , companyId,token , Id;
   inviteModel({this.email,this.reciverRole,this.companyId,this.token});
   factory inviteModel.fromJson(Map<String, dynamic> json) {
     return inviteModel(

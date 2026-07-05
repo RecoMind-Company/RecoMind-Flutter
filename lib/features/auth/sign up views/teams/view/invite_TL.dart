@@ -5,6 +5,7 @@ import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/auth/sign up views/teams/data/team_Model.dart';
 import 'package:recomind/features/auth/sign up views/teams/data/team_Repo.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
@@ -178,9 +179,7 @@ class _InviteTlState extends State<InviteTl> {
 
                           isLoading
                               ? const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColor.primaryColor,
-                            ),
+                            child: SwappedShrinkingLoading(size: 50,strokeWidth: 5,),
                           )
                               : button(
                             onPressed: () => inviteLeader(

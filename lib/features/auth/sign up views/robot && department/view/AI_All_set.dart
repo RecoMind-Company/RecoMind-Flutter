@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
-import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/department_1_verification.dart';
+import 'package:recomind/features/auth/sign%20up%20views/department_verification/view/department_1_verification.dart';
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/robot_root.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';

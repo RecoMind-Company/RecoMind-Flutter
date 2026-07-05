@@ -12,6 +12,7 @@ import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/diver_wid.dart';
 import 'package:recomind/shared/widgets/textfiekd.dart';
 
+import '../../../../shared/widgets/Gradient_Circular_Loading.dart';
 import '../data/report_reporistory.dart';
 
 class GenerateReportView extends StatefulWidget {
@@ -40,7 +41,8 @@ class _GenerateReportViewState extends State<GenerateReportView> {
       });
         final response = await requestReport.getSetup(
             controller.text.trim(), requist!.companyId, requist!.teamName);
-        print(response);
+        print("this is team name ////// ${requist!.teamName}");
+        print("this is response ${response}");
         Navigator.push(context, MaterialPageRoute(builder: (context) => ExpandScreen(taskId: response.task_id,teamId: task.teamId,),));
     } on ApiError catch (e) {
       setState(() {
@@ -102,9 +104,8 @@ class _GenerateReportViewState extends State<GenerateReportView> {
 
               Gap(32),
               ///button
-              isLoading==true ? CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,):button(onPressed: (){
+              isLoading==true ? SwappedShrinkingLoading(size: 30,strokeWidth: 3,):button(onPressed: (){
                 requestAnalysisTask();
-                controller.clear();
               }, color: AppColor.primaryColor, borderColor: AppColor.primaryColor, buttonText: "Generate", textColor: Colors.black)
             ],
           ),

@@ -9,6 +9,7 @@ import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/co
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/dropDown.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_company_setup.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/title_Text_Field.dart';
 import 'package:recomind/shared/widgets/container.dart';
@@ -115,7 +116,7 @@ class _CompanySetup1State extends State<CompanySetup1> {
                 top: 780,
                 left: 18,
                 right: 18,
-                child: isLoading==true ?Center(child: CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,),):button(
+                child: isLoading==true ?Center(child: SwappedShrinkingLoading(size: 50,strokeWidth: 5,),):button(
                   onPressed: () {
                     setup();
                     // Navigator.push(

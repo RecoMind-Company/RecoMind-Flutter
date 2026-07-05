@@ -6,6 +6,7 @@ import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/data/login_repository.dart';
 import 'package:recomind/features/auth/log%20in%20views/log%20in/widget/password_field.dart';
 import 'package:recomind/root.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
@@ -245,7 +246,7 @@ class _LoginviewState extends State<Loginview> {
 
                             , Gap(47),
 
-                            isLoading==true ? Center(child: CircularProgressIndicator(),): button(onPressed: () {
+                            isLoading==true ? Center(child: SwappedShrinkingLoading(size: 50,strokeWidth: 5,),): button(onPressed: () {
                               login();
                             },
                                 color: _isPasswordValid
@@ -273,7 +274,7 @@ class _LoginviewState extends State<Loginview> {
                                                 SignUP()));
                                   },
                                   child: const customText(
-                                   text: "Sing Up",
+                                   text: "Sign Up",
                                         color: Color(0xFF7EE3FF),
                                         fontweight: FontWeight.bold,
                                         textsize: 18,

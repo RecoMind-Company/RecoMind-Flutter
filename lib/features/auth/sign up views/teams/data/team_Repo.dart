@@ -13,24 +13,23 @@ class TeamRepo {
   /// add department || team
   Future<TeamNameModel> addTeam(AddTeam model) async {
     try {
-      final response = await apiServiceTeam.post(
-        '/Team/create',
-        model.toJson(),
-      );
+      final response = await apiServiceTeam.post('/Team/create', model.toJson());
+      if (response is ApiError) throw response;
 
-      if (response is ApiError) {
-        throw response;
+      // تأكد إن الرد Map قبل التحويل
+      if (response is Map<String, dynamic>) {
+        return TeamNameModel.fromJson(response);
+      }
+      // لو الـ API رجع قائمة بعد الإضافة (بتحصل في بعض الـ APIs عندك)
+      else if (response is List && response.isNotEmpty) {
+        return TeamNameModel.fromJson(response.last);
       }
 
-      // لو الريسبونس Map مباشرة
-      return TeamNameModel.fromJson(response);
-
+      throw Exception("Unexpected response format");
     } on DioError catch (e) {
       throw ApiException.handleError(e);
     }
   }
-
-
 ///Get Team Name
   Future<List<TeamNameModel>> getTeamNames() async {
     try {
@@ -40,12 +39,26 @@ class TeamRepo {
         throw response;
       }
 
-      return (response as List)
-          .map((e) => TeamNameModel.fromJson(e))
-          .toList();
+      // ✅ الحل: فحص النوع قبل التحويل
+      if (response is List) {
+        return response.map((e) => TeamNameModel.fromJson(e)).toList();
+      }
 
+      // لو الـ API رجع Map (زي ما ظهر في الـ Error بتاعك)
+      else if (response is Map<String, dynamic>) {
+        // لو الـ Map جواه لستة باسم 'data مثلاً، حولها. لو لأ، رجع قائمة فيها العنصر ده بس
+        if (response['data'] is List) {
+          return (response['data'] as List).map((e) => TeamNameModel.fromJson(e)).toList();
+        }
+        return [TeamNameModel.fromJson(response)];
+      }
+
+      return []; // قائمة فارغة لو مفيش بيانات
     } on DioError catch (e) {
       throw ApiException.handleError(e);
+    } catch (e) {
+      // التقاط أخطاء الـ Parsing ومنع الشاشة الحمراء
+      throw Exception("Data format error: ${e.toString()}");
     }
   }
 /// delete team

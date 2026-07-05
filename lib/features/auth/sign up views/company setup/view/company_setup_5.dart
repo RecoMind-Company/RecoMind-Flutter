@@ -8,6 +8,7 @@ import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/co
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/view/company_setup_success.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/header_all_company.dart';
 import 'package:recomind/features/auth/sign%20up%20views/company%20setup/widgets/little_textfield.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
@@ -99,7 +100,7 @@ bool isLoading = false ;
                 Gap(32),
 
                 /// buttons
-               isLoading == true ?  CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,):button(
+               isLoading == true ?  SwappedShrinkingLoading(size: 50,strokeWidth: 5,):button(
                   color: AppColor.primaryColor,
                   buttonText: "Proceed to Summary",
                   textColor: Colors.black,

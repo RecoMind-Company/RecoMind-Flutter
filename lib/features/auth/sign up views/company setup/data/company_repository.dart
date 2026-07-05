@@ -44,9 +44,14 @@ class SetupRepository {
 
 
   ///setup company
-  Future<void> setup({required String name, required String industry, required String country, required String size, required String website,}) async {
+  Future<setupModel> setup({
+    required String name,
+    required String industry,
+    required String country,
+    required String size,
+    required String website,
+  }) async {
     try {
-
       final response = await apiServiceSetup.post("/create", {
         "name": name,
         "industry": industry,
@@ -55,35 +60,31 @@ class SetupRepository {
         "code": website,
         "subscriptionId": ""
       });
-
-      print("RESPONSE DATA: $response");
-      print("RESPONSE TYPE: ${response.runtimeType}");
-
+      print("this is response : $response");
       if (response is ApiError) {
         throw response;
       }
-      print(response);
-      return response;
 
-    } on DioError catch (e) {
-      print("---- DIO ERROR ----");
+      if (response is List) {
+        if (response.isNotEmpty) {
+          final lastAdded = response.last;
+          return setupModel.fromJson(lastAdded);
+        } else {
+          throw ApiError(message: "Success but no data returned");
+        }
+      }
 
-      print("Type: ${e.type}");
-      print("Status Code: ${e.response?.statusCode}");
-      print("Status Message: ${e.response?.statusMessage}");
-      print("Response Data: ${e.response?.data}");
-      print("Headers: ${e.response?.headers.map}");
-      print("Request Path: ${e.requestOptions.path}");
-      print("Request Data: ${e.requestOptions.data}");
-      print("Dio Message: ${e.message}");
-      print("-------------------");
+      // في حال كان الرد Map مباشر
+      if (response is Map<String, dynamic>) {
+        return setupModel.fromJson(response);
+      }
 
+      throw ApiError(message: "Unexpected response format: ${response.runtimeType}");
+
+    } on DioException catch (e) {
       throw ApiException.handleError(e);
-
     } catch (e) {
-      print("---- UNKNOWN ERROR ----");
-      print(e);
-      print("------------------------");
+      print("Error in setup repo: $e");
       throw ApiError(message: e.toString());
     }
   }
@@ -125,33 +126,43 @@ print(updateResponse);
     }
   }
   ///get Company
-  Future<setupModel> getSetup()async{
-    try{
+  ///get Company
+  Future<setupModel> getSetup() async {
+    try {
       final response = await apiServiceSetup.get("/GetByAdminId");
+
       print("RESPONSE: $response");
       print("RESPONSE TYPE: ${response.runtimeType}");
-      if(response is ApiError){
-       throw response;
-     }
-     final user = setupModel.fromJson(response);
-     return user;
-    }on DioError catch (e) {
-      print("DIO ERROR:");
-      print("Status Code: ${e.response?.statusCode}");
-      print("Status Message: ${e.response?.statusMessage}");
-      print("Response Data: ${e.response?.data}");
-      print("Dio Message: ${e.message}");
-      print("Internal Error: ${e.error}");
 
+      if (response is ApiError) {
+        throw response;
+      }
+
+      // 1. لو الرد قائمة (List) كما يظهر في الـ Logs عندك
+      if (response is List) {
+        if (response.isEmpty) {
+          throw ApiError(message: "No companies found");
+        }
+        // نأخذ أول شركة في القائمة (أو آخر شركة حسب ترتيب الـ API)
+        // الـ Logs بتقول إن عندك شركتين، غالباً هتحتاج آخر واحدة
+        final lastCompany = response.last;
+        return setupModel.fromJson(lastCompany);
+      }
+
+      // 2. لو الرد Map جاهز
+      if (response is Map<String, dynamic>) {
+        return setupModel.fromJson(response);
+      }
+
+      throw ApiError(message: "Unexpected response format");
+
+    } on DioError catch (e) {
       throw ApiException.handleError(e);
     } catch (e) {
-      print("CATCH ERROR:");
-      print("Error: $e");
+      print("CATCH ERROR: $e");
       throw ApiError(message: e.toString());
     }
   }
-
-
 
 
   ///post DB

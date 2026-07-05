@@ -6,6 +6,7 @@ import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/data/signup_repository.dart';
 import 'package:recomind/features/auth/sign%20up%20views/verfy%20&%20almost/view/verify_View.dart';
 import 'package:recomind/root.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/widget/password_rules.dart';
 import 'package:recomind/features/auth/sign%20up%20views/sign%20up/widget/social_Button.dart';
@@ -172,7 +173,7 @@ bool isLoading = false;
 
 
                               ///Button
-                              isLoading==true ? Center(child: CupertinoActivityIndicator(color: AppColor.primaryColor,radius: 20,),):
+                              isLoading==true ? Center(child: SwappedShrinkingLoading(size: 40,strokeWidth: 3,),):
                               Padding(
                                   padding:
                                       const EdgeInsets.only(top: 10, bottom: 20),

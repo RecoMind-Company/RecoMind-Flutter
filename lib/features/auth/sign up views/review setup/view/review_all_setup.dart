@@ -51,19 +51,18 @@ DBModel dbModel = DBModel();
    setupModel? getSetup;
   bool isLoading = false ;
   /// get setup
-  Future<void> getsetupdata() async {
+  Future<String?> getsetupdata() async {
     try {
       final user = await authRepo.getSetup();
       setState(() {
         getSetup = user;
       });
+      return user.id;
     } on ApiError catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message), backgroundColor: Colors.red),
-      );
+
+      return null;
     }
   }
-
   //===================department===================
   // ================= GET TEAMS =================
   final TeamRepo teamRepo = TeamRepo();
@@ -81,37 +80,16 @@ DBModel dbModel = DBModel();
   }
 
   ///review DB
-  Future<void> getDB() async {
+  Future<void> getDB(String companyId) async {
     try {
-      final userlist = await review.getDB();
-
+      final userlist = await review.getDB(Id: companyId);
       if (userlist != null) {
-        dbModel = userlist;
-        print(dbModel.id);
-        setState(() {});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("No data returned from server"),
-            backgroundColor: Colors.orange,
-          ),
-        );
+        setState(() {
+          dbModel = userlist;
+        });
       }
-    } on ApiError catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message),
-          backgroundColor: Colors.red,
-        ),
-      );
     } catch (e) {
-      print("Unexpected error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Unexpected error occurred"),
-          backgroundColor: Colors.red,
-        ),
-      );
+      debugPrint("Unexpected error: $e");
     }
   }
 Future<void> refresh ()async{
@@ -130,26 +108,35 @@ Future<void> refresh ()async{
     }
   @override
   void initState() {
-     isclicked_info=false ;
-     isclicked_dep= false;
-    // TODO: implement initState
     super.initState();
-     getDB();
-     getsetupdata();
-     getTeams();
+    isclicked_info = false;
+    isclicked_dep = false;
+    loadInitialData();
+  }
+
+  Future<void> loadInitialData() async {
+    String? companyId = await getsetupdata();
+
+
+    if (companyId != null) {
+      getDB(companyId);
+      getTeams();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      color: Colors.greenAccent,
+      color: AppColor.darkBlue,
       backgroundColor: AppColor.primaryColor,
-      onRefresh: () async {
-        await getDB();
-      },
+        onRefresh: () async {
+          if (getSetup?.id != null) {
+            await getDB(getSetup!.id!);
+          }
+        },
       child: Scaffold(
         body: Skeletonizer(
-          enabled: getSetup == null ? true : false,
+          enabled: getSetup == null,
           child: Stack(
             children: [
               Containerwid(
@@ -226,7 +213,7 @@ Future<void> refresh ()async{
                       ),
                       ComInfo(
                         title: "Company Size",
-                        name: "200 - 500", //////////// this code ///////////
+                        name: getSetup?.size ?? "", //////////// this code ///////////
                       ),
                       Row(
                         children: [
@@ -239,8 +226,7 @@ Future<void> refresh ()async{
                         ],
                       ),
                       Gap(4),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
                           customText(
                             text: getSetup?.description ?? "",
@@ -322,14 +308,14 @@ Future<void> refresh ()async{
                         ],
                       ),
                       Gap(15),
-                      DbInfo(title: "Server", name: dbModel.server ?? "sales"),
+                      DbInfo(title: "Server", name: dbModel.server ?? ""),
                       Gap(8),
                       Divider(
                         color: Color(0xFF03294A),
                         thickness: 1,
                       ),
                       Gap(8),
-                      DbInfo(title: "Database Name", name: dbModel.dbName ?? "sales"),
+                      DbInfo(title: "Database Name", name: dbModel.dbName ?? ""),
                       Gap(8),
                       Divider(
                         color: Color(0xFF03294A),

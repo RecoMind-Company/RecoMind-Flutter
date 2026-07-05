@@ -13,16 +13,20 @@ class CompanySetup3Cubit extends Cubit<CompanySetup3State> {
 
   Future<void> getTeams() async {
     try {
+      emit(CompanySetup3Loading()); // أضف حالة التحميل عشان الشاشة ما تضربش وهي فاضية
       final teams = await teamRepo.getTeamNames();
-      _teams
-        ..clear()
-        ..addAll(teams ?? []);
+
+      _teams.clear();
+      if (teams != null) {
+        _teams.addAll(teams);
+      }
+
       emit(CompanySetup3Success(List.from(_teams)));
     } catch (e) {
+      // لو حصل خطأ في التحويل (زي اللي في الصور)، هيظهر SnackBar بدل ما الصفحة تقفل
       emit(CompanySetup3Error(e.toString()));
     }
   }
-
   Future<void> addTeam(String name) async {
     try {
       final newTeam = await teamRepo.addTeam(

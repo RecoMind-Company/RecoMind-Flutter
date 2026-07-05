@@ -460,3 +460,63 @@ class ApiServiceChatBot{
     }
   }
 }
+
+/// service public
+class ApiServicepublic {
+  final _dioClient = public();
+
+  Future<dynamic> post(String endPoint, dynamic body) async {
+    try {
+      final response = await _dioClient.dio.post(
+        endPoint,
+        data: body,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw ApiException.handleError(e);
+    }
+  }
+
+  Future<dynamic> get(String endPoint, {Map<String, dynamic>? queryParameters}) async {
+    try {
+      final response = await _dioClient.dio.get(
+        endPoint,
+        queryParameters: queryParameters,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw ApiException.handleError(e);
+    }
+  }
+
+  Future<dynamic> put(String endPoint, dynamic body) async {
+    try {
+      final response = await _dioClient.dio.put(endPoint, data: body);
+      return response.data;
+    } on DioException catch (e) {
+      throw ApiException.handleError(e);
+    }
+  }
+
+  Future<dynamic> patch(String endPoint, dynamic body) async {
+    try {
+      final response = await _dioClient.dio.patch(endPoint, data: body);
+      return response.data;
+    } on DioException catch (e) {
+      throw ApiException.handleError(e);
+    }
+  }
+
+  Future<dynamic> delete(String endPoint, dynamic body, {Map<String, dynamic>? queryParameters}) async {
+    try {
+      final response = await _dioClient.dio.delete(
+        endPoint,
+        data: body,
+        queryParameters: queryParameters,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw ApiException.handleError(e);
+    }
+  }
+}
