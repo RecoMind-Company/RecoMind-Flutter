@@ -43,10 +43,7 @@ class _CompanyPlansState extends State<CompanyPlans> {
     });
     try {
       final responseItems = await _repository.fetchCompanyPlans();
-      _allPlans = responseItems
-          .where((item) => item.isSuccess && item.value != null)
-          .map((item) => item.value!)
-          .toList();
+      _allPlans = responseItems.length as List<ActualPlanModel>;
       _filterPlans();
     } catch (error) {
       setState(() {

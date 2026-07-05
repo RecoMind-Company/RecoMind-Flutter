@@ -287,12 +287,6 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                   style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
-              SvgPicture.asset(
-                "assets/Team leader svg/comment.svg",
-                width: 30,
-                height: 30,
-                fit: BoxFit.contain,
-              ),
             ],
           ),
           const Gap(16),

@@ -31,7 +31,44 @@ class _ChatBotViewState extends State<ChatBotView> {
 
   // قائمة الرسائل (المستخدم + البوت)
   List<Map<String, String>> messages =
-      []; // { "type": "user"/"bot", "text": "..." }
+  []; // { "type": "user"/"bot", "text": "..." }
+
+  // دالة مساعدة لتحويل النص المحتوي على نجوم إلى أجزاء RichText (Bold / Regular)
+  List<TextSpan> _parseMarkdown(String text) {
+    List<TextSpan> spans = [];
+    final RegExp regex = RegExp(r'\*\*(.*?)\*\*');
+    int start = 0;
+
+    for (final Match match in regex.allMatches(text)) {
+      // إضافة النص العادي قبل النجوم
+      if (match.start > start) {
+        spans.add(TextSpan(
+          text: text.substring(start, match.start),
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ));
+      }
+      // إضافة النص اللي جوه النجوم كـ Bold
+      spans.add(TextSpan(
+        text: match.group(1),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ));
+      start = match.end;
+    }
+
+    // إضافة أي نص متبقي في نهاية السطر
+    if (start < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(start),
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ));
+    }
+
+    return spans;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +130,7 @@ class _ChatBotViewState extends State<ChatBotView> {
                                   children: [
                                     RecommendedMessageWidget(
                                         text:
-                                            "           Top 3 products performance           "),
+                                        "           Top 3 products performance           "),
                                   ],
                                 ),
                                 Gap(12),
@@ -101,7 +138,7 @@ class _ChatBotViewState extends State<ChatBotView> {
                                   children: [
                                     RecommendedMessageWidget(
                                         text:
-                                            "        Which services generate the highest revenue ?        "),
+                                        "        Which services generate the highest revenue ?        "),
                                   ],
                                 ),
                                 Gap(12),
@@ -121,72 +158,77 @@ class _ChatBotViewState extends State<ChatBotView> {
                                           : Alignment.centerLeft,
                                       child: Container(
                                         margin:
-                                            EdgeInsets.symmetric(vertical: 4),
-                                        padding: EdgeInsets.all(12),
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                        padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
                                           color: msg["type"] == "user"
-                                              ? Color(0xFF454A5599)
+                                              ? const Color(0xFF454A5599)
                                               : AppColor.darkBlue,
                                           borderRadius: msg["type"] == "user"
-                                              ? BorderRadius.only(
-                                                  topLeft: Radius.circular(12),
-                                                  topRight: Radius.circular(12),
-                                                  bottomLeft:
-                                                      Radius.circular(12),
-                                                )
-                                              : BorderRadius.only(
-                                                  topLeft: Radius.circular(12),
-                                                  topRight: Radius.circular(12),
-                                                  bottomRight:
-                                                      Radius.circular(12),
-                                                ),
+                                              ? const BorderRadius.only(
+                                            topLeft: Radius.circular(12),
+                                            topRight: Radius.circular(12),
+                                            bottomLeft:
+                                            Radius.circular(12),
+                                          )
+                                              : const BorderRadius.only(
+                                            topLeft: Radius.circular(12),
+                                            topRight: Radius.circular(12),
+                                            bottomRight:
+                                            Radius.circular(12),
+                                          ),
                                         ),
-                                        child: customText(
+                                        // تعديل هنا: إذا كانت الرسالة من البوت نستخدم RichText لدعم الـ Bold
+                                        child: msg["type"] == "user"
+                                            ? customText(
                                           text: msg["text"]!,
                                           color: Colors.white,
+                                        )
+                                            : RichText(
+                                          text: TextSpan(
+                                            children: _parseMarkdown(msg["text"]!),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   if (state is ChatBotLoading)
                                     Padding(
-                                      padding: EdgeInsets.only(top: 4),
+                                      padding: const EdgeInsets.only(top: 4),
                                       child: Container(
                                         alignment: Alignment.topCenter,
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 12, vertical: 6),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: Color(0xFF0E1526),
+                                          BorderRadius.circular(15),
+                                          color: const Color(0xFF0E1526),
                                         ),
                                         child:Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Skeletonizer(
                                               enabled: true,
-                                              effect: ShimmerEffect(
+                                              effect: const ShimmerEffect(
                                                 baseColor: Color(0xFF1A2C3D),
                                                 highlightColor: Color(0xFF274454),
                                               ),
                                               child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                      children: [
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(4.0),
-                                                          child: customText(text: "  1                                                                           1 "),
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(4.0),
-                                                          child: customText(text: "  1                                                                           1 "),
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(4.0),
-                                                          child: customText(text: "1                                   1"),
-                                                        ),
-                                                        Gap(8),
-
-
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(4.0),
+                                                    child: customText(text: "  1                                                                           1 "),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(4.0),
+                                                    child: customText(text: "  1                                                                           1 "),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(4.0),
+                                                    child: customText(text: "1                                   1"),
+                                                  ),
+                                                  const Gap(8),
                                                 ],
                                               ),
                                             ),

@@ -45,7 +45,7 @@ class reportRepo{
 
 
   Future<TaskStatusResponse> getReportResult(String? taskID,String? teamID) async {
-    const delayBetweenRetries = Duration(seconds: 30);
+    const delayBetweenRetries = Duration(seconds: 15);
 
     while (true) {
       try {

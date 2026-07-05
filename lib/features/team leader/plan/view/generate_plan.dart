@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_model.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_repo.dart';
@@ -11,6 +13,8 @@ import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/bloc/task_update_event.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/bloc/task_update_bloc.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/bloc/bloc_update_state.dart';
+
+import '../../dashboard/widget/add_members.dart';
 
 class GeneratedPlanScreen extends StatefulWidget {
   final PlanResponse plan;
@@ -72,19 +76,20 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                     titleCentered: true,
                     formatButtonVisible: false,
                     leftChevronIcon:
-                        Icon(Icons.chevron_left, color: Colors.white),
+                    Icon(Icons.chevron_left, color: Colors.white),
                     rightChevronIcon:
-                        Icon(Icons.chevron_right, color: Colors.white),
+                    Icon(Icons.chevron_right, color: Colors.white),
                     titleTextStyle:
-                        TextStyle(color: Colors.white, fontSize: 16)),
+                    TextStyle(color: Colors.white, fontSize: 16)),
               ),
               const Gap(20),
               GestureDetector(
                 onTap: () async {
                   final TimeOfDay? picked = await showTimePicker(
                       context: context, initialTime: selectedTime);
-                  if (picked != null)
+                  if (picked != null) {
                     setModalState(() => selectedTime = picked);
+                  }
                 },
                 child: Container(
                   width: double.infinity,
@@ -95,7 +100,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                   child: Center(
                     child: Text(selectedTime.format(context),
                         style:
-                            const TextStyle(color: Colors.white, fontSize: 18)),
+                        const TextStyle(color: Colors.white, fontSize: 18)),
                   ),
                 ),
               ),
@@ -106,7 +111,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     controller.text =
-                        "${selectedDay.toString().split(' ')[0]} ${selectedTime.format(context)}";
+                    "${selectedDay.toString().split(' ')[0]} ${selectedTime.format(context)}";
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
@@ -129,6 +134,11 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
     final TextEditingController descController = TextEditingController(text: task.description);
     final TextEditingController startController = TextEditingController(text: task.startDate);
     final TextEditingController deadlineController = TextEditingController(text: task.deadlineDate);
+
+    // ✅ تهيئة القائمة بالـ User ID الحالي للتاسك إن وجد لتجنب إرسال قائمة فارغة
+    List<String> selectedUserIds = task.suggestedOwner.userId.isNotEmpty
+        ? [task.suggestedOwner.userId]
+        : [];
 
     final taskBloc = context.read<TaskUpdateBloc>();
 
@@ -170,89 +180,129 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                   SnackBar(content: Text("Error: ${state.error}"), backgroundColor: Colors.redAccent));
             }
           },
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 100),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: const Color(0xFF060B1B),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white10),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          context.read<TaskUpdateBloc>().add(DeleteTaskRequested(task.taskId));
-                        },
-                        child: const Icon(CupertinoIcons.trash_fill, color: Colors.redAccent),
-                      ),
-                      IconButton(
-                          onPressed: () => Navigator.pop(modalContext),
-                          icon: const Icon(Icons.close, color: Colors.white)),
-                    ],
-                  ),
-                  const Text("Task Name", style: TextStyle(color: Color(0xFFACACAC))),
-                  const Gap(8),
-                  TextFormField(
-                      controller: titleController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color(0xFF131A2A),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
-                  const Gap(16),
-                  const Text("- Add Details", style: TextStyle(color: Color(0xFF7DD9FF))),
-                  const Gap(8),
-                  TextFormField(
-                      controller: descController,
-                      maxLines: 3,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          hintText: "Type here",
-                          hintStyle: const TextStyle(color: Colors.white30),
-                          filled: true,
-                          fillColor: const Color(0xFF131A2A),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
-                  const Gap(16),
-                  Center(
-                      child: Text("🕒 Duration : ${task.durationDays} Days",
-                          style: const TextStyle(color: Color(0xFF7DD9FF), fontWeight: FontWeight.bold))),
-                  const Gap(16),
-                  Row(
-                    children: [
-                      Expanded(child: _buildEditableDateField(context, "Start Date", startController)),
-                      const Gap(12),
-                      Expanded(child: _buildEditableDateField(context, "Deadline", deadlineController)),
-                    ],
-                  ),
-                  const Gap(20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final request = UpdateTaskRequest(
-                          title: titleController.text,
-                          description: descController.text,
-                          startDate: startController.text.split(' ')[0],
-                          deadLine: deadlineController.text.split(' ')[0],
-                          status: 0,
-                        );
-                        context.read<TaskUpdateBloc>().add(UpdateTaskRequested(task.taskId, request));
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF7DD9FF),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                      child: const Text("Save Changes", style: TextStyle(color: Color(0xFF060B1B))),
+          child: StatefulBuilder(
+            builder: (context, setBottomSheetState) => Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 100),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF060B1B),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            context.read<TaskUpdateBloc>().add(DeleteTaskRequested(task.taskId));
+                          },
+                          child: const Icon(CupertinoIcons.trash_fill, color: Colors.redAccent),
+                        ),
+                        IconButton(
+                            onPressed: () => Navigator.pop(modalContext),
+                            icon: const Icon(Icons.close, color: Colors.white)),
+                      ],
                     ),
-                  ),
-                ],
+                    const Text("Task Name", style: TextStyle(color: Color(0xFFACACAC))),
+                    const Gap(8),
+                    TextFormField(
+                        controller: titleController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color(0xFF131A2A),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                    const Gap(16),
+                    const Text("- Add Details", style: TextStyle(color: Color(0xFF7DD9FF))),
+                    const Gap(8),
+                    TextFormField(
+                        controller: descController,
+                        maxLines: 5,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                            hintText: "Type here",
+                            hintStyle: const TextStyle(color: Colors.white30),
+                            filled: true,
+                            fillColor: const Color(0xFF131A2A),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
+                    const Gap(16),
+                    GestureDetector(
+                      onTap: () async {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (dialogContext) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: const EditMembersDialogContent(),
+                          ),
+                        ).then((result) {
+                          if (result is List<String>) {
+                            setBottomSheetState(() {
+                              selectedUserIds = result;
+                            });
+                          }
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          SvgPicture.asset("assets/Team_Leader/group_peaple.svg"),
+                          const Gap(8),
+                          Expanded(
+                            child: Text(
+                              selectedUserIds.isNotEmpty
+                                  ? "${selectedUserIds.length} Members Selected"
+                                  : "Assign To",
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                        ],
+                      ),
+                    ),
+                    const Gap(8),
+                    Center(
+                        child: Text("🕒 Duration : ${task.durationDays} Days",
+                            style: const TextStyle(color: Color(0xFF7DD9FF), fontWeight: FontWeight.bold))),
+                    const Gap(16),
+                    Row(
+                      children: [
+                        Expanded(child: _buildEditableDateField(context, "Start Date", startController)),
+                        const Gap(12),
+                        Expanded(child: _buildEditableDateField(context, "Deadline", deadlineController)),
+                      ],
+                    ),
+                    const Gap(20),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // ✅ إرسال البيانات متوافقة مع الـ API متضمنة قائمة الـ userIds
+                          final request = UpdateTaskRequest(
+                            title: titleController.text,
+                            description: descController.text,
+                            startDate: startController.text.split(' ')[0],
+                            deadLine: deadlineController.text.split(' ')[0],
+                            status: 0,
+                            userIds: selectedUserIds, // ✅ تم التمرير بنجاح هنا
+                          );
+                          context.read<TaskUpdateBloc>().add(UpdateTaskRequested(task.taskId, request));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF7DD9FF),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                        child: const Text("Save Changes", style: TextStyle(color: Color(0xFF060B1B))),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -301,10 +351,6 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
     try {
       await _planRepository.approvePlan(planId: widget.plan.planId!);
       if (!mounted) return;
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CompanyPlans(selectedFilterIndex: 1)));
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Plan Approved & Dispatched Successfully!"),
           backgroundColor: Colors.green));
@@ -316,10 +362,11 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
           content: Text("Failed to dispatch plan: ${e.toString()}"),
           backgroundColor: Colors.redAccent));
     } finally {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _isDispatchedLoading = false;
         });
+      }
     }
   }
 
@@ -332,7 +379,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
       }
     } else {
       final currentModule = widget.plan.modules.isNotEmpty &&
-              (_selectedModuleIndex - 1) < widget.plan.modules.length
+          (_selectedModuleIndex - 1) < widget.plan.modules.length
           ? widget.plan.modules[_selectedModuleIndex - 1]
           : null;
       tasks = currentModule?.tasks ?? [];
@@ -368,7 +415,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
               Container(
                 width: double.infinity,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 decoration: BoxDecoration(
                     color: const Color(0xFF131A2A),
                     borderRadius: BorderRadius.circular(12)),
@@ -393,7 +440,6 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                           child: _buildFilterChip("All Plan",
                               isSelected: _selectedModuleIndex == 0))),
                   ...List.generate(widget.plan.modules.length, (index) {
-
                     return Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: GestureDetector(
@@ -405,7 +451,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                             child: _buildFilterChip(
                                 widget.plan.modules[index].moduleName,
                                 isSelected:
-                                    (index + 1) == _selectedModuleIndex)));
+                                (index + 1) == _selectedModuleIndex)));
                   }),
                 ]),
               ),
@@ -430,17 +476,17 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
               const Gap(16),
               tasks.isNotEmpty
                   ? ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: tasks.length,
-                      separatorBuilder: (context, index) => const Gap(16),
-                      itemBuilder: (context, index) =>
-                          _buildTaskCard(task: tasks[index]))
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: tasks.length,
+                  separatorBuilder: (context, index) => const Gap(16),
+                  itemBuilder: (context, index) =>
+                      _buildTaskCard(task: tasks[index]))
                   : const Center(
-                      child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 40),
-                          child: Text("No tasks available for this module.",
-                              style: TextStyle(color: Colors.white54)))),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 40),
+                      child: Text("No tasks available for this module.",
+                          style: TextStyle(color: Colors.white54)))),
               const Gap(20),
             ],
           ),
@@ -460,7 +506,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
           height: 54,
           child: ElevatedButton(
               onPressed:
-                  _isDispatchedLoading ? null : _handleApproveAndDispatch,
+              _isDispatchedLoading ? null : _handleApproveAndDispatch,
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF7DD9FF),
                   shape: RoundedRectangleBorder(
@@ -468,15 +514,14 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                   elevation: 0),
               child: _isDispatchedLoading
                   ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                          color: Color(0xFF060B1B), strokeWidth: 2.5))
+                  width: 24,
+                  height: 24,
+                  child: SwappedShrinkingLoading(size: 30, strokeWidth: 3))
                   : const customText(
-                      text: "Approve & Dispatch",
-                      fontweight: FontWeight.w400,
-                      textsize: 18,
-                      color: Color(0xFF060B1B))),
+                  text: "Approve & Dispatch",
+                  fontweight: FontWeight.w400,
+                  textsize: 18,
+                  color: Color(0xFF060B1B))),
         ),
       ),
     );
@@ -521,7 +566,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.w500))),
               const Gap(10),
-              Row(children: [
+              Row(children: const [
                 Gap(10)
               ]),
             ]),
@@ -542,24 +587,24 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  Text(
-                      task.suggestedOwner.userId.split('-').skip(1).isNotEmpty
-                          ? task.suggestedOwner.userId.split('-').skip(1).first
-                          : task.suggestedOwner.userId,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                      overflow: TextOverflow.ellipsis),
-                  Text(task.suggestedOwner.jobTitle,
-                      style: const TextStyle(
-                          color: Color(0xFFACACAC), fontSize: 12),
-                      overflow: TextOverflow.ellipsis),
-                  const Gap(8),
-                ])),
+                      Text(
+                          task.suggestedOwner.userId.split('-').skip(1).isNotEmpty
+                              ? task.suggestedOwner.userId.split('-').skip(1).first
+                              : task.suggestedOwner.userId,
+                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                          overflow: TextOverflow.ellipsis),
+                      Text(task.suggestedOwner.jobTitle,
+                          style: const TextStyle(
+                              color: Color(0xFFACACAC), fontSize: 12),
+                          overflow: TextOverflow.ellipsis),
+                      const Gap(8),
+                    ])),
             const Gap(30),
             GestureDetector(
                 onTap: () {
                   _showEditTaskBottomSheet(context, task);
-                  debugPrint(
-                      "✏️ Edit button pressed for Task ID: ${task.taskId}");
+                  debugPrint("✏️ Edit button pressed for Task ID: ${task.taskId}");
+
                 },
                 child: const Icon(Icons.edit, color: Colors.grey, size: 25)),
           ])
@@ -598,39 +643,39 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                const Text('Start Date',
-                    style: TextStyle(color: Color(0xFFACACAC), fontSize: 11)),
-                const Gap(6),
-                Container(
-                    height: 34,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: const Color(0xFF1F2634),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Center(
-                        child: Text(task.startDate,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 11))))
-              ])),
+                    const Text('Start Date',
+                        style: TextStyle(color: Color(0xFFACACAC), fontSize: 11)),
+                    const Gap(6),
+                    Container(
+                        height: 34,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: const Color(0xFF1F2634),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                            child: Text(task.startDate,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 11))))
+                  ])),
           const Gap(12),
           Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                const Text('Deadline',
-                    style: TextStyle(color: Color(0xFFACACAC), fontSize: 11)),
-                const Gap(6),
-                Container(
-                    height: 34,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: const Color(0xFF1F2634),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Center(
-                        child: Text(task.deadlineDate,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 11))))
-              ])),
+                    const Text('Deadline',
+                        style: TextStyle(color: Color(0xFFACACAC), fontSize: 11)),
+                    const Gap(6),
+                    Container(
+                        height: 34,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: const Color(0xFF1F2634),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Center(
+                            child: Text(task.deadlineDate,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 11))))
+                  ])),
         ]),
       ]),
     );
@@ -646,6 +691,6 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                 radius: 13,
                 backgroundColor: Color(0xFF1F2634),
                 backgroundImage:
-                    AssetImage('assets/Team_Leader/user_avatar.png'))));
+                AssetImage('assets/Team_Leader/user_avatar.png'))));
   }
 }

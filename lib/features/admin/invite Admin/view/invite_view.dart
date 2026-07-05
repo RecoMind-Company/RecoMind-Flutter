@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/features/admin/invite%20Admin/data/invite_repo.dart';
 import 'package:recomind/features/admin/invite%20Admin/widget/invite_successfully_message.dart';
 import 'package:recomind/features/admin/profile/view/profile_view.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/bloc/not_bloc.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/data/notification_repo.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/admin_head.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/show_notification_TL.dart';
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/features/admin/Home_admin/data/home_admin_repo.dart';
@@ -19,6 +23,8 @@ class InviteView extends StatefulWidget {
 }
 
 class _InvitesScreenState extends State<InviteView> {
+  bool notification = false;
+
   String _companyName = "CName";
   String _acceptedCount = '0';
   String _expiredCount = '0';
@@ -163,7 +169,9 @@ class _InvitesScreenState extends State<InviteView> {
                 const Gap(70),
 
                 // Header
-                AdminHead(companyName: _companyName,),
+                AdminHead(companyName: _companyName,ontap: (){setState(() {
+                  notification = !notification;
+                });},),
 
                 const Gap(40),
 
@@ -257,7 +265,6 @@ class _InvitesScreenState extends State<InviteView> {
             ),
           ),
 
-          /// مؤشر تحميل شفاف يغطي الشاشة أثناء إرسال الـ API لمنع الضغط المتكرر
           if (_isSendingInvite)
             Container(
               color: Colors.black45,
@@ -274,6 +281,23 @@ class _InvitesScreenState extends State<InviteView> {
                   isInvite = false;
                 });
               },
+            ),
+          if (notification)
+            Positioned.fill(
+              child: Material(
+                color: Colors.black.withOpacity(0.5),
+                child: BlocProvider(
+                  create: (context) =>
+                      NotificationBloc(NotificationRepository()),
+                  child: ShowNotificationTl(
+                    cancel: () {
+                      setState(() {
+                        notification = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
             ),
         ],
       ),

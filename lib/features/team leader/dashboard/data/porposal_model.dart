@@ -148,14 +148,15 @@ class ValidationReportModel {
 
   factory ValidationReportModel.fromJson(Map<String, dynamic> json) {
     return ValidationReportModel(
-      id: json['id'] as String?,
-      queryText: json['userQuestion'] as String?,
+      id: json['id']?.toString(),
+      queryText: json['userQuestion']?.toString(),
       reportContent: json['content'] != null
           ? ReportContent.fromJson(json['content'] as Map<String, dynamic>)
           : null,
-      author: json['createdBy'] as String?,
-      creationDate: json['createdAt'] as String?,
-      reviewStatus: json['status'] as String?,
+      author: json['createdBy']?.toString(),
+      creationDate: json['createdAt']?.toString(),
+      // ✅ لو الـ status مفيش فيها قيمة (Null) بنديها افتراضياً 'pending'
+      reviewStatus: json['status'] != null ? json['status'].toString() : 'pending',
     );
   }
 
@@ -192,15 +193,22 @@ class ReportContent {
 
   factory ReportContent.fromJson(Map<String, dynamic> json) {
     return ReportContent(
-      summary: json['executive_summary'] as String?,
-      decision: json['validation_decision'] as String?,
+      summary: json['executive_summary']?.toString(),
+      decision: json['validation_decision']?.toString(),
       score: json['confidence_score'] as num?,
       coreFindings: json['key_findings'] != null
           ? CoreFindings.fromJson(json['key_findings'] as Map<String, dynamic>)
           : null,
-      adviceList: (json['recommendations'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
-      threats: (json['risk_factors'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
-      futureSteps: (json['next_steps'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
+      // ✅ تحويل آمن ومضمون للـ Lists لتجنب الـ TypeError المتكرر في الـ parsing
+      adviceList: json['recommendations'] != null
+          ? List<String>.from(json['recommendations'].map((e) => e.toString()))
+          : const [],
+      threats: json['risk_factors'] != null
+          ? List<String>.from(json['risk_factors'].map((e) => e.toString()))
+          : const [],
+      futureSteps: json['next_steps'] != null
+          ? List<String>.from(json['next_steps'].map((e) => e.toString()))
+          : const [],
     );
   }
 
@@ -230,9 +238,9 @@ class CoreFindings {
 
   factory CoreFindings.fromJson(Map<String, dynamic> json) {
     return CoreFindings(
-      historyAnalysis: json['precedent_analysis'] as String?,
-      assetsAssessment: json['resource_assessment'] as String?,
-      industryTrends: json['market_trends'] as String?,
+      historyAnalysis: json['precedent_analysis']?.toString(),
+      assetsAssessment: json['resource_assessment']?.toString(),
+      industryTrends: json['market_trends']?.toString(),
     );
   }
 

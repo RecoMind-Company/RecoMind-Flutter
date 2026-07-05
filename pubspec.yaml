@@ -62,20 +62,39 @@ dependencies:
   skeleton_loader: ^2.0.0+4
   image_picker: ^1.2.2
   dartz: ^0.10.1
+  rename: ^3.1.0
 
 
 
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^2.3.6
+  flutter_lints: ^5.0.0
+
 
 flutter_native_splash:
-  color: "#060B1B"
-  image: assets/Team leader svg/R.svg
+  color: "#070F1F"
+  image: "assets/native_splash_screen.png"
   android: true
   ios: true
+  android_12:
+    image: "assets/native_splash_screen.png"
+    color: "#070F1F"
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/Black Modern MS Logo.png"
+  adaptive_icon_background: "#070F1F"
+  adaptive_icon_foreground: "assets/Black Modern MS Logo.png"
+  image_path_ios: "assets/Black Modern MS Logo.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

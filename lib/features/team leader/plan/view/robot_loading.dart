@@ -109,10 +109,13 @@ class _RobotLoadingState extends State<RobotLoading> {
                 color: _errorMessage != null ? Colors.redAccent : Colors.white,
               ),
               const Gap(25),
-              SvgPicture.asset(
-                "assets/Robot/robo_position_2.svg",
-                height: screenSize.height * 0.45,
-                fit: BoxFit.contain,
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0),
+                child: SvgPicture.asset(
+                  "assets/Robot/robo_position_2.svg",
+                  height: screenSize.height * 0.45,
+                  fit: BoxFit.contain,
+                ),
               ),
               const Gap(45),
               if (_isLoading)

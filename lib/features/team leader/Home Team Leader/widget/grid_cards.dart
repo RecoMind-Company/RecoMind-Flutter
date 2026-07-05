@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class GridCards extends StatelessWidget {
-  const GridCards({super.key});
+class GridCards2 extends StatelessWidget {
+  const GridCards2 ({super.key});
 
   @override
   Widget build(BuildContext context) {

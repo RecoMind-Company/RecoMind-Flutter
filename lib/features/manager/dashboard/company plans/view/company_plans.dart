@@ -7,7 +7,6 @@ import 'package:recomind/features/manager/dashboard/company%20plans/view/add_pla
 import 'package:recomind/features/manager/dashboard/company%20plans/view/plan_detail.dart';
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 
-
 class CompanyPlans extends StatefulWidget {
   CompanyPlans({super.key, required this.selectedFilterIndex});
   late int selectedFilterIndex;
@@ -20,16 +19,16 @@ class _CompanyPlansState extends State<CompanyPlans> {
   final PlanRepository _repository = PlanRepository();
   final TextEditingController _searchController = TextEditingController();
 
-  List<ActualPlanModel> _allPlans = [];
-  List<ActualPlanModel> _filteredPlans = [];
+  List<ShortPlanDto> _allPlans = [];
+  List<ShortPlanDto> _filteredPlans = [];
   bool _isLoading = true;
   String _errorMessage = '';
 
   int get _countAll => _allPlans.length;
-  int get _countActionRequired => _allPlans.where((p) => p.status.toLowerCase() == 'action_required' || p.status.toLowerCase() == 'action required').length;
-  int get _countActive => _allPlans.where((p) => p.status.toLowerCase() == 'active').length;
-  int get _countPending => _allPlans.where((p) => p.status.toLowerCase() == 'pending' || p.status.toLowerCase() == 'draft').length;
-  int get _countCompleted => _allPlans.where((p) => p.status.toLowerCase() == 'completed').length;
+  int get _countActionRequired => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'action_required').length;
+  int get _countActive => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'active').length;
+  int get _countPending => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'pending').length;
+  int get _countCompleted => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'accepted').length;
 
   @override
   void initState() {
@@ -44,11 +43,12 @@ class _CompanyPlansState extends State<CompanyPlans> {
     });
     try {
       final responseItems = await _repository.fetchCompanyPlans();
-      _allPlans = responseItems
-          .where((item) => item.isSuccess && item.value != null)
-          .map((item) => item.value!)
-          .toList();
-      _filterPlans();
+
+      setState(() {
+        _allPlans = responseItems;
+        _filterPlans();
+        print(_allPlans[1].status);
+      });
     } catch (error) {
       setState(() {
         _isLoading = false;
@@ -65,14 +65,17 @@ class _CompanyPlansState extends State<CompanyPlans> {
     String query = _searchController.text.toLowerCase();
     setState(() {
       _filteredPlans = _allPlans.where((plan) {
-        bool matchesSearch = plan.goal.toLowerCase().contains(query);
+        // ✅ planName يحل محل plan.goal
+        bool matchesSearch = (plan.planName ?? '').toLowerCase().contains(query);
         bool matchesStatus = true;
 
+        String currentStatus = (plan.status ?? 'pending').toLowerCase();
+
         if (widget.selectedFilterIndex == 0) matchesStatus = true;
-        if (widget.selectedFilterIndex == 1) matchesStatus = (plan.status.toLowerCase() == 'action_required' || plan.status.toLowerCase() == 'action required');
-        if (widget.selectedFilterIndex == 2) matchesStatus = (plan.status.toLowerCase() == 'active');
-        if (widget.selectedFilterIndex == 3) matchesStatus = (plan.status.toLowerCase() == 'pending' || plan.status.toLowerCase() == 'draft');
-        if (widget.selectedFilterIndex == 4) matchesStatus = (plan.status.toLowerCase() == 'completed');
+        if (widget.selectedFilterIndex == 1) matchesStatus = (currentStatus == 'action_required' || currentStatus == 'action required');
+        if (widget.selectedFilterIndex == 2) matchesStatus = (currentStatus == 'active');
+        if (widget.selectedFilterIndex == 3) matchesStatus = (currentStatus == 'pending' || currentStatus == 'draft');
+        if (widget.selectedFilterIndex == 4) matchesStatus = (currentStatus == 'completed');
 
         return matchesSearch && matchesStatus;
       }).toList();
@@ -148,25 +151,26 @@ class _CompanyPlansState extends State<CompanyPlans> {
 
               /// Plans List
               if (_isLoading)
-                const Center(child: Padding(padding: EdgeInsets.all(20), child: SwappedShrinkingLoading(size: 50,strokeWidth: 5,)))
+                const Center(child: Padding(padding: EdgeInsets.all(20), child: SwappedShrinkingLoading(size: 50, strokeWidth: 5)))
               else if (_errorMessage.isNotEmpty)
                 Center(child: Padding(padding: EdgeInsets.all(20), child: Text(_errorMessage, style: const TextStyle(color: Colors.red))))
               else if (_filteredPlans.isEmpty)
                   const Center(child: Padding(padding: EdgeInsets.all(20), child: Text('No Plans Found', style: TextStyle(color: Color(0xFF8E9AA6)))))
                 else
                   ..._filteredPlans.map((plan) {
+                    String status = plan.status ?? 'pending';
                     Color statusColor = const Color(0xFF67D8F8);
                     Color statusBgColor = const Color(0xFF142438);
                     bool hasAlert = false;
 
-                    if (plan.status.toLowerCase() == 'action_required' || plan.status.toLowerCase() == 'action required') {
+                    if (status.toLowerCase() == 'action_required' || status.toLowerCase() == 'action required') {
                       statusColor = const Color(0xFFE05353);
                       statusBgColor = const Color(0xFF2C1921);
                       hasAlert = true;
-                    } else if (plan.status.toLowerCase() == 'draft' || plan.status.toLowerCase() == 'pending') {
+                    } else if (status.toLowerCase() == 'draft' || status.toLowerCase() == 'pending') {
                       statusColor = const Color(0xFFD4E313);
                       statusBgColor = const Color(0xFF242514);
-                    } else if (plan.status.toLowerCase() == 'completed') {
+                    } else if (status.toLowerCase() == 'completed') {
                       statusColor = const Color(0xFF3CD182);
                       statusBgColor = const Color(0xFF132A1E);
                     }
@@ -174,14 +178,13 @@ class _CompanyPlansState extends State<CompanyPlans> {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: _buildPlanCard(
-                        moduleId: plan.modules.isNotEmpty ? plan.modules[0].id : '',
-                        planId: plan.id,
-                        planName: plan.goal,
-                        statusLabel: plan.status,
+                        planId: plan.planId ?? '',
+                        planName: plan.planName ?? 'N/A',
+                        statusLabel: status,
                         statusColor: statusColor,
                         statusBgColor: statusBgColor,
                         progress: 0.05,
-                        progressText: plan.duration != '0' ? '${plan.duration} Days' : '0%',
+                        progressText: 'Active',
                         progressBarColor: statusColor,
                         hasAlert: hasAlert,
                         alertText: hasAlert ? 'Action required on this plan' : null,
@@ -470,7 +473,6 @@ class _CompanyPlansState extends State<CompanyPlans> {
 
   /// Plan Card Builder
   Widget _buildPlanCard({
-    required String moduleId,
     required String planId,
     required String planName,
     required String statusLabel,
@@ -487,12 +489,11 @@ class _CompanyPlansState extends State<CompanyPlans> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PlanDetailsScreen(
-                  planId: planId,
-                  planName: planName,
-                  status: statusLabel,
-                ),
+            builder: (context) => PlanDetailsScreen(
+              planId: planId,
+              planName: planName,
+              status: statusLabel,
+            ),
           ),
         );
         print(planId);
@@ -579,11 +580,11 @@ class _CompanyPlansState extends State<CompanyPlans> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: LinearProgressIndicator(
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),topRight: Radius.circular(15)),
                 value: progress,
                 backgroundColor: const Color(0xFF1E2538),
                 valueColor: AlwaysStoppedAnimation<Color>(progressBarColor),
                 minHeight: 16,
-                borderRadius: const BorderRadius.only(topRight: Radius.circular(16), bottomRight: Radius.circular(16)),
               ),
             ),
             const Gap(16),
@@ -615,57 +616,12 @@ class _CompanyPlansState extends State<CompanyPlans> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildTag(Icons.campaign_outlined, 'Marketing'),
-                    const Gap(8),
-                    _buildTag(Icons.monetization_on_outlined, 'Sales'),
-                    const Gap(8),
                     _buildHRTag(),
-                    const Gap(8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A2132),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Text(
-                        '+3',
-                        style: TextStyle(
-                          color: Color(0xFF8E9AA6),
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
           ],
         ),
-      ),
-    );
-  }
-
-  /// Tag Builder
-  Widget _buildTag(IconData icon, String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2132),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: const Color(0xFF8E9AA6), size: 16),
-          const Gap(6),
-          Text(
-            text,
-            style: const TextStyle(
-              color: Color(0xFF8E9AA6),
-              fontSize: 13,
-            ),
-          ),
-        ],
       ),
     );
   }

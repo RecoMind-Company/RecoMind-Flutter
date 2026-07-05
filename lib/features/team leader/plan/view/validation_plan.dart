@@ -43,15 +43,14 @@ class _ValidatingPlanScreenState extends State<ValidatingPlanScreen> {
           fetchedContent = result;
           isLoaded = true;
         } else {
-          await Future.delayed(const Duration(seconds: 3));
+          await Future.delayed(const Duration(seconds: 15));
         }
       } catch (e) {
         debugPrint("Validation report still processing, retrying... Error: $e");
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 15));
       }
     }
 
-    // 2. إرسال البيانات للحفظ مع حقل الـ userRequest والـ status = 1 (Static)
     if (isLoaded && fetchedContent != null && mounted) {
       try {
         final requestBody = SaveValidationRequestModel(
@@ -76,15 +75,15 @@ class _ValidatingPlanScreenState extends State<ValidatingPlanScreen> {
   }
 
   void _startAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(seconds: 10));
     if (!mounted) return;
     setState(() => _currentStep = 1);
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 15));
     if (!mounted) return;
     setState(() => _currentStep = 2);
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 20));
     if (!mounted) return;
     setState(() => _currentStep = 3);
 

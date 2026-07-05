@@ -8,6 +8,7 @@ import 'package:recomind/features/team%20leader/Home%20Team%20Leader/view/home_T
 import 'package:recomind/features/team%20leader/dashboard/view/suggest_plan.dart';
 import 'package:recomind/features/team%20leader/report%20history/view/full_screen.dart';
 import 'package:recomind/root.dart';
+import 'package:recomind/splash_screen.dart';
 
 void main() {
   runApp(const App());
@@ -20,7 +21,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:Loginview(),
+      home:splash_screen(),
     );
   }
 }

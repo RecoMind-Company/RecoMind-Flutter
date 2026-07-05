@@ -5,17 +5,14 @@ import 'package:recomind/features/team%20leader/dashboard/data/porposal_model.da
 class ProposalRepository {
   final ApiServicepublic _apiServiceTeam = ApiServicepublic();
 
-  /// جلب قائمة المقترحات بناءً على الـ Endpoint الموضحة في الاسكرين شوت بالظبط
   Future<dynamic> getProposals() async {
     try {
-      // استخدام نفس المسار والـ Query Params الموضحة بصورة البوستمان
       final response = await _apiServiceTeam.get('/api/ValidationReport/sent?limit=6');
 
       if (response is ApiError) {
         return response;
       }
 
-      // تحويل الاستجابة باستخدام الدالة المرنة الجديدة التي تدعم كلا الشكلين (List / Map)
       final List<ProposalModel> proposals = ProposalModel.fromResponse(response);
 
       return proposals;
@@ -28,11 +25,10 @@ class ProposalRepository {
   }
 
   /// single one
-  /// جلب تفاصيل تقرير تحقق محدد باستخدام المعرف الخاص به
   Future<dynamic> fetchReportDetails(String reportId) async {
     try {
       final response = await _apiServiceTeam.get('/api/ValidationReport/get/$reportId');
-
+      print(response);
       if (response is ApiError) {
         return response;
       }

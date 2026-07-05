@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/core/network/api_exceptions.dart';
@@ -12,15 +11,15 @@ class ChatbotRepo {
   String? taskId, user_question;
   ApiServiceChatBot apiService = ApiServiceChatBot();
 
-  /// create Query
   Future<createQuery> create1Query(String question) async {
     try {
-      final response = await apiService.post("/CreateQuery",
-        jsonEncode(
-          question,  // أو "question" حسب الـ DTO في الـ backend
-        ),
+      final response = await apiService.post(
+        "/CreateQuery",
+        {
+          "question": question,
+        },
       );
-      print(response);
+      print("this is first response $response");
       return createQuery.fromJson(response);
     } on DioError catch (e) {
       throw ApiException.handleError(e);
@@ -39,7 +38,7 @@ class ChatbotRepo {
           "taskId": taskID,
           "user_question": user_question,
         });
-
+        print("this is second response $response");
         if (response is ApiError) {
           throw response;
         }
@@ -47,12 +46,10 @@ class ChatbotRepo {
         final user = getQuery.fromJson(response);
         print(user);
 
-        // تحقق من حالة النجاح
         if (user.status == "SUCCESS") {
           return user;
         }
 
-        // لو لسه مش SUCCESS ننتظر 20 ثانية قبل المحاولة التالية
         await Future.delayed(Duration(seconds: 20));
 
       } on DioError catch (e) {
@@ -62,7 +59,4 @@ class ChatbotRepo {
       }
     }
   }
-
-
-
 }

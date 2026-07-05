@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/core/network/api_service.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_model.dart';
 
@@ -15,7 +16,7 @@ class PlanRepository {
       debugPrint("----------------------------------------");
       debugPrint("This is description: $description");
       debugPrint("Sending generated custom plan...");
-
+      print("This is description: $description");
       final response = await _apiService.post(
         '/api/Plan/custom-plan/generate',
         {
@@ -39,14 +40,14 @@ class PlanRepository {
       final response = await _apiService.post(
         '/api/Plan/custom-plan/result',
         {
-          'taskId': taskId,    // الـ CamelCase الافتراضي للدرفتس
-          'task_id': taskId,   // الـ Snake_Case تأميناً إذا كان السيرفر صارم في التسمية
+          'taskId': taskId,
+          'task_id': taskId,
         },
       );
 
       return PlanResponse.fromJson(response);
     } catch (e, stackTrace) {
-      // 🔴 طباعة تفاصيل الخطأ في الـ Console لتسهيل معالجته أثناء الـ Debugging
+
       debugPrint('================ 🚨 CUSTOM PLAN ERROR 🚨 ================');
       debugPrint('Exception Caught: $e');
       debugPrint('Stack Trace:\n$stackTrace');
@@ -82,19 +83,27 @@ class PlanRepository {
   // =========================================================================
   // 3. بقية دوال جلب خطط وتاسكات الشركة (Company Plans & Tasks)
   // =========================================================================
-  Future<List<CompanyPlanResponseItem>> fetchCompanyPlans() async {
+  Future<List<ShortPlanDto>> fetchCompanyPlans() async {
     try {
-      final responseData = await _apiService.get('/api/Plan/GetAll');
-
-      if (responseData is List) {
+      final responseData = await _apiService.get('/api/Plan/by-teamId');
+      print(responseData);
+      if (responseData is Map<String, dynamic> && responseData.containsKey('shortPlanDtos')) {
+        final List<dynamic> list = responseData['shortPlanDtos'] ?? [];
+        return list
+            .map((e) => ShortPlanDto.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else if (responseData is List) {
         return responseData
-            .map((e) => CompanyPlanResponseItem.fromJson(e as Map<String, dynamic>))
+            .map((e) => ShortPlanDto.fromJson(e as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Expected a List from API response');
+        throw ApiError(message: 'Unexpected API response format');
       }
     } catch (e) {
-      rethrow;
+      if (e is ApiError) {
+        rethrow;
+      }
+      throw ApiError(message: e.toString());
     }
   }
 
@@ -143,7 +152,7 @@ class PlanRepository {
       final body = request.toJson();
 
       debugPrint("🚀 Sending Update Request to: $endpoint");
-      debugPrint("📦 Payload: $body"); // هنا ستعرف إذا كانت البيانات تصل بشكل صحيح
+      debugPrint("📦 Payload: $body");
 
       final response = await _apiService.patch(endpoint, body);
 

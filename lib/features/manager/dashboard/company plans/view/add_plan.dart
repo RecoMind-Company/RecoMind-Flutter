@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_model.dart';
 import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_repo.dart';
+import 'package:recomind/features/team%20leader/plan/data/plan_repo.dart';
 import 'package:recomind/features/team%20leader/plan/view/robot_loading.dart';
+import 'package:recomind/features/team%20leader/plan/view/validation_plan.dart';
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
+import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/container.dart';
+import 'package:recomind/shared/widgets/custom_text.dart';
 
 
 class AddPlan extends StatefulWidget {
@@ -26,8 +31,9 @@ class _AddPlanState extends State<AddPlan> {
     super.initState();
     _planRepository = PlanRepository();
   }
-
-  void _handleExecute() async {
+  ActionPlanRepository _actionPlanRepository = ActionPlanRepository();
+  bool _isExecuting = false;
+  void _handleExecute({required bool isValidation}) async {
     final userInput = _textController.text.trim();
     if (userInput.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -35,31 +41,50 @@ class _AddPlanState extends State<AddPlan> {
       );
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
 
+
     try {
-      // استلام الـ PlanResponse الموحد الذي يحتوي على الـ task_id والـ status والـ message
-      final PlanResponse result = await _planRepository.generateCustomPlan(userInput);
+      dynamic result;
+
+      if (isValidation) {
+        // إذا ضغط على Start Validation يستدعي الـ Endpoint المخصصة للـ ValidationReport
+        result = await _actionPlanRepository.generateCustomPlanvalidation(userInput);
+      } else {
+        // هنا يوضع استدعاء الـ Endpoint العادي الخاص بالـ Execute إذا كان مختلفاً مستقبلاً
+        // حالياً سنتركه يستدعي الـ generateCustomPlan أو الميثود المخصصة للـ Execute لديك
+        result = await _planRepository.generateCustomPlan(userInput);
+      }
+
+      print("this is result //////////////////////////////////////////$result");
 
       setState(() {
-        _isLoading = false;
+        _isExecuting = false;
       });
 
       if (mounted) {
-        // الانتقال لشاشة الـ RobotLoading وتمرير الـ response كامل لتنادي منه الـ endpoint التانية
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RobotLoading(taskId: result.taskId!),
-          ),
-        );
+        if (isValidation) {
+          print(result.taskId!);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ValidatingPlanScreen(taskId:result.taskId!,Description: userInput,),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RobotLoading(taskId: result.taskId!),
+            ),
+          );
+        }
       }
     } catch (error) {
       setState(() {
-        _isLoading = false;
+        _isExecuting = false;
       });
 
       String errorMessage = 'Something went wrong';
@@ -86,7 +111,7 @@ class _AddPlanState extends State<AddPlan> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
+            child:Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Gap(16),
@@ -138,37 +163,35 @@ class _AddPlanState extends State<AddPlan> {
                   ),
                 ),
                 const Gap(40),
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _handleExecute,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF67D8F8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: SwappedShrinkingLoading(
-                        size: 40,
-                        strokeWidth: 3,
-                      ),
-                    )
-                        : const Text(
-                      'Execute it',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                _isLoading ? Center(child: SwappedShrinkingLoading(strokeWidth: 5,size: 50,)) :Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton(
+                          onPressed:() =>  _handleExecute(isValidation: false),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF67D8F8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const customText(text:
+                          'Execute it',
+                            color: Colors.black,
+                            textsize: 16,
+                            fontweight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                    const Gap(15),
+                    button(onPressed: (){
+                       _handleExecute(isValidation: true);
+
+                    }, color: AppColor.darkBlue, borderColor: AppColor.primaryColor, buttonText: "Validate it", textColor: AppColor.primaryColor),
+                  ],
+                )
               ],
             ),
           ),

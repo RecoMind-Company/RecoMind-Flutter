@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -13,7 +14,10 @@ import 'package:recomind/features/auth/sign%20up%20views/company%20setup/data/co
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/data/review_repo.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/com_info.dart';
 import 'package:recomind/features/auth/sign%20up%20views/review%20setup/widget/edit_button.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/bloc/not_bloc.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/data/notification_repo.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/admin_head.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/show_notification_TL.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/show_dialog_comInfo.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -31,6 +35,8 @@ class CompanyView extends StatefulWidget {
 
 class _CompanyScreenState extends State<CompanyView> {
  bool isclicked_info = false;
+ bool notification = false;
+
 
  reviewRepo review = reviewRepo();
  /// review Company setup
@@ -84,7 +90,9 @@ class _CompanyScreenState extends State<CompanyView> {
                  Gap(70),
 
                   // Header
-                  AdminHead(),
+                AdminHead(ontap: (){setState(() {
+                  notification = !notification;
+                });},),
 
                   Gap(50),
                   Padding(
@@ -208,7 +216,24 @@ class _CompanyScreenState extends State<CompanyView> {
           ),
           isclicked_info == true ? ShowDialogCominfo(ontap: (){setState(() {
             isclicked_info = false;
-          });},):customText(text: "")
+          });},):customText(text: ""),
+          if (notification)
+            Positioned.fill(
+              child: Material(
+                color: Colors.black.withOpacity(0.5),
+                child: BlocProvider(
+                  create: (context) =>
+                      NotificationBloc(NotificationRepository()),
+                  child: ShowNotificationTl(
+                    cancel: () {
+                      setState(() {
+                        notification = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

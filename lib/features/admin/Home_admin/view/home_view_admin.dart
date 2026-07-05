@@ -10,7 +10,6 @@ import 'package:recomind/root.dart';
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/features/admin/Home_admin/data/home_admin_repo.dart';
-// تم إضافة هذه الاستيرادات لتفعيل نظام الإشعارات
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/bloc/not_bloc.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/data/notification_repo.dart';
@@ -29,6 +28,7 @@ class _HomeViewAdminState extends State<HomeViewAdmin> {
   bool _isLoading = true;
   bool notification = false;
   int _unreadCount = 0;
+
   Future<void> _fetchUnreadCount() async {
     try {
       final count = await NotificationRepository().getUnreadCount();
@@ -116,7 +116,16 @@ class _HomeViewAdminState extends State<HomeViewAdmin> {
               children: [
                 const Gap(70),
                 // Profile header
-                AdminHead(companyName: _companyName,),
+                AdminHead(
+                  companyName: _companyName,
+                  ontap: () {
+                    setState(() {
+                      notification = !notification;
+                    });
+                    print("object");
+                    print(notification);
+                  },
+                ),
 
                 const Gap(50),
 
@@ -141,82 +150,104 @@ class _HomeViewAdminState extends State<HomeViewAdmin> {
                           ]),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24, horizontal: 16),
                     child: _isLoading
                         ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40.0),
-                        child: SwappedShrinkingLoading(size: 50,strokeWidth: 5,),
-                      ),
-                    )
-                        : Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: Image(
-                              image: AssetImage(
-                                  "assets/Home/fluent_people-team-20-regular.png")),
-                        ),
-                        const Gap(20),
-                        SizedBox(
-                          height: 70,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              StatColumn(label: 'Accepted Invites', value: _acceptedCount),
-                              const VerticalDivider(
-                                color: Color(0xff2F5368),
-                                width: 2,
-                                endIndent: 16,
-                                indent: 16,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 40.0),
+                              child: SwappedShrinkingLoading(
+                                size: 50,
+                                strokeWidth: 5,
                               ),
-                              StatColumn(label: 'Expired Invites', value: _expiredCount),
+                            ),
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Image(
+                                    image: AssetImage(
+                                        "assets/Home/fluent_people-team-20-regular.png")),
+                              ),
+                              const Gap(20),
+                              SizedBox(
+                                height: 70,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    StatColumn(
+                                        label: 'Accepted Invites',
+                                        value: _acceptedCount),
+                                    const VerticalDivider(
+                                      color: Color(0xff2F5368),
+                                      width: 2,
+                                      endIndent: 16,
+                                      indent: 16,
+                                    ),
+                                    StatColumn(
+                                        label: 'Expired Invites',
+                                        value: _expiredCount),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              customText(
+                                text:
+                                    "$_pendingCount members haven't joined yet",
+                                color: const Color(0xffEFEFEF),
+                                textsize: 20,
+                              ),
+                              const Gap(16),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const root(
+                                          initialPage: 1,
+                                          Role: "admin",
+                                        ),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF7EE3FF),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    elevation: 8,
+                                  ),
+                                  child: const customText(
+                                    text: 'Track Invites',
+                                    color: Colors.black,
+                                    fontweight: FontWeight.bold,
+                                    textsize: 15,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        customText(
-                          text: "$_pendingCount members haven't joined yet",
-                          color: const Color(0xffEFEFEF),
-                          textsize: 20,
-                        ),
-                        const Gap(16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF7EE3FF),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              elevation: 8,
-                            ),
-                            child: const customText(
-                              text: 'Track Invites',
-                              color: Colors.black,
-                              fontweight: FontWeight.bold,
-                              textsize: 15,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 const Spacer(),
               ],
             ),
           ),
-          // إضافة الـ Overlay الخاص بنافذة الإشعارات
           if (notification)
             Positioned.fill(
               child: Material(
                 color: Colors.black.withOpacity(0.5),
                 child: BlocProvider(
-                  create: (context) => NotificationBloc(NotificationRepository()),
+                  create: (context) =>
+                      NotificationBloc(NotificationRepository()),
                   child: ShowNotificationTl(
                     cancel: () {
                       setState(() {

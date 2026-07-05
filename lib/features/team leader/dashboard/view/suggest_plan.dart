@@ -4,9 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
+import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_model.dart';
+import 'package:recomind/features/manager/dashboard/company%20plans/data/dashboard_repo.dart';
 import 'package:recomind/features/team%20leader/dashboard/data/porposal_model.dart';
 import 'package:recomind/features/team%20leader/dashboard/data/porposal_repo.dart';
 import 'package:recomind/features/team%20leader/dashboard/widget/show_widget_contant.dart';
+import 'package:recomind/features/team%20leader/plan/view/robot_loading.dart';
 import 'package:recomind/shared/widgets/button.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
@@ -25,7 +28,7 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
   final ProposalRepository _updateStatusRepository = ProposalRepository(); // 💡 تعريف الـ repo
 
   late Future<dynamic> _reportFuture;
-  bool _isActionLoading = false; // 💡 متغير لمتابعة حالة التحميل أثناء الضغط على الأزرار
+  bool _isActionLoading = false;
 
   @override
   void initState() {
@@ -33,7 +36,8 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
     _reportFuture = _reportRepository.fetchReportDetails(widget.id ?? "");
   }
 
-  /// 💡 دالة مركزية لتحديث حالة التقرير وتجنب تكرار الكود
+  static late String userInputprint ;
+
   Future<void> _handleUpdateStatus(int statusValue, String statusText) async {
     if (widget.id == null) return;
 
@@ -47,30 +51,76 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
     );
 
     final response = await _updateStatusRepository.updateReportStatus(request);
-
+    print(response);
     setState(() {
       _isActionLoading = false;
     });
 
     if (response is! ApiError) {
-      // إشعار بالنجاح
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Plan $statusText Successfully!"),
           backgroundColor: statusValue == 3 ? Colors.green : Colors.redAccent,
         ),
       );
-      // 💡 قفل الشاشة فوراً للـ Approve والـ Reject وتمرير true لعمل ريلود وحذف الكارد من الشاشة السابقة
-      if (mounted) {
-        Navigator.pop(context, true);
-      }
+
     } else {
-      // إشعار في حالة حدوث خطأ من السيرفر
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(response.message ?? "Failed to update status. Please try again."),
           backgroundColor: Colors.red,
         ),
+      );
+    }
+  }
+
+  final PlanRepository _planRepository = PlanRepository();
+
+  bool _isLoading = false;
+  static late String userRequis ;
+
+  /// execute
+  void _handleExecute() async {
+    final userInput = userRequis.trim() ;
+    userInputprint = userInput;
+    if (userInput.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please type something first')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final PlanResponse result = await _planRepository.generateCustomPlan(userInput);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RobotLoading(taskId: result.taskId!),
+          ),
+        );
+      }
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      String errorMessage = 'Something went wrong';
+      if (error is ApiError) {
+        errorMessage = error.message;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
       );
     }
   }
@@ -84,14 +134,12 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
         child: FutureBuilder<dynamic>(
           future: _reportFuture,
           builder: (context, snapshot) {
-            // 1. حالة التحميل (Loading)
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: SwappedShrinkingLoading(size: 40, strokeWidth: 4),
               );
             }
 
-            // 2. حالة حدوث خطأ أو بيانات غير صالحة
             if (snapshot.hasError || snapshot.data is! ValidationReportModel) {
               return Center(
                 child: Padding(
@@ -119,9 +167,9 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
               );
             }
 
-            // استخراج كائن البيانات الفعلي المرجوع
             final ValidationReportModel report = snapshot.data as ValidationReportModel;
-
+            userRequis = report.queryText ?? "";
+            userInputprint = report.queryText ?? "";
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: CustomScrollView(
@@ -160,7 +208,7 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
                               : "Social Media Growth",
                           style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold),
                         ),
                         const Gap(10),
@@ -276,11 +324,10 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const Gap(40),
-                        // عرض مؤشر تحميل عام فوق الأزرار عند الضغط للحماية والتأكيد البصري
                         if (_isActionLoading)
                           const Padding(
                             padding: EdgeInsets.only(bottom: 16.0),
-                            child: CupertinoActivityIndicator(color: Colors.white),
+                            child: SwappedShrinkingLoading(size: 40, strokeWidth: 4),
                           ),
                         Row(children: [
                           Expanded(
@@ -304,7 +351,7 @@ class _SuggestedPlanScreenState extends State<SuggestedPlanScreen> {
                                       ? () {}
                                       : (){
                                     _handleUpdateStatus(3, "Approved");
-                                    print(widget.id);
+                                    _handleExecute();
                                   } , // استدعاء حالة الـ Approve
                                   color: _isActionLoading ? const Color(0xFF212636) : AppColor.primaryColor,
                                   borderColor: _isActionLoading ? const Color(0xFF212636) : AppColor.primaryColor,

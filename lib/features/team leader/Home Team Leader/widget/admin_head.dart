@@ -7,15 +7,16 @@ import 'package:recomind/features/admin/profile/data/profile_model.dart';
 import 'package:recomind/features/admin/profile/data/profile_repo.dart';
 import 'package:recomind/features/admin/profile/view/profile_view.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/data/notification_repo.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/show_notification_TL.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../shared/widgets/custom_text.dart';
 
 
 class AdminHead extends StatefulWidget {
-  const AdminHead({super.key,this.companyName = 'CName'});
+  const AdminHead({super.key,this.companyName = 'CName',required this.ontap});
   final companyName ;
-
+final Function() ontap;
 
 
   @override
@@ -126,8 +127,9 @@ class _AdminHeadState extends State<AdminHead> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileView()));
               },
               child: const CircleAvatar(
+                backgroundColor: Color(0xFF151B29),
                 radius: 23,
-                backgroundImage: AssetImage("assets/Home/Ellipse 79.png"),
+                child: Icon(Icons.person, color: Colors.white54, size: 30),
               ),
             ),
             const Gap(10),
@@ -154,7 +156,7 @@ class _AdminHeadState extends State<AdminHead> {
             Stack(
               children: [
                 GestureDetector(
-                  onTap: () => setState(() => notification = true),
+                  onTap: widget.ontap,
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(

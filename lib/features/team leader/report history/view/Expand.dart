@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -9,14 +8,12 @@ import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/core/network/api_error.dart';
 import 'package:recomind/features/team%20leader/report%20history/data/report_reporistory.dart';
 import 'package:recomind/features/team%20leader/report%20history/view/full_screen.dart';
-import 'package:recomind/features/team%20leader/report%20history/widget/texttest.dart';
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
-import 'package:recomind/shared/widgets/diver_wid.dart';
 
 class ExpandScreen extends StatefulWidget {
-  const ExpandScreen({super.key, this.taskId,this.teamId});
+  const ExpandScreen({super.key, this.taskId, this.teamId});
 
   final String? taskId;
   final String? teamId;
@@ -26,10 +23,9 @@ class ExpandScreen extends StatefulWidget {
 }
 
 class _ExpandScreenState extends State<ExpandScreen> {
-  /// get report
   String? fixedText;
   bool isLoading = false;
-  reportRepo resultrepo = reportRepo();
+  final reportRepo resultrepo = reportRepo();
   late String reportID;
 
   Future<void> getResult() async {
@@ -37,14 +33,9 @@ class _ExpandScreenState extends State<ExpandScreen> {
       setState(() {
         isLoading = true;
       });
-      final result = await resultrepo.getReportResult(widget.taskId,widget.teamId,);
-      print("TASK ID = ${result.aiResponse}");
-      print("Status = ${result.generatedDate}");
+      final result = await resultrepo.getReportResult(widget.taskId, widget.teamId);
       fixedText = result.aiResponse?.replaceAll(RegExp(r'\\\\n'), r'\n');
-      reportID = result.id!;
-
-
-      print("Fixed Result:\n$fixedText");
+      reportID = result.id ?? '';
       setState(() {
         isLoading = false;
       });
@@ -58,7 +49,6 @@ class _ExpandScreenState extends State<ExpandScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getResult();
   }
@@ -68,36 +58,33 @@ class _ExpandScreenState extends State<ExpandScreen> {
     return RefreshIndicator(
       color: AppColor.darkBlue,
       backgroundColor: AppColor.primaryColor,
-      onRefresh: () async {
-        await getResult();
-      },
+      onRefresh: getResult,
       child: Scaffold(
         body: Containerwid(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              // ✅ تم إزالة الـ Expanded من هنا لإنهاء الـ Exception تماماً
               child: Column(
                 children: [
-                  Gap(90),
+                  const Gap(90),
                   Row(
                     children: [
-                      Gap(5),
+                      const Gap(5),
                       GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            CupertinoIcons.back,
-                            color: Colors.white,
-                            size: 30,
-                          )),
+                        onTap: () => Navigator.pop(context),
+                        child: const Icon(
+                          CupertinoIcons.back,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
                     ],
                   ),
-                  Gap(40),
+                  const Gap(40),
 
-                  /// title
+                  /// Title
                   Row(
                     children: [
                       customText(
@@ -108,9 +95,10 @@ class _ExpandScreenState extends State<ExpandScreen> {
                       ),
                     ],
                   ),
-                  Gap(40),
+                  const Gap(40),
 
-                  isLoading == true
+                  /// Content Area
+                  isLoading
                       ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -120,124 +108,96 @@ class _ExpandScreenState extends State<ExpandScreen> {
                         fontweight: FontWeight.bold,
                         textsize: 20,
                       ),
-                      Gap(40),
-                      Center(
-                          child: SwappedShrinkingLoading(strokeWidth: 5,size: 50,))
+                      const Gap(40),
+                      const Center(
+                        child: SwappedShrinkingLoading(strokeWidth: 5, size: 50),
+                      )
                     ],
-                  ): Stack(
-                      children: [
-                        Material(
-                          color: Colors.transparent,
-                          elevation: 20,
-                          borderRadius: BorderRadius.circular(15),
-                          child: Container(
-                              height: 500,
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color:AppColor.darkBlue,
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(color: AppColor.primaryColor,width: 3)
-                              ),
-                              child: isLoading == true
-                                  ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        customText(
-                                          text: "Report is loading please wait ...",
-                                          color: AppColor.primaryColor,
-                                          fontweight: FontWeight.bold,
-                                          textsize: 20,
-                                        ),
-                                        Gap(20),
-                                        Center(
-                                            child: CupertinoActivityIndicator(
-                                          color: AppColor.primaryColor,
-                                          radius: 20,
-                                        ))
-                                      ],
-                                    )
-                                  : Markdown(
-                                    data: fixedText.toString(),
-                                    physics: NeverScrollableScrollPhysics(),
-                                    styleSheet: MarkdownStyleSheet(
-                                      h1: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold),
-                                      h2: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
-                                      h3: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                      h4: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                      h5: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                      h6: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                      p: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                      listBullet: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                      blockSpacing: 10.0,
-                                      listIndent: 24.0,
-                                    ),
-                                  )),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                            child: Container(
-                              height: 500,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: AppColor.darkBlue.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
+                  )
+                      : Stack(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        elevation: 20,
+                        borderRadius: BorderRadius.circular(15),
+                        child: Container(
+                          height: 500,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppColor.darkBlue,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: AppColor.primaryColor, width: 3),
+                          ),
+                          child: Markdown(
+                            data: fixedText ?? "No content available",
+                            physics: const NeverScrollableScrollPhysics(),
+                            styleSheet: MarkdownStyleSheet(
+                              h1: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                              h2: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                              h3: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                              p: const TextStyle(color: Colors.white, fontSize: 15, height: 1.4),
+                              listBullet: const TextStyle(color: Colors.white, fontSize: 15),
+                              blockSpacing: 12.0,
+                              listIndent: 20.0,
                             ),
                           ),
                         ),
-                        Positioned(
-                          bottom: 30,
-                          right: 30,
-                          child: GestureDetector(
-                            onTap: () {
-                              print(reportID);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreen(teamId: widget.teamId,taskId: widget.taskId,fixedText: fixedText.toString(),reportid:reportID,),));
-                            },
-                            child: Container(
-                              height: 40,
-                              width: 60,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColor.primaryColor,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: SvgPicture.asset("assets/Team leader svg/zoom.svg"),
-                            ),
-                          ),
-                        ) ,
-                      ],
-                    ),
+                      ),
 
-                  ///Divider
+                      // طبقة الـ Blur مدمجة فوق الـ Card ومنسقة الأبعاد
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                          child: Container(
+                            height: 500,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColor.darkBlue.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // زرار الـ Zoom في مقدمة الـ Stack لضمان استجابة اللمس
+                      Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreen(
+                                  teamId: widget.teamId,
+                                  taskId: widget.taskId,
+                                  fixedText: fixedText.toString(),
+                                  reportid: reportID,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 44,
+                            width: 64,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColor.primaryColor,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SvgPicture.asset("assets/Team leader svg/zoom.svg"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-        )),
+        ),
       ),
     );
   }

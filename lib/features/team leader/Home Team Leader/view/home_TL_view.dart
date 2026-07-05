@@ -15,6 +15,7 @@ import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/grid
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/notification_TL.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/premium_card.dart';
 import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/show_notification_TL.dart';
+import 'package:recomind/features/team%20leader/Home%20Team%20Leader/widget/validate_button.dart';
 import 'package:recomind/features/team%20leader/report%20history/view/generate_report_view.dart';
 import 'package:recomind/shared/widgets/container.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
@@ -223,51 +224,106 @@ class _HomeTeamleaderScreenState extends State<HomeTlView> {
                     },
                   ),
                   Gap(24),
-                  Center(
-                    child: Container(
-                      width: 370,
-                      height: 220,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF0077A8), Color(0xFF003B57), Color(0xFF02101D)],
-                            stops: [0.01, 0.08, 0.20]),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: -20,
-                              bottom: 0,
-                              top: 0,
-                              child: Image.asset('assets/Team_Leader/man.png'),
+
+                  /// card man
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 370,
+                            height: 220,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [Color(0xFF0077A8), Color(0xFF003B57), Color(0xFF02101D)],
+                                  stops: [0.01, 0.08, 0.20]),
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Let's turn it into\nreality.", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 10),
-                                    const Text("Validate your idea, and turn it\ninto actionable tasks.", style: TextStyle(color: Colors.white70, fontSize: 14)),
-                                  ],
-                                ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: -20,
+                                    bottom: 0,
+                                    top: 0,
+                                    child: Image.asset('assets/Team_Leader/man.png'),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Let's turn it into\nreality.", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 10),
+                                          const Text("Validate your idea, and turn it\ninto actionable tasks.", style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                          Gap(20),
+                                          ValidateButton()
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                        const Gap(40),
+                        Center(
+                          child: Container(
+                            width: 370,
+                            height: 220,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [Color(0xFF0077A8), Color(0xFF003B57), Color(0xFF02101D)],
+                                  stops: [0.01, 0.08, 0.20]),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: -20,
+                                    bottom: 0,
+                                    top: 0,
+                                    child: Image.asset('assets/Team_Leader/manthink.png'),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Have an idea and want to\nsee its impact on your\ncompany?", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 10),
+                                          const Text("Validate your ideas before you\ninvest time, money, or effort.", style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                          Gap(20),
+                                          ValidateButton()
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   Gap(24),
-                  const GridCards(),
-                  const Gap(40),
+
                 ],
               ),
             ),

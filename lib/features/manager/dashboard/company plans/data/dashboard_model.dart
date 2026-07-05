@@ -486,7 +486,8 @@ class UpdateTaskRequest {
   final String description;
   final int status;
   final String startDate;
-  final String deadLine;
+  final String deadLine; // ✅ تم توحيد الاسم هنا ومطابقته مع الـ JSON
+  final List<String> userIds; // ✅ إضافة قائمة الـ IDs الخاصة بالأعضاء
 
   UpdateTaskRequest({
     required this.title,
@@ -494,6 +495,7 @@ class UpdateTaskRequest {
     required this.status,
     required this.startDate,
     required this.deadLine,
+    required this.userIds, // ✅ تمريرها في الـ Constructor
   });
 
   Map<String, dynamic> toJson() {
@@ -502,7 +504,28 @@ class UpdateTaskRequest {
       "description": description,
       "status": status,
       "startDate": startDate,
-      "deadlineDate": deadLine,
+      "deadLine": deadLine,   // ✅ تعديل المفتاح ليطابق الـ API تماماً بدلاً من deadlineDate
+      "userIds": userIds,     // ✅ إرسال قائمة الأعضاء المحددة
     };
+  }
+}
+/// team plan
+class ShortPlanDto {
+  final String? planId;
+  final String? planName;
+  final String? status; // يفضل تخلي اسم المتغير camelCase كـ clean code
+
+  ShortPlanDto({this.planId, this.planName, this.status});
+
+  factory ShortPlanDto.fromJson(Map<String, dynamic> json) {
+    // 1. بندعم لو الـ Key جيه كابيتال 'Status' أو سمول 'status'
+    final statusValue = json['Status'] ?? json['status'];
+
+    return ShortPlanDto(
+      planId: json['planId']?.toString(),
+      planName: json['planName']?.toString(),
+      // 2. لو الـ status مش موجودة أو null، بنديها قيمة افتراضية 'pending'
+      status: statusValue != null ? statusValue.toString() : 'pending',
+    );
   }
 }

@@ -8,6 +8,7 @@ import 'package:recomind/features/team%20leader/plan/data/plan_repo.dart';
 import 'package:recomind/features/team%20leader/plan/view/robot_loading.dart';
 import 'package:recomind/features/team%20leader/report/view/report_view.dart';
 import 'package:recomind/root.dart';
+import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 
 class ValidationReportScreen extends StatefulWidget {
   const ValidationReportScreen({super.key, required this.savedReportModel, required this.Description});
@@ -128,7 +129,7 @@ class _ValidationReportScreenState extends State<ValidationReportScreen> {
               Container(
                 color: Colors.black.withOpacity(0.4),
                 child: const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF7DD9FF)),
+                  child: SwappedShrinkingLoading(strokeWidth: 3,size: 30,),
                 ),
               ),
           ],
