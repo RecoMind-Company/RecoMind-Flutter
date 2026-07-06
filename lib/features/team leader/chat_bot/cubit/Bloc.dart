@@ -14,7 +14,7 @@ class ChatBotBloc extends Bloc<ChatBotEvent, ChatBotState> {
         // إنشاء الاستعلام
         final query = await repo.create1Query(event.message);
 
-        // انتظار الرد من الباكيند لحد ما يكون SUCCESS
+        // انتظار الرد من الباكيند
         final response = await repo.ChatResponse(
           taskID: query.task_id!,
           user_question: query.user_question!,
@@ -23,7 +23,9 @@ class ChatBotBloc extends Bloc<ChatBotEvent, ChatBotState> {
         emit(ChatBotLoaded(response.response!));
 
       } catch (e) {
-        emit(ChatBotError(e.toString()));
+        // ✅ هنا بنجبر البلوك يبعت رسالة الخطأ الصديقة للمستخدم
+        print("Bloc caught error: $e");
+        emit(ChatBotError("Something went wrong, please try again."));
       }
     });
   }

@@ -27,7 +27,6 @@ class _CardDepartmentState extends State<CardDepartment> {
       onTap: widget.ontap,
       child: Container(
         key: const ValueKey<bool>(false),
-        // مفتاح خاص بالحالة المدمجة
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         height: 60,
         width: 346,
@@ -69,11 +68,6 @@ class _CardDepartmentState extends State<CardDepartment> {
                   SvgPicture.asset("assets/Team_Leader/number_member.svg"),
                 ],
               )),
-          Gap(12),
-          Container(
-              width: 25,
-              height: 25,
-              child: SvgPicture.asset("assets/Team_Leader/right.svg"))
         ]),
       ),
     );

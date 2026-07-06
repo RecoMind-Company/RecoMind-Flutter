@@ -13,10 +13,8 @@ import 'package:recomind/root.dart';
 import 'package:recomind/splash_screen.dart';
 
 void main() async {
-  // ✅ 2. التأكد من تهيئة الـ WidgetsBinding أولاً لأن الدالة أصبحت async
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ 3. تحديد الاتجاهات الرأسية المسموح بها فقط (من الأعلى للأسفل والعكس) ومنع الأفقي تماماً
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -27,6 +25,8 @@ void main() async {
 
 class App extends StatelessWidget {
   const App({super.key});
+
+
 
   @override
   Widget build(BuildContext context) {

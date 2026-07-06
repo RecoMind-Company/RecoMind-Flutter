@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:recomind/core/constants/app_colors.dart';
 import 'package:recomind/features/admin/add%20team%20leader/view/markting_department.dart';
 import 'package:recomind/features/admin/add%20team%20leader/view/no_team_leader.dart';
 import 'package:recomind/features/admin/company%20members%20&%20DB/view/add_department.dart';
 import 'package:recomind/features/admin/company%20members%20&%20DB/widget/card_Department.dart';
+import 'package:recomind/features/auth/sign%20up%20views/teams/Cubit/company_setup_3_cubit.dart';
 import 'package:recomind/features/auth/sign%20up%20views/teams/data/team_Model.dart';
 import 'package:recomind/features/auth/sign%20up%20views/teams/data/team_Repo.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
@@ -72,8 +74,19 @@ class _DepartmentsViewState extends State<DepartmentsView> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddDepartment()),
-              );
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (_) => CompanySetup3Cubit(TeamRepo())..getTeams(),
+                    child: const AddDepartment(),
+                  ),
+                ),
+              ).then((_) {
+                // ✅ الكود ده هيتنفذ فوراً لما ترجع للصفحة دي من أي Pop
+                setState(() {
+                  teams.clear(); // تصفير القائمة لتشغيل الـ Skeletonizer Loading
+                });
+                getTeams(); // إعادة تحميل البيانات تلقائياً
+              });
             },
             child: Container(
               height: 44,
@@ -85,8 +98,8 @@ class _DepartmentsViewState extends State<DepartmentsView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(CupertinoIcons.plus, color: Colors.black),
-                  Gap(8),
+                  const Icon(CupertinoIcons.plus, color: Colors.black),
+                  const Gap(8),
                   customText(
                     text: "Add Department",
                     fontweight: FontWeight.w400,

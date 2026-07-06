@@ -37,8 +37,19 @@ class RobotRep{
           print("🟡 Response empty, retrying...");
         }
 
-      } on DioError catch (e) {
-        print("❌ DioError: ${e.message}, retrying...");
+      } on DioException catch (e) { // 💡 يفضل استخدام DioException في الإصدارات الجديدة من Dio
+        print("❌ DioError: ${e.message}");
+
+        // ✅ فحص لو الـ status code من السيرفر هو 500
+        if (e.response?.statusCode == 500) {
+          print("🛑 Server Error 500 detected. Stopping retries.");
+          // تقدر ترمي خطأ عشان الـ UI يعرف:
+          throw Exception("Server Error 500: Internal Server Error");
+          // أو لو حابب تخرج وترجع قيمة مخصصة بدل الـ throw:
+          // return "SERVER_ERROR_500";
+        }
+
+        print("🔄 Retrying after connection/other error...");
       } catch (e) {
         print("❌ Error: $e, retrying...");
       }

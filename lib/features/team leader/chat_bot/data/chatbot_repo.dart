@@ -38,9 +38,16 @@ class ChatbotRepo {
           "taskId": taskID,
           "user_question": user_question,
         });
+
         print("this is second response $response");
+
         if (response is ApiError) {
-          throw response;
+          throw response.message;
+        }
+
+        // ✅ حماية إضافية: لو الباكيند رجع String (Plain text خطأ من السيرفر) وليس Map
+        if (response is String) {
+          throw "Something went wrong, please try again.";
         }
 
         final user = getQuery.fromJson(response);
@@ -50,13 +57,39 @@ class ChatbotRepo {
           return user;
         }
 
-        await Future.delayed(Duration(seconds: 20));
+        await Future.delayed(const Duration(seconds: 20));
 
-      } on DioError catch (e) {
-        throw ApiException.handleError(e);
-      } on ApiError catch (e) {
-        throw e.message;
+      } on DioException catch (e) {
+        throw "Something went wrong, please try again.";
+      } catch (e) {
+        throw "Something went wrong, please try again.";
       }
+    }
+  }
+    Future<List<ChatBotHistoryModel>> getChatHistory() async {
+    try {
+      // استدعاء الـ Endpoint بأسلوب GET كما هو موضح بالصورة
+      final response = await apiService.get("/GetHistory");
+
+      print("History Response: $response");
+
+      if (response is ApiError) {
+        throw response.message;
+      }
+
+      // بما أن السيرفر يرجع List مباشرة [ {...}, {...} ]
+      if (response is List) {
+        return ChatBotHistoryModel.fromJsonList(response);
+      } else {
+        throw "Unexpected data format received.";
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error in history: $e");
+      throw "Something went wrong, please try again.";
+    } catch (e) {
+      print("Parsing Error in history: $e");
+      throw "Something went wrong, please try again.";
     }
   }
 }

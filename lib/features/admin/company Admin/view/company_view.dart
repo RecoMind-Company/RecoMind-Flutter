@@ -164,26 +164,25 @@ class _CompanyScreenState extends State<CompanyView> {
                       Gap(32),
 
                       ///DB setup
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => DatabaseSetup(),));
-                        },
-                        child: Container(
-                          height: 48,
-                          width: 343,
-                          color: Colors.transparent,
-                          child: Row(
-                            children: [
-                               Icon(FeatherIcons.database , color: Color(0xFFEEEEEE),),
-                              Gap(23),
-                              customText(text: "Database Setup",textsize: 18,fontweight: FontWeight.w500,color: Color(0xFFFFFFFF),),
-                              Spacer(),
-                              SvgPicture.asset("assets/Home/next.svg")
-                            ],
-                          ),
-                        ),
-                      ) ,
-                      Gap(32),
+                      // GestureDetector(
+                      //   onTap: (){
+                      //     Navigator.push(context, MaterialPageRoute(builder: (context) => DatabaseSetup(),));
+                      //   },
+                      //   child: Container(
+                      //     height: 48,
+                      //     width: 343,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       children: [
+                      //          Icon(FeatherIcons.database , color: Color(0xFFEEEEEE),),
+                      //         Gap(23),
+                      //         customText(text: "Database Setup",textsize: 18,fontweight: FontWeight.w500,color: Color(0xFFFFFFFF),),
+                      //         Spacer(),
+                      //         SvgPicture.asset("assets/Home/next.svg")
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ) ,
 
 
                       ///Members

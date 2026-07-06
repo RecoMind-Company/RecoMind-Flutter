@@ -22,3 +22,36 @@ class getQuery {
     );
   }
 }
+
+
+/// history
+class ChatBotHistoryModel {
+  final String? query;
+  final String? responseMessage;
+
+  ChatBotHistoryModel({
+    this.query,
+    this.responseMessage,
+  });
+
+  factory ChatBotHistoryModel.fromJson(Map<String, dynamic> json) {
+    return ChatBotHistoryModel(
+      query: json['query'] as String?,
+      responseMessage: json['responseMessage'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'query': query,
+      'responseMessage': responseMessage,
+    };
+  }
+
+  // دالة مساعدة لتحويل الـ List القادمة من الباكيند مباشرة
+  static List<ChatBotHistoryModel> fromJsonList(List<dynamic> jsonList) {
+    return jsonList
+        .map((item) => ChatBotHistoryModel.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+}

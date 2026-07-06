@@ -13,24 +13,21 @@ class CompanyMembers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. نستخدم DefaultTabController لإدارة حالة التبويبات
     return DefaultTabController(
-      length: 2, // عدد التبويبات (Management و Departments)
+      length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFF060B1B), // لون خلفية داكن
+        backgroundColor: const Color(0xFF060B1B),
 
         body: Containerwid(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // محاذاة العناصر لليسار
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gap(70),
-              // 2. العنوان وزر الرجوع (محاكاة الـ AppBar)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // زر الرجوع
                     GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
@@ -38,9 +35,8 @@ class CompanyMembers extends StatelessWidget {
                       child: const Icon(CupertinoIcons.back, color: Colors.white, size: 30),
                     ),
 
-                    const Gap(32), // مسافة بين الزر والعنوان
+                    const Gap(32),
 
-                    // العنوان
                     customText(
                       text: "Company Members",
                       color: const Color(0xFFFFFFFF),

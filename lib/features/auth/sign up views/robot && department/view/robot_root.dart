@@ -8,6 +8,8 @@ import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department
 import 'package:recomind/features/auth/sign%20up%20views/robot%20&&%20department/view/step_5_widget.dart';
 import 'package:recomind/shared/widgets/container.dart';
 
+
+
 class RobotRoot extends StatefulWidget {
   RobotRoot({super.key, required this.Id});
   String Id;
@@ -42,7 +44,7 @@ class _RobotRootState extends State<RobotRoot> {
     Step3Widget(),
     Step4Widget(),
     Step5Widget(),
-    AiAllSet() // آخر خطوة
+    AiAllSet()
   ];
 
   @override

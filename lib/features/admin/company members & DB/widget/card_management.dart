@@ -84,8 +84,8 @@ class _CardManagementState extends State<CardManagement> {
 
             : Container(
           key: const ValueKey<bool>(true),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          height: 180,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+
           width: double.infinity,
           decoration: BoxDecoration(
             color: const Color(0xFF212635),
@@ -121,24 +121,16 @@ class _CardManagementState extends State<CardManagement> {
               Row(
                 children: [
                   customText(
-                    text: "Email :",
+                    text: "Status :",
                     color: CupertinoColors.inactiveGray,
                   ),
-                  const Gap(5),
+                  Spacer(),
                   customText(
-                    text: widget.gmail_copy,
-                    color: CupertinoColors.inactiveGray,
+                    text: "Active",
+                    color: Colors.greenAccent,
                   )
                 ],
               ),
-              const Gap(20),
-              // تم تعديل onTap لاستخدام الدالة المنفصلة
-              button(
-                  onPressed: () => _copyEmail(context),
-                  color: const Color(0xFF212635),
-                  borderColor: AppColor.primaryColor,
-                  buttonText: "Copy Email",
-                  textColor: Colors.white)
             ],
           ),
         ),
