@@ -126,6 +126,7 @@ bool isLoading = false;
                                   SocialButton(
                                       image: "assets/Icons.png",
                                       text: "With Google"),
+
                                   SocialButton(
                                       image:
                                           "assets/microsoft_svgrepo.com (2).png",

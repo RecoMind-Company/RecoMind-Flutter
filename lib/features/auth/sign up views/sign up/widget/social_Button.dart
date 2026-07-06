@@ -8,7 +8,7 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 170,
+      padding: EdgeInsets.symmetric(horizontal: 10),
       height: 45,
       decoration: BoxDecoration(
         color: const Color(0xFF060B1B),
