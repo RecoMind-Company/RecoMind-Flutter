@@ -10,15 +10,15 @@ import 'package:recomind/features/team%20leader/dashboard/view/teamwork_view.dar
 import 'package:recomind/features/team%20leader/dashboard/data/team_work_repo.dart';
 
 class CompanyPlansScreen extends StatefulWidget {
-  const CompanyPlansScreen({super.key});
-
+   CompanyPlansScreen({super.key,this.category = 0});
+int category;
   @override
   State<CompanyPlansScreen> createState() => _CompanyPlansScreenState();
 }
 
 class _CompanyPlansScreenState extends State<CompanyPlansScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedFilterIndex = 0;
+  late int _selectedFilterIndex = widget.category;
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _CompanyPlansScreenState extends State<CompanyPlansScreen> with SingleTick
                         create: (context) => UserTasksBloc(UserTaskRepository())..add(FetchUserTasks()),
                         child: const MyWorkContent(),
                       ),
-                      CompanyPlans(selectedFilterIndex: _selectedFilterIndex,),
+                      CompanyPlans(selectedFilterIndex: _selectedFilterIndex,category: widget.category,),
                     ],
                   ),
                 ),

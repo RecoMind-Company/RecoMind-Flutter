@@ -83,6 +83,7 @@ class _RobotLoadingState extends State<RobotLoading> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
+              Gap(40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -101,16 +102,16 @@ class _RobotLoadingState extends State<RobotLoading> {
                   const SizedBox(width: 48),
                 ],
               ),
-              const Gap(30),
+              const Gap(50),
               customText(
                 text: _errorMessage ?? "AI Generating Task",
                 fontweight: FontWeight.w400,
                 textsize: 22,
                 color: _errorMessage != null ? Colors.redAccent : Colors.white,
               ),
-              const Gap(25),
+              const Gap(30),
               Padding(
-                padding: const EdgeInsets.only(left: 30.0),
+                padding: const EdgeInsets.only(left: 50.0),
                 child: SvgPicture.asset(
                   "assets/Robot/robo_position_2.svg",
                   height: screenSize.height * 0.45,

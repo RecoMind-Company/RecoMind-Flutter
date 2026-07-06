@@ -10,9 +10,10 @@ import 'package:recomind/features/team%20leader/chat_bot/view/chat_bot_view.dart
 import 'package:recomind/features/team%20leader/report/view/report_view.dart';
 
 class root extends StatefulWidget {
-  const root({super.key, this.Role, this.initialPage = 0});
+  const root({super.key, this.Role, this.initialPage = 0, this.category});
   final String? Role;
-  final int initialPage; // استقبال قيمة الصفحة المراد فتحها
+  final int initialPage;
+  final category;
 
   @override
   State<root> createState() => _rootState();
@@ -40,7 +41,7 @@ class _rootState extends State<root> {
         : pages = [
       HomeTlView(),
       ReportView(),
-      CompanyPlansScreen(),
+      CompanyPlansScreen(category: widget.category == null ? 0 : widget.category,),
       ChatBotView(),
     ];
     super.initState();

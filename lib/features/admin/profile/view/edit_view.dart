@@ -138,8 +138,7 @@ class _EditViewState extends State<EditView> {
                   CircleAvatar(
                     radius: 70,
                     backgroundColor: const Color(0xFF151B29),
-
-                    child:Icon(Icons.person,size: 70,color: Colors.white54,)
+                    backgroundImage: AssetImage("assets/Team_Leader/home/Ellipse 79 (1).png"),
                   ),
                   Positioned(
                     bottom: 0,

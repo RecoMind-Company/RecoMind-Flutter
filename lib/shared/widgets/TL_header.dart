@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:recomind/features/admin/profile/view/profile_view.dart';
 import 'package:recomind/shared/widgets/custom_text.dart';
 
 
@@ -13,9 +14,15 @@ final Function()? onTab_setting ;
     return  Row(
       children: [
         Gap(8),
-        CircleAvatar(
-          backgroundImage:AssetImage("assets/Team_Leader/home/Ellipse 79 (1).png") ,
-          radius:28 ,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView()));
+          },
+          child: const CircleAvatar(
+            backgroundColor: Color(0xFF151B29),
+            radius: 28,
+           backgroundImage: AssetImage("assets/Team_Leader/home/Ellipse 79 (1).png"),
+          ),
         ),
         Gap(40),
         ///icon title

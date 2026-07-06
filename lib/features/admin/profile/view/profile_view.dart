@@ -23,7 +23,6 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   bool isLogout = false;
 
-  // ✨ إدارة حالة البيانات والتحميل
   bool isLoading = false;
   final ProfileRepository _profileRepository = ProfileRepository();
   UserProfileModel? userProfile;
@@ -31,7 +30,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    fetchProfileData(); // ✨ جلب البيانات فور فتح الصفحة
+    fetchProfileData();
   }
 
   Future<void> fetchProfileData() async {
@@ -158,7 +157,7 @@ class _ProfileViewState extends State<ProfileView> {
                         CircleAvatar(
                           radius: 50,
                           backgroundColor: const Color(0xFF151B29),
-                          child: Icon(Icons.person,size: 70,color: Colors.white54,),
+                          backgroundImage: AssetImage("assets/Team_Leader/home/Ellipse 79 (1).png"),
                         )
                       ],
                     ),
@@ -180,7 +179,6 @@ class _ProfileViewState extends State<ProfileView> {
                         children: [
                           const Icon(Icons.person_outline, color: Color(0xFFB9B8B8)), // تم تعديل الأيقونة لتلائم الـ Name
                           const Gap(10),
-                          // ✨ الاسم الحقيقي ديناميكي
                           Expanded(
                             child: customText(
                               text: "Name :  ${userProfile!.name}",

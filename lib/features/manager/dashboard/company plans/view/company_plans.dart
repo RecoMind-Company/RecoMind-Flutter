@@ -8,8 +8,9 @@ import 'package:recomind/features/manager/dashboard/company%20plans/view/plan_de
 import 'package:recomind/shared/widgets/Gradient_Circular_Loading.dart';
 
 class CompanyPlans extends StatefulWidget {
-  CompanyPlans({super.key, required this.selectedFilterIndex});
+  CompanyPlans({super.key, required this.selectedFilterIndex,this.category=0});
   late int selectedFilterIndex;
+  int category;
 
   @override
   State<CompanyPlans> createState() => _CompanyPlansState();
@@ -24,11 +25,20 @@ class _CompanyPlansState extends State<CompanyPlans> {
   bool _isLoading = true;
   String _errorMessage = '';
 
+  // حساب الأعداد ديناميكياً بناءً على الحالات المتوقعة من الـ API
   int get _countAll => _allPlans.length;
-  int get _countActionRequired => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'action_required').length;
-  int get _countActive => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'active').length;
-  int get _countPending => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'pending').length;
-  int get _countCompleted => _allPlans.where((p) => (p.status ?? 'pending').toLowerCase() == 'accepted').length;
+  int get _countActionRequired => _allPlans.where((p) {
+    final status = (p.status ?? 'pending').toLowerCase().trim();
+    return status == 'action_required' || status == 'action required';
+  }).length;
+  int get _countAccept => _allPlans.where((p) {
+    final status = (p.status ?? 'pending').toLowerCase().trim();
+    return status == 'accepted' || status == 'completed' || status == 'active';
+  }).length;
+  int get _countDraft => _allPlans.where((p) {
+    final status = (p.status ?? 'pending').toLowerCase().trim();
+    return status == 'draft' || status == 'pending';
+  }).length;
 
   @override
   void initState() {
@@ -47,7 +57,6 @@ class _CompanyPlansState extends State<CompanyPlans> {
       setState(() {
         _allPlans = responseItems;
         _filterPlans();
-        print(_allPlans[1].status);
       });
     } catch (error) {
       setState(() {
@@ -61,21 +70,32 @@ class _CompanyPlansState extends State<CompanyPlans> {
     }
   }
 
+  // ✅ الفلترة بناءً على الـ Category المختار (شامل الـ Draft كـ Chip أساسي برقم 3)
   void _filterPlans() {
-    String query = _searchController.text.toLowerCase();
+    String query = _searchController.text.toLowerCase().trim();
     setState(() {
       _filteredPlans = _allPlans.where((plan) {
-        // ✅ planName يحل محل plan.goal
         bool matchesSearch = (plan.planName ?? '').toLowerCase().contains(query);
         bool matchesStatus = true;
 
-        String currentStatus = (plan.status ?? 'pending').toLowerCase();
+        String currentStatus = (plan.status ?? 'pending').toLowerCase().trim();
 
-        if (widget.selectedFilterIndex == 0) matchesStatus = true;
-        if (widget.selectedFilterIndex == 1) matchesStatus = (currentStatus == 'action_required' || currentStatus == 'action required');
-        if (widget.selectedFilterIndex == 2) matchesStatus = (currentStatus == 'active');
-        if (widget.selectedFilterIndex == 3) matchesStatus = (currentStatus == 'pending' || currentStatus == 'draft');
-        if (widget.selectedFilterIndex == 4) matchesStatus = (currentStatus == 'completed');
+        // 0 -> All
+        if (widget.selectedFilterIndex == 0) {
+          matchesStatus = true;
+        }
+        // 1 -> Action Required
+        else if (widget.selectedFilterIndex == 1) {
+          matchesStatus = (currentStatus == 'action_required' || currentStatus == 'action required');
+        }
+        // 2 -> Accept (Accepted / Completed / Active)
+        else if (widget.selectedFilterIndex == 2) {
+          matchesStatus = (currentStatus == 'accepted' || currentStatus == 'completed' || currentStatus == 'active');
+        }
+        // 3 -> Draft (Draft / Pending)
+        else if (widget.selectedFilterIndex == 3) {
+          matchesStatus = (currentStatus == 'draft' || currentStatus == 'pending');
+        }
 
         return matchesSearch && matchesStatus;
       }).toList();
@@ -132,7 +152,7 @@ class _CompanyPlansState extends State<CompanyPlans> {
               ),
               const Gap(20),
 
-              /// Filter Row
+              /// Filter Row (تم إضافة كارت الـ Draft كـ Chip أساسي هنا بشكل مباشر)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -141,7 +161,9 @@ class _CompanyPlansState extends State<CompanyPlans> {
                     const Gap(10),
                     _buildFilterChip(1, Icons.warning_amber_rounded, 'Action Required', '$_countActionRequired', const Color(0xFFE05353)),
                     const Gap(10),
-                    _buildFilterChip(2, Icons.hourglass_empty_rounded, 'Active', '$_countActive', const Color(0xFF67D8F8)),
+                    _buildFilterChip(2, Icons.check_circle_outline_rounded, 'Accept', '$_countAccept', const Color(0xFF3CD182)),
+                    const Gap(10),
+                    _buildFilterChip(3, Icons.access_time_filled_rounded, 'Draft', '$_countDraft', const Color(0xFFD4E313)),
                     const Gap(10),
                     _buildMoreChip(),
                   ],
@@ -163,14 +185,16 @@ class _CompanyPlansState extends State<CompanyPlans> {
                     Color statusBgColor = const Color(0xFF142438);
                     bool hasAlert = false;
 
-                    if (status.toLowerCase() == 'action_required' || status.toLowerCase() == 'action required') {
+                    String normStatus = status.toLowerCase().trim();
+
+                    if (normStatus == 'action_required' || normStatus == 'action required') {
                       statusColor = const Color(0xFFE05353);
                       statusBgColor = const Color(0xFF2C1921);
                       hasAlert = true;
-                    } else if (status.toLowerCase() == 'draft' || status.toLowerCase() == 'pending') {
+                    } else if (normStatus == 'draft' || normStatus == 'pending') {
                       statusColor = const Color(0xFFD4E313);
                       statusBgColor = const Color(0xFF242514);
-                    } else if (status.toLowerCase() == 'completed') {
+                    } else if (normStatus == 'completed' || normStatus == 'accepted' || normStatus == 'active') {
                       statusColor = const Color(0xFF3CD182);
                       statusBgColor = const Color(0xFF132A1E);
                     }
@@ -246,6 +270,14 @@ class _CompanyPlansState extends State<CompanyPlans> {
         bgColor = const Color(0xFF2C1921);
         borderCol = const Color(0xFFE05353);
         iconColor = const Color(0xFFE05353);
+      } else if (index == 2) {
+        bgColor = const Color(0xFF132A1E);
+        borderCol = const Color(0xFF3CD182);
+        iconColor = const Color(0xFF3CD182);
+      } else if (index == 3) {
+        bgColor = const Color(0xFF242514);
+        borderCol = const Color(0xFFD4E313);
+        iconColor = const Color(0xFFD4E313);
       } else {
         bgColor = const Color(0xFF142438);
         borderCol = const Color(0xFF67D8F8);
@@ -257,6 +289,11 @@ class _CompanyPlansState extends State<CompanyPlans> {
         borderCol = const Color(0xFF5A2A30);
         textColor = const Color(0xFF9E7E83);
         iconColor = const Color(0xFF7D434A);
+      } else if (index == 3) {
+        bgColor = const Color(0xFF242514).withOpacity(0.4);
+        borderCol = const Color(0xFF4A4B20);
+        textColor = const Color(0xFF9EA07E);
+        iconColor = const Color(0xFF7B7D3F);
       }
     }
     return GestureDetector(
@@ -342,7 +379,7 @@ class _CompanyPlansState extends State<CompanyPlans> {
     );
   }
 
-  /// Bottom Sheet Menu
+  /// Bottom Sheet Menu (يحتوي على كافة الحالات للرجوع السريع إن لزم الأمر)
   void _showMoreBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -380,16 +417,16 @@ class _CompanyPlansState extends State<CompanyPlans> {
                 index: 3,
                 icon: Icons.access_time_filled_rounded,
                 iconColor: const Color(0xFFD4E313),
-                label: 'Pending',
-                count: '$_countPending',
+                label: 'Draft',
+                count: '$_countDraft',
                 showDivider: true,
               ),
               _buildBottomSheetItem(
-                index: 4,
+                index: 2,
                 icon: Icons.check_circle_outline_rounded,
                 iconColor: const Color(0xFF3CD182),
-                label: 'Completed',
-                count: '$_countCompleted',
+                label: 'Accept',
+                count: '$_countAccept',
                 showDivider: true,
               ),
               _buildBottomSheetItem(
@@ -516,7 +553,7 @@ class _CompanyPlansState extends State<CompanyPlans> {
                     planName,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
                     maxLines: 2,
@@ -580,7 +617,7 @@ class _CompanyPlansState extends State<CompanyPlans> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: LinearProgressIndicator(
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),topRight: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(bottomRight: Radius.circular(15), topRight: Radius.circular(15)),
                 value: progress,
                 backgroundColor: const Color(0xFF1E2538),
                 valueColor: AlwaysStoppedAnimation<Color>(progressBarColor),

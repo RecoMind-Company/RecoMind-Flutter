@@ -95,184 +95,190 @@ class _ChatBotViewState extends State<ChatBotView> {
                   Containerwid(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Column(
-                        children: [
-                          Gap(70),
-                          TlHeader(
-                            icon: "assets/Team leader svg/List_icon.svg",
-                            onTab_setting: () {
-                              setState(() => isClickedSetting = true);
-                            },
-                          ),
-                          Gap(22),
-                          // Recommended messages فوق
-                          if (showRecommendedMessages)
-                            Column(
-                              children: [
-                                customText(
-                                  text: "Hi, How Can I Help You?",
-                                  color: AppColor.primaryColor,
-                                  textsize: 28,
-                                  fontweight: FontWeight.w400,
-                                ),
-                                Gap(32),
-                                Row(
-                                  children: [
-                                    RecommendedMessageWidget(
-                                        text: "  What if we cut costs 10%?  "),
-                                    Gap(8),
-                                    RecommendedMessageWidget(
-                                        text: " Show sales this month "),
-                                  ],
-                                ),
-                                Gap(12),
-                                Row(
-                                  children: [
-                                    RecommendedMessageWidget(
-                                        text:
-                                        "           Top 3 products performance           "),
-                                  ],
-                                ),
-                                Gap(12),
-                                Row(
-                                  children: [
-                                    RecommendedMessageWidget(
-                                        text:
-                                        "        Which services generate the highest revenue ?        "),
-                                  ],
-                                ),
-                                Gap(12),
-                              ],
+                      child: SafeArea(
+                        child: Column(
+                          children: [
+                            Gap(40),
+                            TlHeader(
+                              icon: "assets/Team leader svg/List_icon.svg",
+                              onTab_setting: () {
+                                setState(() => isClickedSetting = true);
+                              },
                             ),
-                          // الرسائل Scrollable تحت
-                          Expanded(
-                            child: SingleChildScrollView(
-                              reverse: true,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            Gap(22),
+                            // Recommended messages فوق
+                            if (showRecommendedMessages)
+                              Column(
                                 children: [
-                                  for (var msg in messages)
-                                    Align(
-                                      alignment: msg["type"] == "user"
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                      child: Container(
-                                        margin:
-                                        const EdgeInsets.symmetric(vertical: 4),
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: msg["type"] == "user"
-                                              ? const Color(0xFF454A5599)
-                                              : AppColor.darkBlue,
-                                          borderRadius: msg["type"] == "user"
-                                              ? const BorderRadius.only(
-                                            topLeft: Radius.circular(12),
-                                            topRight: Radius.circular(12),
-                                            bottomLeft:
-                                            Radius.circular(12),
-                                          )
-                                              : const BorderRadius.only(
-                                            topLeft: Radius.circular(12),
-                                            topRight: Radius.circular(12),
-                                            bottomRight:
-                                            Radius.circular(12),
-                                          ),
-                                        ),
-                                        // تعديل هنا: إذا كانت الرسالة من البوت نستخدم RichText لدعم الـ Bold
-                                        child: msg["type"] == "user"
-                                            ? customText(
-                                          text: msg["text"]!,
-                                          color: Colors.white,
-                                        )
-                                            : RichText(
-                                          text: TextSpan(
-                                            children: _parseMarkdown(msg["text"]!),
-                                          ),
-                                        ),
+                                  customText(
+                                    text: "Hi, How Can I Help You?",
+                                    color: AppColor.primaryColor,
+                                    textsize: 28,
+                                    fontweight: FontWeight.w400,
+                                  ),
+                                  Gap(32),
+                                  Row(
+                                    children: [
+                                      RecommendedMessageWidget(
+                                          text: "Show sales this month"),
+                                    ],
+                                  ),
+                                 Gap(12),
+                                      Row(
+                                        children: [
+                                          RecommendedMessageWidget(
+                                              text: "What if we cut costs 10%?"),
+                                        ],
                                       ),
-                                    ),
-                                  if (state is ChatBotLoading)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Container(
-                                        alignment: Alignment.topCenter,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(15),
-                                          color: const Color(0xFF0E1526),
-                                        ),
-                                        child:Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Skeletonizer(
-                                              enabled: true,
-                                              effect: const ShimmerEffect(
-                                                baseColor: Color(0xFF1A2C3D),
-                                                highlightColor: Color(0xFF274454),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: customText(text: "  1                                                                           1 "),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: customText(text: "  1                                                                           1 "),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: customText(text: "1                                   1"),
-                                                  ),
-                                                  const Gap(8),
-                                                ],
-                                              ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                customText(
-                                                  text:
-                                                  "Analyzing your question ...",
-                                                  color:
-                                                  Colors.white.withOpacity(0.6),
-                                                  textsize: 15,
-                                                  fontweight: FontWeight.bold,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
+                                  Gap(12),
+                                  Row(
+                                    children: [
+                                      RecommendedMessageWidget(
+                                          text:
+                                          "Top 3 products performance"),
+                                    ],
+                                  ),
+                                  Gap(12),
+                                  Row(
+                                    children: [
+                                      RecommendedMessageWidget(
+                                          text:
+                                          "Which services generate the highest revenue ?"),
+                                    ],
+                                  ),
+                                  Gap(12),
                                 ],
                               ),
+                            // الرسائل Scrollable تحت
+                            Expanded(
+                              child: SingleChildScrollView(
+                                reverse: true,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (var msg in messages)
+                                      Align(
+                                        alignment: msg["type"] == "user"
+                                            ? Alignment.centerRight
+                                            : Alignment.centerLeft,
+                                        child: Container(
+                                          margin:
+                                          const EdgeInsets.symmetric(vertical: 4),
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: msg["type"] == "user"
+                                                ? const Color(0xFF454A5599)
+                                                : AppColor.darkBlue,
+                                            borderRadius: msg["type"] == "user"
+                                                ? const BorderRadius.only(
+                                              topLeft: Radius.circular(12),
+                                              topRight: Radius.circular(12),
+                                              bottomLeft:
+                                              Radius.circular(12),
+                                            )
+                                                : const BorderRadius.only(
+                                              topLeft: Radius.circular(12),
+                                              topRight: Radius.circular(12),
+                                              bottomRight:
+                                              Radius.circular(12),
+                                            ),
+                                          ),
+                                          // تعديل هنا: إذا كانت الرسالة من البوت نستخدم RichText لدعم الـ Bold
+                                          child: msg["type"] == "user"
+                                              ? customText(
+                                            text: msg["text"]!,
+                                            color: Colors.white,
+                                          )
+                                              : RichText(
+                                            text: TextSpan(
+                                              children: _parseMarkdown(msg["text"]!),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (state is ChatBotLoading)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 4),
+                                        child: Container(
+                                          alignment: Alignment.topCenter,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(15),
+                                            color: const Color(0xFF0E1526),
+                                          ),
+                                          child:Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Skeletonizer(
+                                                enabled: true,
+                                                effect: const ShimmerEffect(
+                                                  baseColor: Color(0xFF1A2C3D),
+                                                  highlightColor: Color(0xFF274454),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(4.0),
+                                                      child: customText(text: "  1                                                                           1 "),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(4.0),
+                                                      child: customText(text: "  1                                                                           1 "),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(4.0),
+                                                      child: customText(text: "1                                   1"),
+                                                    ),
+                                                    const Gap(8),
+                                                  ],
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  customText(
+                                                    text:
+                                                    "Analyzing your question ...",
+                                                    color:
+                                                    Colors.white.withOpacity(0.6),
+                                                    textsize: 15,
+                                                    fontweight: FontWeight.bold,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          TextfieldSend(
-                            sendMessage: () {
-                              if (controller.text.trim().isEmpty) return;
-
-                              setState(() {
-                                messages.add({
-                                  "type": "user",
-                                  "text": controller.text.trim()
+                            TextfieldSend(
+                              sendMessage: () {
+                                if (controller.text.trim().isEmpty) return;
+                        
+                                setState(() {
+                                  messages.add({
+                                    "type": "user",
+                                    "text": controller.text.trim()
+                                  });
+                                  showRecommendedMessages = false;
                                 });
-                                showRecommendedMessages = false;
-                              });
-
-                              // ارسال الرسالة للـ Bloc
-                              context.read<ChatBotBloc>().add(
-                                  SendMessageEvent(controller.text.trim()));
-
-                              controller.clear();
-                            },
-                            controller: controller,
-                          ),
-                        ],
+                        
+                                // ارسال الرسالة للـ Bloc
+                                context.read<ChatBotBloc>().add(
+                                    SendMessageEvent(controller.text.trim()));
+                        
+                                controller.clear();
+                              },
+                              controller: controller,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

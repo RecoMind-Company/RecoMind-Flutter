@@ -121,7 +121,7 @@ class _ValidatingPlanScreenState extends State<ValidatingPlanScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const Gap(20),
+              const Gap(40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -151,11 +151,13 @@ class _ValidatingPlanScreenState extends State<ValidatingPlanScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      "We're checking your plan across multiple\ndimensions to ensure feasibility and\nalignment with your business goals.",
+                      "We're checking your plan across multiple dimensions to ensure feasibility and alignment with your business goals.",
                       textAlign: TextAlign.start,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Color(0xFFACACAC),
-                        fontSize: 19,
+                        fontSize: 18,
                         height: 1.5,
                       ),
                     ),

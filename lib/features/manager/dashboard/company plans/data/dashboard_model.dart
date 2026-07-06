@@ -487,15 +487,13 @@ class UpdateTaskRequest {
   final int status;
   final String startDate;
   final String deadLine; // ✅ تم توحيد الاسم هنا ومطابقته مع الـ JSON
-  final List<String> userIds; // ✅ إضافة قائمة الـ IDs الخاصة بالأعضاء
 
   UpdateTaskRequest({
     required this.title,
     required this.description,
     required this.status,
     required this.startDate,
-    required this.deadLine,
-    required this.userIds, // ✅ تمريرها في الـ Constructor
+    required this.deadLine, // ✅ تمريرها في الـ Constructor
   });
 
   Map<String, dynamic> toJson() {
@@ -505,7 +503,7 @@ class UpdateTaskRequest {
       "status": status,
       "startDate": startDate,
       "deadLine": deadLine,   // ✅ تعديل المفتاح ليطابق الـ API تماماً بدلاً من deadlineDate
-      "userIds": userIds,     // ✅ إرسال قائمة الأعضاء المحددة
+      // ✅ إرسال قائمة الأعضاء المحددة
     };
   }
 }

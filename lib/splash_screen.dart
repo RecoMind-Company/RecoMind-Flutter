@@ -48,14 +48,6 @@ class _splash_screenState extends State<splash_screen> {
               ),
               Stack(
                 children: [
-                  Positioned( top: 1.6, left: 54.5,
-                    child: Center(
-                      child: Image.asset(
-                        "assets/Logo.png",
-                        height: 80,
-                      ),
-                    ),
-                  ),
                   AnimatedOpacity(
                     opacity: showGroup ? 1.0 : 0.0,
                     duration: Duration(seconds: 2),

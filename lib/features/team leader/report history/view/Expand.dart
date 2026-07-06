@@ -65,7 +65,6 @@ class _ExpandScreenState extends State<ExpandScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              // ✅ تم إزالة الـ Expanded من هنا لإنهاء الـ Exception تماماً
               child: Column(
                 children: [
                   const Gap(90),
@@ -86,9 +85,10 @@ class _ExpandScreenState extends State<ExpandScreen> {
 
                   /// Title
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       customText(
-                        text: "Your insights and action plan are ready",
+                        text: "Insights and action plan are ready",
                         textsize: 19,
                         fontweight: FontWeight.w500,
                         color: Colors.white,
@@ -106,7 +106,7 @@ class _ExpandScreenState extends State<ExpandScreen> {
                         text: "Report is loading please wait ...",
                         color: AppColor.primaryColor,
                         fontweight: FontWeight.bold,
-                        textsize: 20,
+                        textsize: 18,
                       ),
                       const Gap(40),
                       const Center(

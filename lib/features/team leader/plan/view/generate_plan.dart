@@ -19,8 +19,8 @@ import '../../dashboard/widget/add_members.dart';
 class GeneratedPlanScreen extends StatefulWidget {
   final PlanResponse plan;
 
-  const GeneratedPlanScreen({super.key, required this.plan});
-
+   GeneratedPlanScreen({super.key, required this.plan, this.category = 0 });
+   int category;
   @override
   State<GeneratedPlanScreen> createState() => _GeneratedPlanScreenState();
 }
@@ -135,7 +135,6 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
     final TextEditingController startController = TextEditingController(text: task.startDate);
     final TextEditingController deadlineController = TextEditingController(text: task.deadlineDate);
 
-    // ✅ تهيئة القائمة بالـ User ID الحالي للتاسك إن وجد لتجنب إرسال قائمة فارغة
     List<String> selectedUserIds = task.suggestedOwner.userId.isNotEmpty
         ? [task.suggestedOwner.userId]
         : [];
@@ -290,8 +289,7 @@ class _GeneratedPlanScreenState extends State<GeneratedPlanScreen> {
                             description: descController.text,
                             startDate: startController.text.split(' ')[0],
                             deadLine: deadlineController.text.split(' ')[0],
-                            status: 0,
-                            userIds: selectedUserIds, // ✅ تم التمرير بنجاح هنا
+                            status: 0
                           );
                           context.read<TaskUpdateBloc>().add(UpdateTaskRequested(task.taskId, request));
                         },
